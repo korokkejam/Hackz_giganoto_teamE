@@ -1,0 +1,110 @@
+export class ModBase {
+    log_list;
+    constructor() {
+        this.log_list = [];
+    }
+    log(content) {
+        this.log_list.push(content);
+    }
+    update(data, before, event, sender, updater) {
+        const requests = [];
+        const events = [];
+        switch (event.type) {
+            case "start":
+                {
+                    const re = this.onStart(data, before, event, sender, updater);
+                    re.r.forEach((r) => {
+                        requests.push(r);
+                    });
+                    re.e.forEach((e) => {
+                        events.push(e);
+                    });
+                }
+                break;
+            case "board":
+                {
+                    const re = this.onBoard(data, before, event, sender, updater);
+                    re.r.forEach((r) => {
+                        requests.push(r);
+                    });
+                    re.e.forEach((e) => {
+                        events.push(e);
+                    });
+                }
+                break;
+            case "move":
+                {
+                    const re = this.onMove(data, before, event, sender, updater);
+                    re.r.forEach((r) => {
+                        requests.push(r);
+                    });
+                    re.e.forEach((e) => {
+                        events.push(e);
+                    });
+                }
+                break;
+            case "answer":
+                {
+                    const re = this.onAnswer(data, before, event, sender, updater);
+                    re.r.forEach((r) => {
+                        requests.push(r);
+                    });
+                    re.e.forEach((e) => {
+                        events.push(e);
+                    });
+                }
+                break;
+            case "drop":
+                {
+                    const re = this.onDrop(data, before, event, sender, updater);
+                    re.r.forEach((r) => {
+                        requests.push(r);
+                    });
+                    re.e.forEach((e) => {
+                        events.push(e);
+                    });
+                }
+                break;
+            case "capture":
+                {
+                    const re = this.onCapture(data, before, event, sender, updater);
+                    re.r.forEach((r) => {
+                        requests.push(r);
+                    });
+                    re.e.forEach((e) => {
+                        events.push(e);
+                    });
+                }
+                break;
+            case "end":
+                {
+                    const re = this.onEnd(data, before, event, sender, updater);
+                    re.r.forEach((r) => {
+                        requests.push(r);
+                    });
+                    re.e.forEach((e) => {
+                        events.push(e);
+                    });
+                }
+                break;
+        }
+        data.log = data.log.concat(this.log_list);
+        this.log_list = [];
+        return { r: requests, e: events };
+    }
+    onStart(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
+    ;
+    onBoard(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
+    ;
+    onMove(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
+    ;
+    onAnswer(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
+    ;
+    onDrop(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
+    ;
+    onCapture(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
+    ;
+    onEnd(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
+    ;
+}
+//# sourceMappingURL=ModBase.js.map

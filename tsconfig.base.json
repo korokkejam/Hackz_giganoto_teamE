@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": false,
+    "declaration":true,
+    "esModuleInterop": true,
+    "rootDir": "./src",
+    "sourceMap":true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
+  } ,
+  "include":["src"]
+}
