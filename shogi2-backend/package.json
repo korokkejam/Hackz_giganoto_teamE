@@ -17,8 +17,10 @@
   "dependencies": {
     "@hono/node-server": "^1.14.4",
     "@hono/node-ws": "^1.1.7",
+    "@types/ws": "^8.18.1",
     "hono": "^4.8.0",
     "nodemon": "^3.1.10",
-    "react-router-dom": "^7.6.2"
+    "react-router-dom": "^7.6.2",
+    "ws": "^8.18.2"
   }
 }

@@ -4,6 +4,10 @@
   position:relative;
 }
 
+.piece.movable:hover{
+  cursor:pointer;
+}
+
 .piece.turn > img{
   transform:rotate(180deg);
 }
