@@ -1,0 +1,36 @@
+.match-box{
+  position:absolute;
+  transform:translateX(-50%);
+  top:20vh;
+  left:50%;
+  text-align:center;
+}
+
+.match-box > *{
+  margin-bottom:10px !important;
+}
+
+.match-box-button{
+  border:3px solid !important;
+  border-radius:20px !important;
+  margin-left:10px !important;
+  margin-right:10px !important;
+  color:gray !important;
+}
+
+.match-box-button:hover{
+  background:gray;
+  color:#ccc !important;
+}
+
+@media screen and (min-width: 600px) {
+  .match-box{
+    width:570px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .match-box{
+    width:95vw;
+  }
+}

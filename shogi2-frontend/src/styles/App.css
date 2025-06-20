@@ -1,7 +1,9 @@
 body{
   margin:0;
+  background:#ccc;
 }
 
 .app{
-  background:#ccc;
+  width:100vw;
+  height:100vh;
 }
