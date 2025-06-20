@@ -11,7 +11,7 @@ export default function Piece({pos}:{pos:number[]}){
   return (
     <div className={`piece ${piece.piece?.player===player?"":"turn"}`}>
       <img src={pieceImg}/>
-      <p>{board[pos[0]][pos[1]].piece?.name}</p>
+      <p>{board[pos[0]][pos[1]].piece?.type.name}</p>
     </div>
   );
 }
