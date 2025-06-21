@@ -1,6 +1,7 @@
 import { CommandResult, GameState, Move, Position } from '../commonTypes';
 import { CommandBase } from '../base/CommandBase';
 
+// このクラス(のexecuteCommand)が返すデータの型
 interface TeleportResult {
   gameState: GameState;
 }
@@ -18,7 +19,7 @@ export class TeleportCommand extends CommandBase<TeleportResult> { // 抽象ク�
   }
 
   // コマンドの機能本体
-  executeCommand(gameState: GameState): CommandResult<TeleportResult> {
+  executeCommand(gameState: GameState): CommandResult<TeleportResult> { // ←返り値の型をこんなふうにする
     const updatedPieces = gameState.pieces.map(piece => {
       if (piece.id === this.pieceId) {
         return { ...piece, position: this.to };
