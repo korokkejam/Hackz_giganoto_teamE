@@ -1,20 +1,16 @@
 
-import { Piece, Move, GameState, CommandResult } from '../commonTypes';
+import { GameState, CommandResult } from '../commonTypes';
 
 // 抽象クラス
 export abstract class CommandBase<T = undefined> {
     abstract type: string; // 抽象フィールド
     
-    protected pieces: Piece[];
-    protected turn: "sente" | "gote";
-    protected history: Move[];
+    protected gameState: GameState;
     
-    constructor(protected readonly raw: any, protected readonly gameState: GameState) {
-        this.pieces = gameState.pieces;
-        this.turn = gameState.turn;
-        this.history = gameState.history;
+    constructor(protected readonly raw: any, gameState: GameState) {
+        this.gameState = gameState;
     }
 
     // 抽象メソッド
-    abstract executeCommand(state: GameState): CommandResult<T>;
+    abstract execute(): CommandResult<T>;
 }

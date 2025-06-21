@@ -1,6 +1,6 @@
 import { CommandResult, GameState } from './commonTypes';
 import { CommandBase } from './base/CommandBase';
-import { TeleportCommand } from './teleportation/TeleportCommand'
+import { TeleportCommand } from './teleportation/TeleportCommand';
 // ここに新しいクラスをインポート
 
 // Command execution function
@@ -18,7 +18,8 @@ export function createCommand(raw: any, state: GameState): CommandBase<any> {
 
 }
 
+// フロント側からこの関数を呼び出すことになると思うんだよねー
 export function executeCommand(raw: any, gamestate: GameState): CommandResult {
   const command = createCommand(raw, gamestate);
-  return command.executeCommand(gamestate);
+  return command.execute();
 }
