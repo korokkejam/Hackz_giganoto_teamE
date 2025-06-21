@@ -2,7 +2,7 @@ import "./styles/Index.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useState} from "react";
-import {wsAtom,playerAtom} from "../state";
+import {wsAtom,playerAtom,boardAtom} from "../state";
 import {useSetAtom} from "jotai";
 import {useNavigate} from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -12,6 +12,7 @@ export default function Index(){
   const [error,setError]=useState<string>("");
   const setWs=useSetAtom(wsAtom);
   const setPlayer=useSetAtom(playerAtom);
+  const setBoard=useSetAtom(boardAtom);
   const navigate=useNavigate();
   const [loading,setLoading]=useState<boolean>(false);
   const checkRoomExists=()=>{
@@ -33,10 +34,15 @@ export default function Index(){
       return;
     }
     const ws=new WebSocket(`ws://localhost:3000/room/enter/${name}`);
-    ws.onopen=((e)=>{
-      setWs(ws);
-      setPlayer("player2");
-      navigate("/game");
+    ws.onmessage=((e:MessageEvent)=>{
+      const d:request=JSON.parse(e.data);
+      if (d.head==="ready"){
+        const board:boardData=d.content;
+        setBoard(board.boards[0]);
+        setWs(ws);
+        setPlayer("player2");
+        navigate("/game");
+      }
     });
   };
   const createRoom=()=>{
@@ -44,16 +50,18 @@ export default function Index(){
       return;
     }
     const ws=new WebSocket(`ws://localhost:3000/room/create/${name}`);
-    ws.onmessage=(e:MessageEvent)=>{
-      switch (e.data){
-        case "ready":
-          setLoading(false);
-          navigate("/game");
-          break;
+    ws.onmessage=((e:MessageEvent)=>{
+      const d:request=JSON.parse(e.data);
+      if (d.head==="ready"){
+        setLoading(false);
+        const board:boardData=d.content;
+        setBoard(board.boards[0]);
+        setWs(ws);
+        navigate("/game");
       }
-    };
+    });
     ws.onopen=()=>{
-      setPlayer("player1");
+        setPlayer("player1");
       setLoading(true);
       setWs(ws);
     }

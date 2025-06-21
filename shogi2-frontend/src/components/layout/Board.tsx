@@ -28,9 +28,7 @@ export default function Board(){
   const board=useAtomValue(boardAtom);
   const player=useAtomValue(playerAtom);
   const focusedPiece=useAtomValue(focusedPieceAtom);
-  const converted_board=useMemo(()=>{
-    return convert(board);
-  },[board]);
+  const converted_board=useMemo(()=>convert(board),[board]);
   const move=useMemo(()=>{
     if (!focusedPiece){
       return;
@@ -53,9 +51,7 @@ export default function Board(){
       }
       const dx=p[0]-pos[0];
       const dy=p[1]-pos[1];
-      const c1=dx>dy;
-      const c2=player==="player2";
-      const max=Math.abs((!c1 && !c2) || (c1 && c2)?dx:dy);
+      const max=Math.abs(Math.abs(dy)<Math.abs(dx)?dx:dy);
       const step_x=dx==0?0:dx/Math.abs(dx);
       const step_y=dy==0?0:dy/Math.abs(dy);
       let count=0;
@@ -94,7 +90,11 @@ export default function Board(){
       {(player==="player1"?converted_board:reverse_board(converted_board)).map((r)=>
         <div className="row" style={{height:`calc(100% / ${board.length})`}}>
           {(player==="player1"?r.row:reverse_row(r.row)).map((s)=>
-            <Square pos={[s.index,r.index]} dye={move?move.includes(`${s.index},${r.index}`):false}/>
+            <Square
+              pos={[s.index,r.index]}
+              square={s.square}
+              dye={move?move.includes(`${s.index},${r.index}`):false}
+            />
           )}
         </div>
       )}

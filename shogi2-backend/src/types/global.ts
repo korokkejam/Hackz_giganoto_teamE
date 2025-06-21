@@ -14,6 +14,7 @@ type pieceType={
 type piece={player:"player1"|"player2",type:pieceType};
 type square={piece:piece|null};
 type board=square[][];
-type boardData={boards:board[],turn:"player1"|"player2"};
+type boardData={boards:board[],turn:"player1"|"player2",player1_current_board:number,player2_current_board:number};
+type request={head:string,content:any,sender?:string};
 
-export {board,pieceType,piece,square,room,boardData};
+export {board,pieceType,piece,square,room,boardData,request};
