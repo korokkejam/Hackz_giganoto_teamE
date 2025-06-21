@@ -1,4 +1,5 @@
 .square{
+  /* background:#000000; */
   background:#fa0;
   width:calc(100% / 9);
   height:100%;

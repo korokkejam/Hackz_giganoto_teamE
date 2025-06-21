@@ -8,6 +8,20 @@
   cursor:pointer;
 }
 
+.cover{
+  width:100%;
+  height:100%;
+  position:absolute;
+  left:0;
+  top:0;
+  z-index:50;
+  /* display:none; */
+}
+
+.piece.focus > .cover{
+  display:block;
+}
+
 .piece.turn > img{
   transform:rotate(180deg);
 }
