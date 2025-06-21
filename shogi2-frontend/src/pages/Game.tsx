@@ -13,13 +13,12 @@ export default function Game(){
       return;
     }
     ws.onmessage=(e:MessageEvent)=>{
-      const d:request=e.data;
+      const d:request=JSON.parse(e.data);
       switch (d.head){
         case "move":
           {
             const data:{board:board,next:"player1"|"player2"}=d.content;
             setBoard(data.board);
-            console.log(data.board);
             setTurn(data.next);
           }
           break;
