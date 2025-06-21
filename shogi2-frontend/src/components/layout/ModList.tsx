@@ -30,7 +30,13 @@ export default function ModList() {
             <ul>
                 {directories.map((dir, index) => (
                     <li key={index} className="mod-directory">
-                        {dir}
+                        <a
+                            href={dir}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                window.open({dir} + ".ts", '_blank', 'width=300,height=300');
+                            }}
+                        >{dir}</a>
                     </li>
                 ))}
             </ul>
