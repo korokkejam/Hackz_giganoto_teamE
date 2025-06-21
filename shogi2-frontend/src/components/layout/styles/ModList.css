@@ -1,0 +1,11 @@
+.mod-list{
+    padding-left: 5%;
+}
+
+.windowBox{
+    width: 45%;
+    height: 100px;
+    overflow-y: scroll;
+    border: 1px #999999 solid;
+    background: #eeeeee;
+}

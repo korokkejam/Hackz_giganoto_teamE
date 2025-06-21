@@ -6,6 +6,9 @@ import {createNodeWebSocket} from "@hono/node-ws";
 import {rooms,setRooms} from "./game/rooms";
 import Data from "./game/board";
 
+import fs from 'fs';
+import path from 'path';
+
 const app=new Hono();
 
 const {injectWebSocket,upgradeWebSocket}=createNodeWebSocket({app});
@@ -73,6 +76,23 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
     }
   };
 }));
+
+app.get("/api/mods/list", (c) => {
+  const modsPath = path.join(__dirname, "../../mods");
+
+  try {
+    const files = fs.readdirSync(modsPath);
+    const directories = files.filter(file =>
+        fs.statSync(path.join(modsPath, file)).isDirectory()
+    );
+
+    return c.json(directories);
+  } catch (error) {
+    console.error("Error reading mods directory:", error);
+    return c.json({ error: "Failed to read mods directory" }, 500);
+  }
+});
+
 
 const server=serve({ fetch: app.fetch, port: 3000 }, () => {
   console.log("Server is running on http://localhost:3000")

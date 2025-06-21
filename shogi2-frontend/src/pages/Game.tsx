@@ -1,5 +1,6 @@
 import "./styles/Game.css";
 import Board from "../components/layout/Board";
+import ModList from "../components/layout/ModList";
 import { useEffect } from "react";
 import { useAtomValue } from "jotai";
 import { wsAtom } from "../state";
@@ -16,6 +17,7 @@ export default function Game(){
   return (
     <div className="game">
       <Board/>
+      <ModList/>
     </div>
   );
 }
