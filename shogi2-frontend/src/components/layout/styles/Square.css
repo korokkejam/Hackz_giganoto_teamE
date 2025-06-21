@@ -3,8 +3,24 @@
   width:calc(100% / 9);
   height:100%;
   border:1px solid;
+  position: relative;
 }
 
 .square.dye{
-  background:red;
+  background: #cbdb86;
+}
+
+.move-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.square.dye:has(> div) .move-indicator {
+  z-index: 0;
 }

@@ -11,6 +11,7 @@ export default function Square({pos,dye}:{pos:number[],dye?:boolean}){
         ? <Piece pos={pos}/>
         : null
       }
+      {dye && <span className="move-indicator">●</span>}
     </div>
   );
 }
