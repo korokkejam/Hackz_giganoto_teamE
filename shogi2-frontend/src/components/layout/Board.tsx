@@ -13,7 +13,14 @@ export default function Board(){
       return;
     }
     const {pos,piece}=focusedPiece;
-    return [...piece.type.movable.absolute,...piece.type.movable.relative.map((p)=>`${pos[0]-p[0]},${pos[1]-p[1]}`)];
+    const absolute=piece.type.movable.absolute.filter((p)=>board[p[1]][p[0]].piece?.player!==player);
+    const relative=
+      piece.type.movable.relative.map((p)=>[pos[0]-p[0],pos[1]-p[1]])
+    .filter((p)=>0<=p[1] && board.length>p[1] && 0<=p[0] && board[p[1]].length>p[0] && board[p[1]][p[0]].piece?.player!==player)
+    return [
+      ...absolute,
+      ...relative
+    ].map((p)=>`${p[0]},${p[1]}`);
   },[focusedPiece]);
   return (
     <div className="board">
