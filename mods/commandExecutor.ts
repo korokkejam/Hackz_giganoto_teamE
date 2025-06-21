@@ -9,7 +9,9 @@ export function createCommand(raw: any, state: GameState): CommandBase {
   switch (raw.type) {
     case 'teleport':
       return new TeleportCommand(raw, state);
+
     // ここに新しいcaseを追加
+    
     default:
       throw new Error(`Unknown command type: ${raw.type}`);
   }

@@ -1,8 +1,9 @@
 
 import { Piece, Move, GameState } from '../commonTypes';
 
+// 抽象クラス
 export abstract class CommandBase {
-    abstract type: string;
+    abstract type: string; // 抽象フィールド
     
     protected pieces: Piece[];
     protected turn: "sente" | "gote";
@@ -14,5 +15,6 @@ export abstract class CommandBase {
         this.history = gameState.history;
     }
 
+    // 抽象メソッド
     abstract executeCommand(state: GameState): GameState;
 }

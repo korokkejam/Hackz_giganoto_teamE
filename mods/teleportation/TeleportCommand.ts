@@ -2,6 +2,7 @@ import { GameState, Move, Position } from '../commonTypes';
 import { CommandBase } from '../base/CommandBase';
 
 export class TeleportCommand extends CommandBase { // 抽象クラスを継承
+  // typeを決めて、必要なフィールドを追加
   type = "teleport";
   pieceId: string;
   to: Position;
@@ -12,7 +13,7 @@ export class TeleportCommand extends CommandBase { // 抽象クラスを継承
     this.to = raw.to;
   }
 
-  // Command handler functions
+  // コマンドの機能本体
   executeCommand(gameState: GameState): GameState {
     const updatedPieces = gameState.pieces.map(piece => {
       if (piece.id === this.pieceId) {
