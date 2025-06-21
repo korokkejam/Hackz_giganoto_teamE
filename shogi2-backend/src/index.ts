@@ -3,12 +3,11 @@ import {serve} from "@hono/node-server";
 import {cors} from "hono/cors";
 import {boards} from "./config/board";
 import {createNodeWebSocket} from "@hono/node-ws";
-import rooms from "./game/rooms";
+import {rooms,setRooms} from "./game/rooms";
 
 const app=new Hono();
 
 const {injectWebSocket,upgradeWebSocket}=createNodeWebSocket({app});
-
 
 const logger=async (c:Context,next:Next)=>{
   console.log(c.req.url);
@@ -34,9 +33,12 @@ app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
     onMessage(event,ws){
     },
     onOpen(event,ws){
-      rooms.push({ws:[ws],id});
+      rooms.push({ws:[ws],id,gamemode:"survival"});
     },
     onClose(event){
+      const room=rooms.find((room)=>room.id===id);
+      room?.ws.map((ws)=>ws.send("disconnected"));
+      setRooms(rooms.filter((room)=>room.id!==id));
       console.log(event.code);
       console.log(event.reason);
     },
@@ -55,10 +57,11 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
     onOpen(event,ws){
       room?.ws[0].send("ready");
       room?.ws.push(ws);
-      console.log(rooms);
-      // rooms=rooms.map((room)=>room.id===id?({ws:[room.ws[0],ws],id:room.id}):room);
     },
     onClose(event){
+      const room=rooms.find((room)=>room.id===id);
+      room?.ws.map((ws)=>ws.send("disconnected"));
+      setRooms(rooms.filter((room)=>room.id!==id));
       console.log(event.code);
       console.log(event.reason);
     },

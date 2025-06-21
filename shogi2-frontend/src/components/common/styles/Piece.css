@@ -15,7 +15,8 @@
   left:0;
   top:0;
   z-index:50;
-  /* display:none; */
+  display:none;
+  background:#0005;
 }
 
 .piece.focus > .cover{
@@ -37,4 +38,6 @@
   left:50%;
   top:50%;
   position:absolute;
+  user-select:none;
+  /* font-family:yowaku; */
 }

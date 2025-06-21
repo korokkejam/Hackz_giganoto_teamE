@@ -43,16 +43,20 @@ export default function Index(){
     }
     const ws=new WebSocket(`ws://localhost:3000/room/create/${name}`);
     ws.onmessage=(e:MessageEvent)=>{
-      if (e.data==="ready"){
-        setLoading(false);
-        navigate("/game");
+      switch (e.data){
+        case "ready":
+          setLoading(false);
+          navigate("/game");
+          break;
+        case "disconnected":
+          navigate("/");
+          break;
       }
     };
     ws.onopen=()=>{
-      ws.send("hello");
-    setPlayer("player1");
-    setLoading(true);
-    setWs(ws);
+      setPlayer("player1");
+      setLoading(true);
+      setWs(ws);
     }
   };
   return (

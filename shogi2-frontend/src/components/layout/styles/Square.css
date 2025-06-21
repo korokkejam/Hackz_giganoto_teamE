@@ -1,7 +1,10 @@
 .square{
-  /* background:#000000; */
   background:#fa0;
   width:calc(100% / 9);
   height:100%;
   border:1px solid;
+}
+
+.square.dye{
+  background:red;
 }

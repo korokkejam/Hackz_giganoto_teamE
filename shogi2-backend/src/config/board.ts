@@ -1,14 +1,5 @@
 import "../types/global";
-
-const lance:pieceType={name:"香",movable:{relative:[],absolute:[]}};
-const knight:pieceType={name:"桂",movable:{relative:[],absolute:[]}};
-const silver_general:pieceType={name:"銀",movable:{relative:[],absolute:[]}};
-const gold_general:pieceType={name:"金",movable:{relative:[],absolute:[]}};
-const king1:pieceType={name:"王",movable:{relative:[],absolute:[]}};
-const king2:pieceType={name:"玉",movable:{relative:[],absolute:[]}};
-const rook:pieceType={name:"飛",movable:{relative:[],absolute:[]}};
-const bishop:pieceType={name:"角",movable:{relative:[],absolute:[]}};
-const pawn:pieceType={name:"歩",movable:{relative:[],absolute:[]}};
+import {lance,knight,silver_general,gold_general,king1,king2,rook,pawn,bishop} from "./piece";
 
 const boards:board[]=[[
   [{piece:{type:lance,player:"player2"}},{piece:{type:knight,player:"player2"}},{piece:{type:silver_general,player:"player2"}},{piece:{type:gold_general,player:"player2"}},{piece:{type:king1,player:"player2"}},{piece:{type:gold_general,player:"player2"}},{piece:{type:silver_general,player:"player2"}},{piece:{type:knight,player:"player2"}},{piece:{type:lance,player:"player2"}}],
