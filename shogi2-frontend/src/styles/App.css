@@ -1,0 +1,14 @@
+body{
+  margin:0;
+  background:#ccc;
+}
+
+.app{
+  width:100vw;
+  height:100vh;
+}
+
+@font-face {
+  font-family: "yowaku";
+  src: url("../assets/y.ttf");
+}
