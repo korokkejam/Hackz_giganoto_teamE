@@ -22,6 +22,7 @@ export class TeleportCommand extends CommandBase { // 抽象クラスを継承
       return piece;
     });
 
+    // @ts-ignore
     const movedPiece = gameState.pieces.find(p => p.id === this.pieceId);
     const move: Move = {
       pieceId: this.pieceId,
