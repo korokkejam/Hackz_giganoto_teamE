@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { executeCommand } from './commands/commandExecutor';
-import { GameState, Command, Position } from './commands/commandTypes';
+import { executeCommand } from '../commands/commandExecutor';
+import { GameState, Command, Position } from '../commands/commandTypes';
 
 // Initial game state (example)
 const initialGameState: GameState = {

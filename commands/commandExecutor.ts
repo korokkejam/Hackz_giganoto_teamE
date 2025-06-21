@@ -1,41 +1,4 @@
-
-// Type definitions
-interface Position {
-  x: number;
-  y: number;
-}
-
-interface Piece {
-  id: string;
-  type: string;
-  owner: "sente" | "gote";
-  position: Position | null;
-  isPromoted: boolean;
-}
-
-interface GameState {
-  pieces: Piece[];
-  turn: "sente" | "gote";
-  history: Move[];
-}
-
-type Command =
-  {
-    type: "teleport";
-    pieceId: string;
-    to: Position;
-  }
-  {
-    // ここに他のコマンドの定義も追加
-  };
-
-interface Move {
-  type: "teleport"; // ここに他のコマンドを列挙
-  pieceId?: string;
-  from?: Position | null;
-  to?: Position;
-  // 必要なプロパティを追加
-}
+import { GameState, Command, Move, Position, Piece } from './commandTypes';
 
 // Command execution function
 export function executeCommand(command: Command, gameState: GameState): GameState {
