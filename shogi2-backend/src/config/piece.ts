@@ -39,7 +39,7 @@ const gold_general:pieceType={
 const king1:pieceType={
   name:"王",
   movable:{
-    relative:[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[-1,-1],[-1,0],[-1,1]],
+    relative:[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]],
     absolute:[]
   },
   jumpable:false
@@ -48,7 +48,7 @@ const king1:pieceType={
 const king2:pieceType={
   name:"玉",
   movable:{
-    relative:[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[-1,-1],[-1,0],[-1,1]],
+    relative:[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]],
     absolute:[]
   },
   jumpable:false

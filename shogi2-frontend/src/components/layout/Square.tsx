@@ -7,7 +7,7 @@ export default function Square({pos,dye}:{pos:number[],dye?:boolean}){
   const board=useAtomValue(boardAtom);
   return (
     <div className={`square ${dye?"dye":""}`}>
-      {board[pos[0]][pos[1]].piece
+      {board[pos[1]][pos[0]].piece
         ? <Piece pos={pos}/>
         : null
       }

@@ -5,7 +5,6 @@ import Square from "./Square";
 import {useMemo} from "react";
 
 export default function Board(){
-  // 位相がズレておりますわ〜
   const board=useAtomValue(boardAtom);
   const player=useAtomValue(playerAtom);
   const focusedPiece=useAtomValue(focusedPieceAtom);
@@ -14,13 +13,13 @@ export default function Board(){
       return;
     }
     const {pos,piece}=focusedPiece;
-    return [...piece.type.movable.absolute,...piece.type.movable.relative.map((p)=>`${p[0]+pos[0]},${p[1]+pos[1]}`)];
+    return [...piece.type.movable.absolute,...piece.type.movable.relative.map((p)=>`${pos[0]-p[0]},${pos[1]-p[1]}`)];
   },[focusedPiece]);
   return (
     <div className="board">
-      {(player==="player1"?board:board.reverse()).map((row:square[],x:number)=>
+      {(player==="player1"?board:board.reverse()).map((row:square[],y:number)=>
         <div className="row">
-          {(player==="player1"?row:row.reverse()).map((_,y:number)=>
+          {(player==="player1"?row:row.reverse()).map((_,x:number)=>
             <Square pos={[x,y]} dye={move?move.includes(`${x},${y}`):false}/>
           )}
         </div>
