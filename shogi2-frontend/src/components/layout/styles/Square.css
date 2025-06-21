@@ -1,6 +1,5 @@
 .square{
   background:#fa0;
-  width:calc(100% / 9);
   height:100%;
   border:1px solid;
   position: relative;
@@ -8,6 +7,10 @@
 
 .square.dye{
   background: #cbdb86;
+}
+
+.square.dye:hover{
+  cursor:pointer;
 }
 
 .move-indicator {

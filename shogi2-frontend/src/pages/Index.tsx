@@ -33,9 +33,11 @@ export default function Index(){
       return;
     }
     const ws=new WebSocket(`ws://localhost:3000/room/enter/${name}`);
-    setWs(ws);
-    setPlayer("player2");
-    navigate("/game");
+    ws.onopen=((e)=>{
+      setWs(ws);
+      setPlayer("player2");
+      navigate("/game");
+    });
   };
   const createRoom=()=>{
     if (!name){
@@ -47,9 +49,6 @@ export default function Index(){
         case "ready":
           setLoading(false);
           navigate("/game");
-          break;
-        case "disconnected":
-          navigate("/");
           break;
       }
     };

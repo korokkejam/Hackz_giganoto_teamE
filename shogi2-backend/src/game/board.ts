@@ -1,10 +1,18 @@
-import rooms from "./rooms";
+import "./rooms";
+import {board,boardData} from "../types/global";
 
-class Board{
-  id:string
-  boards:board[]
-  constructor(id:string,boards:board[]){
-    this.id=id;
-    this.boards=boards;
+class Data{
+  data:boardData;
+  constructor(boards:board[]){
+    this.data={boards,turn:"player1"};
+  }
+  change(){
+    if (this.data.turn==="player1"){
+      this.data.turn="player2";
+    }else{
+      this.data.turn="player1";
+    }
   }
 }
+
+export default Data;

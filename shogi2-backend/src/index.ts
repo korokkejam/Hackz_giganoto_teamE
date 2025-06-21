@@ -4,6 +4,7 @@ import {cors} from "hono/cors";
 import {boards} from "./config/board";
 import {createNodeWebSocket} from "@hono/node-ws";
 import {rooms,setRooms} from "./game/rooms";
+import Data from "./game/board";
 
 const app=new Hono();
 
@@ -29,11 +30,13 @@ app.get("/room/check/:id",(c:Context)=>{
 app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
   const id=c.req.param("id");
   console.log(id);
+  const data=new Data(boards);
   return {
     onMessage(event,ws){
+      console.log(event.data);
     },
     onOpen(event,ws){
-      rooms.push({ws:[ws],id,gamemode:"survival"});
+      rooms.push({ws:[ws],id,gamemode:"survival",data});
     },
     onClose(event){
       const room=rooms.find((room)=>room.id===id);

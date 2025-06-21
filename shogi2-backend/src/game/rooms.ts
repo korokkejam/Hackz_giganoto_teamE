@@ -1,7 +1,7 @@
-import { WSContext } from "hono/ws";
+import {room} from "../types/global";
 
-let rooms:{ws:WSContext[],id:string,gamemode:"survival"|"creative"}[]=[];
-const setRooms=(r:{ws:WSContext[],id:string,gamemode:"survival"|"creative"}[])=>{
+let rooms:room[]=[];
+const setRooms=(r:room[])=>{
   rooms=r;
 };
 
