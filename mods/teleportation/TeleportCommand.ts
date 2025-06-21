@@ -1,7 +1,7 @@
-import { GameState, Move, Position, Piece } from '../commonTypes';
+import { GameState, Move, Position } from '../commonTypes';
 import { CommandBase } from '../base/CommandBase';
 
-export class TeleportCommand extends CommandBase {
+export class TeleportCommand extends CommandBase { // 抽象クラスを継承
   type = "teleport";
   pieceId: string;
   to: Position;
