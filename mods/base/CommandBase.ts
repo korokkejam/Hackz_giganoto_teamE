@@ -1,8 +1,8 @@
 
-import { Piece, Move, GameState } from '../commonTypes';
+import { Piece, Move, GameState, CommandResult } from '../commonTypes';
 
 // 抽象クラス
-export abstract class CommandBase {
+export abstract class CommandBase<T = undefined> {
     abstract type: string; // 抽象フィールド
     
     protected pieces: Piece[];
@@ -16,5 +16,5 @@ export abstract class CommandBase {
     }
 
     // 抽象メソッド
-    abstract executeCommand(state: GameState): GameState;
+    abstract executeCommand(state: GameState): CommandResult<T>;
 }
