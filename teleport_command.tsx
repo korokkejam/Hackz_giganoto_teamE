@@ -21,12 +21,11 @@ interface GameState {
   history: Move[];
 }
 
-type Command =
-  | {
+type Command = {
       type: 'teleport';
       pieceId: string;
       to: Position;
-    };
+};
 
 interface Move {
   type: 'teleport';
