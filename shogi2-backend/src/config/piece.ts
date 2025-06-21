@@ -15,7 +15,7 @@ const knight:pieceType={
     relative:[[1,2],[-1,2]],
     absolute:[]
   },
-  jumpable:false
+  jumpable:true
 };
 
 const silver_general:pieceType={
