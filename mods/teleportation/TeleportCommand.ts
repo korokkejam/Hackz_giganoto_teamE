@@ -8,6 +8,7 @@ interface TeleportResult {
 
 export class TeleportCommand extends CommandBase<TeleportResult> { // 抽象クラスを継承
   // typeを決めて、必要なフィールドを追加（pieceIDとtoはTeleportCommandに必要なフィールド）
+  // 必要なら新しいデータ型も定義する（別ファイルに書いてインポート推奨）
   type = "teleport";
   pieceId: string;
   to: Position;
@@ -19,16 +20,15 @@ export class TeleportCommand extends CommandBase<TeleportResult> { // 抽象ク�
   }
 
   // コマンドの機能本体
-  executeCommand(gameState: GameState): CommandResult<TeleportResult> { // ←返り値の型をこんなふうにする
-    const updatedPieces = gameState.pieces.map(piece => {
+  execute(): CommandResult<TeleportResult> { // ←返り値の型をこんなふうにする
+    const updatedPieces = this.gameState.pieces.map(piece => {
       if (piece.id === this.pieceId) {
         return { ...piece, position: this.to };
       }
       return piece;
     });
 
-    // @ts-ignore
-    const movedPiece = gameState.pieces.find(p => p.id === this.pieceId);
+    const movedPiece = this.gameState.pieces.find(p => p.id === this.pieceId);
     const move: Move = {
       pieceId: this.pieceId,
       from: movedPiece?.position ?? null,
