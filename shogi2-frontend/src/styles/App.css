@@ -7,3 +7,12 @@ body{
   width:100vw;
   height:100vh;
 }
+
+@font-face {
+  font-family: "yowaku";
+  src: url("../assets/y.ttf");
+  font-family: "ai";
+  src: url("../assets/gakuran_font.ttf");
+  font-family: "kk";
+  src: url("../assets/KaiseiTokumin-Bold.ttf");
+}
