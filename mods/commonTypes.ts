@@ -17,20 +17,8 @@ export interface GameState {
     history: Move[];
 }
 
-export type Command =
-    {
-    type: "teleport";
-    pieceId: string;
-    to: Position;
-    }
-    {
-    // ここに他のコマンドの定義も追加
-    };
-
 export interface Move {
-    type: "teleport"; // ここに他のコマンドを列挙
-    pieceId?: string;
-    from?: Position | null;
-    to?: Position;
-    // 必要なプロパティを追加
+    pieceId: string;
+    from: Position | null;
+    to: Position;
 }
