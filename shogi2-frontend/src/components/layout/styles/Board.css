@@ -1,6 +1,5 @@
 .row{
   width:100%;
-  height:calc(100% / 9);
   display:flex;
 }
 

@@ -4,6 +4,8 @@ import {cors} from "hono/cors";
 import {boards} from "./config/board";
 import {createNodeWebSocket} from "@hono/node-ws";
 import {rooms,setRooms} from "./game/rooms";
+import Data from "./game/board";
+import {request} from "./types/global";
 
 const app=new Hono();
 
@@ -17,10 +19,6 @@ const logger=async (c:Context,next:Next)=>{
 app.use("*",logger);
 app.use("*",cors());
 
-app.get("/board",(c:Context)=>{
-  return c.json(boards[0]);
-});
-
 app.get("/room/check/:id",(c:Context)=>{
   const id=c.req.param("id");
   return c.text(rooms.map((room)=>room.id).includes(id)?"yes":"no");
@@ -29,11 +27,18 @@ app.get("/room/check/:id",(c:Context)=>{
 app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
   const id=c.req.param("id");
   console.log(id);
+  const data=new Data(boards);
   return {
     onMessage(event,ws){
+      const room=rooms.find((room)=>room.id===id);
+      if (!room){
+        return;
+      }
+      room.data.change();
+      room.data.update(event,room.ws);
     },
     onOpen(event,ws){
-      rooms.push({ws:[ws],id,gamemode:"survival"});
+      rooms.push({ws:[ws],id,gamemode:"survival",data});
     },
     onClose(event){
       const room=rooms.find((room)=>room.id===id);
@@ -53,10 +58,20 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
   const room=rooms.find((room)=>room.id===id);
   return {
     onMessage(event,ws){
+      if (!room){
+        return;
+      }
+      room.data.change();
+      room.data.update(event,room.ws);
     },
     onOpen(event,ws){
-      room?.ws[0].send("ready");
-      room?.ws.push(ws);
+      if (!room){
+        return;
+      }
+      const d:request={head:"ready",content:room.data.data};
+      room.ws[0].send(JSON.stringify(d));
+      ws.send(JSON.stringify(d));
+      room.ws.push(ws);
     },
     onClose(event){
       const room=rooms.find((room)=>room.id===id);

@@ -11,8 +11,19 @@ body{
 @font-face {
   font-family: "yowaku";
   src: url("../assets/y.ttf");
+}
+
+@font-face {
+  font-family: "tsuyoku";
+  src: url("../assets/t.ttf");
+}
+
+@font-face{
   font-family: "ai";
   src: url("../assets/gakuran_font.ttf");
+}
+
+@font-face{
   font-family: "kk";
   src: url("../assets/KaiseiTokumin-Bold.ttf");
 }
