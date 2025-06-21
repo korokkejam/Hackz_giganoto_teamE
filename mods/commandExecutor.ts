@@ -1,11 +1,11 @@
-import { GameState } from './commonTypes';
+import { CommandResult, GameState } from './commonTypes';
 import { CommandBase } from './base/CommandBase';
 import { TeleportCommand } from './teleportation/TeleportCommand'
 import {KillCommand} from "./kill/killCommand";
 // ここに新しいクラスをインポート
 
 // Command execution function
-export function createCommand(raw: any, state: GameState): CommandBase {
+export function createCommand(raw: any, state: GameState): CommandBase<any> {
   
   switch (raw.type) {
     case 'teleport':
@@ -21,7 +21,7 @@ export function createCommand(raw: any, state: GameState): CommandBase {
 
 }
 
-export function executeCommand(raw: any, gamestate: GameState): GameState {
+export function executeCommand(raw: any, gamestate: GameState): CommandResult {
   const command = createCommand(raw, gamestate);
   return command.executeCommand(gamestate);
 }

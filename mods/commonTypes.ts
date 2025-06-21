@@ -22,3 +22,7 @@ export interface Move {
     from: Position | null;
     to: Position;
 }
+
+export interface CommandResult<T = undefined> {
+    data?: T;
+}
