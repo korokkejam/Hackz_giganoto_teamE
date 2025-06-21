@@ -36,8 +36,8 @@ const superman:pieceType={
   },
   jumpable:true
 };
-const b:pieceType={
-  name:"b",movable:{
+const ki:pieceType={
+  name:"奇",movable:{
     relative:[],
     absolute:[],
     func:"()=>[Math.floor(Math.random()*9),Math.floor(Math.random()*9)]"
