@@ -20,7 +20,7 @@ export interface GameState {
 export interface Move {
     pieceId: string;
     from: Position | null;
-    to: Position;
+    to: Position | null;
 }
 
 export interface CommandResult<T = undefined> {

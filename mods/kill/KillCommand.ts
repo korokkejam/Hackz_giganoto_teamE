@@ -30,8 +30,8 @@ export class KillCommand extends CommandBase {
         const movedPiece = gameState.pieces.find(p => p.id === this.pieceId);
         const move: Move = {
             pieceId: this.pieceId,
-            from: movedPiece?.position ?? null,
-            to: undefined,
+            from: null,
+            to: null,
         };
 
         return {

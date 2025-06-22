@@ -1,21 +1,21 @@
 import { CommandResult, GameState } from './commonTypes';
 import { CommandBase } from './base/CommandBase';
 import { TeleportCommand } from './teleportation/TeleportCommand';
-import {KillCommand} from "./kill/killCommand";
-import {PlaySoundCommand} from "./playsound/playSound";
+import { KillCommand } from './kill/KillCommand';
+import { PlaySoundCommand } from './playsound/PlaySoundCommand';
+
 // ここに新しいクラスをインポート
 
 // Command execution function
-export function createCommand(raw: any, state: GameState): CommandBase<any> {
+export function createCommand<TCommand extends {type: string}, TResult = undefined>(raw: TCommand, gameState: GameState): CommandBase<TResult> {
   
   switch (raw.type) {
     case 'teleport':
-      return new TeleportCommand(raw, state);
+      return new TeleportCommand(raw, gameState) as unknown as CommandBase<TResult>;
     case 'kill':
-      return new KillCommand(raw, state);
-      case 'playSound':
-        return new PlaySoundCommand(raw, state);
-
+      return new KillCommand(raw, gameState) as unknown as CommandBase<TResult>;
+    case 'playSound':
+      return new PlaySoundCommand(raw, gameState) as unknown as CommandBase<TResult>;
     // ここに新しいcaseを追加
     
     default:
@@ -25,7 +25,7 @@ export function createCommand(raw: any, state: GameState): CommandBase<any> {
 }
 
 // フロント側からこの関数を呼び出すことになると思うんだよねー
-export function executeCommand(raw: any, gamestate: GameState): CommandResult {
-  const command = createCommand(raw, gamestate);
+export function executeCommand<TCommand extends {type: string}, TResult = undefined>(raw: TCommand, gamestate: GameState): CommandResult<TResult> {
+  const command = createCommand<TCommand, TResult>(raw, gamestate);
   return command.execute();
 }
