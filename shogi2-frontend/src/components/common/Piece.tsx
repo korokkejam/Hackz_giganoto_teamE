@@ -32,7 +32,7 @@ export default function Piece({pos}:{pos:number[]}){
   return (
     <div className={`piece ${piece?.player===player?"":"turn"} ${turn===player && piece?.player===player?"movable":""} ${eq(pos,focusedPiece?.pos)?"focus":""}`} onClick={onFocus}>
       <img src={pieceImg}/>
-      <p>{piece?.type.name}</p>
+      <p>{piece?.type.name}{pos}</p>
       <div className="cover"/>
     </div>
   );
