@@ -15,7 +15,6 @@ export function createCommand(raw: any, state: GameState): CommandBase<any> {
       return new KillCommand(raw, state);
       case 'playSound':
         return new PlaySoundCommand(raw, state);
-
     // ここに新しいcaseを追加
     
     default:

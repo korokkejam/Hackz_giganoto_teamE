@@ -1,9 +1,11 @@
-import {GameState, Position} from "../commonTypes";
+import
+{GameState, Position} from "../commonTypes";
 import {executeCommand} from "../commandExecutor";
 import {CommandBase} from "../base/CommandBase";
 
 
-export class TeleportCommand extends CommandBase { // 抽象クラスを継承
+// @ts-ignore
+export class backGroundCommand extends CommandBase { // 抽象クラスを継承
     // typeを決めて、必要なフィールドを追加
     type = "backGround";
     pieceId: string;
