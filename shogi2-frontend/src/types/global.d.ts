@@ -7,7 +7,8 @@ type pieceType={
   },
   jumpable:boolean,
   promotion:pieceType|undefined,
-  promotion_callback:string
+  promotion_callback:string,
+  promotion_msg:string[]
 };
 type piece={player:"player1"|"player2",type:pieceType};
 type square={piece:piece|null};

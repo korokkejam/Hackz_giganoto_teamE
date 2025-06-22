@@ -5,6 +5,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import {useAtom, useAtomValue} from "jotai";
 import { boardAtom, playerAtom, wsAtom } from "../../state";
+import { useMemo } from "react";
 
 const style:CSSProperties={
   position:"absolute",
@@ -19,8 +20,8 @@ export default function PromotionDialog({open,onClose,pos}:{open:boolean,onClose
   const [board,setBoard]=useAtom(boardAtom);
   const player=useAtomValue(playerAtom);
   const ws=useAtomValue(wsAtom);
+  const piece=useMemo(()=>board[pos[1]][pos[0]].piece,[board]);
   const promotion=()=>{
-    const piece=board[pos[1]][pos[0]].piece;
     if (!piece || !player || !piece.type.promotion){
       return;
     }
@@ -45,10 +46,10 @@ export default function PromotionDialog({open,onClose,pos}:{open:boolean,onClose
     <Modal open={open} onClose={onClose}>
       <Paper sx={style}>
         <div className="promotiondialog">
-          <h4>成る？</h4>
+          <h4>{piece?.type.promotion_msg[0]?piece.type.promotion_msg[0]:"成る？"}</h4>
           <div>
-            <Button onClick={promotion}>成る</Button>
-            <Button onClick={onClose}>成らない</Button>
+            <Button onClick={promotion}>{piece?.type.promotion_msg[1]?piece.type.promotion_msg[1]:"成る"}</Button>
+            <Button onClick={onClose}>{piece?.type.promotion_msg[2]?piece.type.promotion_msg[2]:"成らない"}</Button>
           </div>
         </div>
       </Paper>
