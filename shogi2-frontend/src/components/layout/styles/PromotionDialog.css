@@ -1,0 +1,8 @@
+.promotiondialog{
+  width:100%;
+  text-align:center;
+}
+
+.promotiondialog > div > *{
+  width:50%;
+}

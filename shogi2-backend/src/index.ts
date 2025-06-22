@@ -27,7 +27,7 @@ app.get("/room/check/:id",(c:Context)=>{
 app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
   const id=c.req.param("id");
   console.log(id);
-  const data=new Data(boards);
+  const data=new Data(boards.map((board)=>board.map((row)=>row.map((s)=>{return{...s}}))));
   return {
     onMessage(event,ws){
       const room=rooms.find((room)=>room.id===id);
@@ -39,6 +39,7 @@ app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
     },
     onOpen(event,ws){
       rooms.push({ws:[ws],id,gamemode:"survival",data});
+      console.log(rooms);
     },
     onClose(event){
       const room=rooms.find((room)=>room.id===id);
@@ -72,6 +73,7 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
       room.ws[0].send(JSON.stringify(d));
       ws.send(JSON.stringify(d));
       room.ws.push(ws);
+      console.log(rooms);
     },
     onClose(event){
       const room=rooms.find((room)=>room.id===id);

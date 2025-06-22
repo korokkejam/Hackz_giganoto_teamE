@@ -1,13 +1,16 @@
 import Piece from "../common/Piece";
 import "./styles/Square.css";
 import {boardAtom,focusedPieceAtom, pieceStorageAtom, playerAtom,wsAtom} from "../../state";
-import {useAtom, useAtomValue,useSetAtom} from "jotai";
+import {useAtom, useAtomValue} from "jotai";
+import { useState } from "react";
+import PromotionDialog from "./PromotionDialog";
 
 export default function Square({pos,square,dye}:{pos:number[],square:square,dye?:boolean}){
   const [focusedPiece,setFocusPiece]=useAtom(focusedPieceAtom);
   const [board,setBoard]=useAtom(boardAtom);
   const player=useAtomValue(playerAtom);
   const ws=useAtomValue(wsAtom);
+  const [open,setOpen]=useState<boolean>(false);
   const [pieceStorage,setPieceStorage]=useAtom(pieceStorageAtom);
   const move=()=>{
     if (dye && focusedPiece && player){
@@ -26,11 +29,15 @@ export default function Square({pos,square,dye}:{pos:number[],square:square,dye?
       }
       const d:request={head:"move",content:board_copied,sender:player};
       ws.send(JSON.stringify(d));
-      console.log(d);
+      if (((player==="player1" && 0<=pos[1] && pos[1]<=2)
+        || (player==="player2" && 6<=pos[1] && pos[1]<=8)) && focusedPiece.piece.type.promotion){
+        setOpen(true);
+      }
     }
   };
   return (
     <div className={`square ${dye?"dye":""}`} onClick={move} style={{width:`calc(100% / ${board[pos[1]].length})`}}>
+      <PromotionDialog open={open} onClose={()=>{setOpen(false)}} pos={pos}/>
       {square.piece
         ? <Piece pos={pos}/>
         : null
