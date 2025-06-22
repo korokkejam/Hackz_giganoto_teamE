@@ -9,7 +9,8 @@ const dragon_king:pieceType={
   },
   jumpable:false,
   promotion:undefined,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const promoted_bishop:pieceType={
@@ -21,7 +22,8 @@ const promoted_bishop:pieceType={
   },
   jumpable:false,
   promotion:undefined,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const promoted_silver:pieceType={
@@ -33,7 +35,8 @@ const promoted_silver:pieceType={
   },
   jumpable:false,
   promotion:undefined,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const promoted_knight:pieceType={
@@ -45,7 +48,8 @@ const promoted_knight:pieceType={
   },
   jumpable:false,
   promotion:undefined,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const promoted_lance:pieceType={
@@ -57,7 +61,8 @@ const promoted_lance:pieceType={
   },
   jumpable:false,
   promotion:undefined,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const lance:pieceType={
@@ -69,7 +74,8 @@ const lance:pieceType={
   },
   jumpable:false,
   promotion:promoted_lance,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const knight:pieceType={
@@ -81,7 +87,8 @@ const knight:pieceType={
   },
   jumpable:true,
   promotion:promoted_knight,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const silver_general:pieceType={
@@ -93,7 +100,8 @@ const silver_general:pieceType={
   },
   jumpable:false,
   promotion:promoted_silver,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:["成りますか？","嫌じゃないかもしれない","嫌です"]
 };
 
 const gold_general:pieceType={
@@ -105,7 +113,8 @@ const gold_general:pieceType={
   },
   jumpable:false,
   promotion:undefined,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const promoted_pawn:pieceType={
@@ -117,7 +126,8 @@ const promoted_pawn:pieceType={
   },
   jumpable:false,
   promotion:undefined,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const king1:pieceType={
@@ -129,7 +139,8 @@ const king1:pieceType={
   },
   jumpable:false,
   promotion:undefined,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const king2:pieceType={
@@ -141,7 +152,8 @@ const king2:pieceType={
   },
   jumpable:false,
   promotion:undefined,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const rook:pieceType={
@@ -153,7 +165,8 @@ const rook:pieceType={
   },
   jumpable:false,
   promotion:dragon_king,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const bishop:pieceType={
@@ -165,7 +178,8 @@ const bishop:pieceType={
   },
   jumpable:false,
   promotion:promoted_bishop,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const pawn:pieceType={
@@ -177,7 +191,8 @@ const pawn:pieceType={
   },
   jumpable:false,
   promotion:promoted_pawn,
-  promotion_callback:""
+  promotion_callback:"",
+  promotion_msg:[]
 };
 
 const pieces:pieceType[]=[lance,knight,silver_general,gold_general,king1,king2,rook,bishop,pawn,]
