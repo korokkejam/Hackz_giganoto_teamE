@@ -44,3 +44,4 @@ const ki:pieceType={
   },
   jumpable:true
 };
+  
