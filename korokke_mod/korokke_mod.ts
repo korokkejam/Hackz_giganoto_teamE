@@ -44,4 +44,28 @@ const ki:pieceType={
   },
   jumpable:true
 };
-  
+const pawn:pieceType={
+  name:"ポ",movable:{
+    relative:[[0,1],[0,2]],
+    absolute:[],
+    func:""
+  },
+  jumpable:false
+};
+const oh:pieceType={
+  name:"oh",movable:{
+    relative:[[1,2],[-1,1]],
+    absolute:[],
+    func:""
+    //oh!!!
+  },
+  jumpable:false  
+};
+const emoji:pieceType={
+  name:"🤔",movable:{
+    relative:[[0,1],[1,0],[-1,0],[0,-1]],
+    absolute:[[0,0],[0,8],[8,0],[8,8]],
+    func:""
+  },
+  jumpable:true
+};
