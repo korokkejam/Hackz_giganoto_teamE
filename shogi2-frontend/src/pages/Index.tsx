@@ -2,7 +2,7 @@ import "./styles/Index.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useState} from "react";
-import {wsAtom,playerAtom,boardAtom} from "../state";
+import {wsAtom,playerAtom,boardAtom, pieceStorageAtom} from "../state";
 import {useSetAtom} from "jotai";
 import {useNavigate} from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -13,6 +13,7 @@ export default function Index(){
   const setWs=useSetAtom(wsAtom);
   const setPlayer=useSetAtom(playerAtom);
   const setBoard=useSetAtom(boardAtom);
+  const setStorage=useSetAtom(pieceStorageAtom);
   const navigate=useNavigate();
   const [loading,setLoading]=useState<boolean>(false);
   const checkRoomExists=()=>{
@@ -39,6 +40,7 @@ export default function Index(){
       if (d.head==="ready"){
         const board:boardData=d.content;
         setBoard(board.boards[0]);
+        setStorage(board.player2_storage);
         setWs(ws);
         setPlayer("player2");
         navigate("/game");
@@ -55,6 +57,7 @@ export default function Index(){
       if (d.head==="ready"){
         setLoading(false);
         const board:boardData=d.content;
+        setStorage(board.player1_storage);
         setBoard(board.boards[0]);
         setWs(ws);
         navigate("/game");

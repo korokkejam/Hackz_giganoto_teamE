@@ -27,7 +27,7 @@ export default function PromotionDialog({open,onClose,pos}:{open:boolean,onClose
     }
     const bb=board.map((row,y)=>row.map((s,x)=>{
       if (x===pos[0] && y===pos[1] && player && piece.type.promotion){
-        const a:piece={type:piece.type.promotion,player};
+        const a:piece={type:piece.type.promotion,owner:player,id:""};
         const b:square={piece:a};
         return b;
       }else{

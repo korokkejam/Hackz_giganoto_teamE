@@ -7,6 +7,8 @@ import {rooms,setRooms} from "./game/rooms";
 import Data from "./game/board";
 import {request} from "./types/global";
 
+import setup from "./mods/addpieces/index";
+
 const app=new Hono();
 
 const {injectWebSocket,upgradeWebSocket}=createNodeWebSocket({app});
@@ -27,7 +29,8 @@ app.get("/room/check/:id",(c:Context)=>{
 app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
   const id=c.req.param("id");
   console.log(id);
-  const data=new Data(boards.map((board)=>board.map((row)=>row.map((s)=>{return{...s}}))));
+  let data=new Data(boards.map((board)=>board.map((row)=>row.map((s)=>{return{...s}}))));
+  setup(data);
   return {
     onMessage(event,ws){
       const room=rooms.find((room)=>room.id===id);
@@ -69,7 +72,7 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
       if (!room){
         return;
       }
-      const d:request={head:"ready",content:room.data.data};
+      const d:request={head:"ready",content:{room:room.data.data,piece:[]}};
       room.ws[0].send(JSON.stringify(d));
       ws.send(JSON.stringify(d));
       room.ws.push(ws);

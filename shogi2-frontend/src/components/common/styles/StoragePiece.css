@@ -1,0 +1,44 @@
+.storagepiece{
+  width:100px;
+  height:100px;
+  position:relative;
+}
+
+.storagepiece.movable:hover{
+  cursor:pointer;
+}
+
+.cover{
+  width:100%;
+  height:100%;
+  position:absolute;
+  left:0;
+  top:0;
+  z-index:50;
+  display:none;
+  background:#0005;
+}
+
+.storagepiece.focus > .cover{
+  display:block;
+}
+
+.storagepiece.turn > img{
+  transform:rotate(180deg);
+}
+
+.storagepiece > img{
+  width:100%;
+  height:100%;
+}
+
+.storagepiece > p{
+  margin:0;
+  transform:translate(-50%,-50%);
+  left:50%;
+  top:50%;
+  position:absolute;
+  user-select:none;
+  font-family: tsuyoku;
+  font-size: 150%;
+}

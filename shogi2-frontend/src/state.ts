@@ -5,6 +5,8 @@ const playerAtom=atom<"player1"|"player2"|undefined>("player1");
 const turnAtom=atom<"player1"|"player2">("player1");
 const wsAtom=atom<WebSocket|null>(null);
 const focusedPieceAtom=atom<{pos:number[],piece:piece}|null>(null);
-const pieceStorageAtom=atom<piece[]>([]);
+const pieceStorageAtom=atom<pieceType[]>([]);
+const putPieceAtom=atom<number|undefined>(undefined);
+const pieceTypesAtom=atom<pieceType[]>([]);
 
-export {boardAtom,playerAtom,turnAtom,wsAtom,focusedPieceAtom,pieceStorageAtom};
+export {boardAtom,playerAtom,turnAtom,wsAtom,focusedPieceAtom,pieceStorageAtom,putPieceAtom,pieceTypesAtom};

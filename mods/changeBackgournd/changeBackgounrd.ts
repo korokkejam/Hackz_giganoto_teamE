@@ -1,4 +1,4 @@
-import { GameState, Position, CommandResult } from "../commonTypes";
+import { GameState, CommandResult } from "../commonTypes";
 import { CommandBase } from "../base/CommandBase";
 
 interface ChangeBackgroundResult {

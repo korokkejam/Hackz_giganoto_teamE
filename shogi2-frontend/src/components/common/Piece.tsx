@@ -21,7 +21,7 @@ export default function Piece({pos}:{pos:number[]}){
     if (!piece){
       return;
     }
-    if (turn===player && piece.player===player){
+    if (turn===player && piece.owner===player){
       if (eq(pos,focusedPiece?.pos)){
         setFocusedPiece(null);
       }else{
@@ -30,7 +30,7 @@ export default function Piece({pos}:{pos:number[]}){
     }
   };
   return (
-    <div className={`piece ${piece?.player===player?"":"turn"} ${turn===player && piece?.player===player?"movable":""} ${eq(pos,focusedPiece?.pos)?"focus":""}`} onClick={onFocus}>
+    <div className={`piece ${piece?.owner===player?"":"turn"} ${turn===player && piece?.owner===player?"movable":""} ${eq(pos,focusedPiece?.pos)?"focus":""}`} onClick={onFocus}>
       <img src={pieceImg}/>
       <p>{piece?.type.name}</p>
       <div className="cover"/>

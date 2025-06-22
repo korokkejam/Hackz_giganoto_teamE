@@ -35,14 +35,14 @@ export default function Board(){
     }
     const {pos,piece}=focusedPiece;
     const b=[...board];
-    const absolute=piece.type.movable.absolute.filter((p)=>b[p[1]][p[0]].piece?.player!==player)
-      .map((p)=>player==="player2"?[8-p[0],8-p[1]]:p);
+    const absolute=piece.type.movable.absolute.filter((p)=>b[p[1]][p[0]].piece?.owner!==player)
+      // .map((p)=>player==="player2"?[8-p[0],8-p[1]]:p);
     const positions=piece.type.movable.relative.map((p)=>[p[0],p[1]*(player==="player2"?-1:1)])
       .map((p)=>[pos[0]-p[0],pos[1]-p[1]])
       .filter((p)=>0<=p[1] && b.length>p[1] && 0<=p[0] && b[p[1]].length>p[0]);
     const over_enemy=positions
       .filter((p)=>b[p[1]][p[0]].piece)
-      .filter((p)=>b[p[1]][p[0]].piece?.player!==player);
+      .filter((p)=>b[p[1]][p[0]].piece?.owner!==player);
     const empty=positions
       .filter((p)=>!b[p[1]][p[0]].piece);
     const relative=[...empty,...over_enemy].filter((p)=>{
@@ -59,10 +59,10 @@ export default function Board(){
         const x=i*step_x+pos[0];
         const y=i*step_y+pos[1];
         if (x>=0 && 8>=x && y>=0 && 8>=y){
-          if (b[y][x].piece && b[y][x].piece?.player!==player){
+          if (b[y][x].piece && b[y][x].piece?.owner!==player){
             count+=1;
           }
-          if (b[y][x].piece?.player===player || (count>0 && b[y][x].piece?.player!==player)){
+          if (b[y][x].piece?.owner===player || (count>0 && b[y][x].piece?.owner!==player)){
             return false;
           }
         }

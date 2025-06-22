@@ -38,6 +38,7 @@ export class TeleportCommand extends CommandBase<TeleportResult> { // 抽象ク�
     return {
       data: {
         gameState: {
+          ...this.gameState,
           pieces: updatedPieces,
           turn: this.gameState.turn,
           history: [...this.gameState.history, move],
