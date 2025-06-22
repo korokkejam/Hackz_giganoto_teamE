@@ -1,23 +1,26 @@
-import {GameState, Position} from "../commonTypes";
-import {executeCommand} from "../commandExecutor";
-import {CommandBase} from "../base/CommandBase";
+import { GameState, Position, CommandResult } from "../commonTypes";
+import { CommandBase } from "../base/CommandBase";
 
+interface ChangeBackgroundResult {
+    color: string;
+}
 
-export class TeleportCommand extends CommandBase { // 抽象クラスを継承
+export class ChangeBackgroundCommand extends CommandBase<ChangeBackgroundResult> { // 抽象クラスを継承
     // typeを決めて、必要なフィールドを追加
-    type = "backGround";
-    pieceId: string;
-    to: Position;
-
+    type = "changeBackground";
+    color: string;
+    
     constructor(raw: any, gameState: GameState) {
         super(raw, gameState);
-        this.pieceId = raw.pieceId;
-        this.to = raw.to;
+        this.color = raw.color || '#ffffff'; // デフォルトは白
     }
-    executeCommand(gameState: GameState): GameState {
+
+    async execute(): Promise<CommandResult<ChangeBackgroundResult>> {
         return {
-            ...gameState,
-            pieces: gameState.pieces,
+            data:
+            {
+                color: this.color,
+            },
         };
     }
 }

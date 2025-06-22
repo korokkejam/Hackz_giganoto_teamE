@@ -1,10 +1,12 @@
 import { CommandResult, GameState, Move, Position} from '../commonTypes';
 import {CommandBase} from '../base/CommandBase';
 
-export class KillCommand extends CommandBase {
-    execute(): CommandResult<undefined> {
-        throw new Error('Method not implemented.');
-    } // 抽象クラスを継承
+interface KillResult {
+    gameState: GameState;
+}
+
+export class KillCommand extends CommandBase<KillResult> {
+    // 抽象クラスを継承
     // typeを決めて、必要なフィールドを追加
     type = "kill";
     pieceId: string;
@@ -17,17 +19,15 @@ export class KillCommand extends CommandBase {
     }
 
     // コマンドの機能本体
-    // @ts-ignore
-    executeCommand(gameState: GameState): GameState {
-        const updatedPieces = gameState.pieces.map(piece => {
+    async execute(): Promise<CommandResult<KillResult>> {
+        const updatedPieces = this.gameState.pieces.map(piece => {
             if (piece.id === this.pieceId) {
                 return { ...piece, position: this.to };
             }
             return piece;
         });
 
-        // @ts-ignore
-        const movedPiece = gameState.pieces.find(p => p.id === this.pieceId);
+        const movedPiece = this.gameState.pieces.find(p => p.id === this.pieceId);
         const move: Move = {
             pieceId: this.pieceId,
             from: null,
@@ -35,9 +35,13 @@ export class KillCommand extends CommandBase {
         };
 
         return {
-            ...gameState,
-            pieces: updatedPieces,
-            history: [...gameState.history, move],
+            data: {
+                gameState: {
+                    ...this.gameState,
+                    pieces: updatedPieces,
+                    history: [...this.gameState.history, move],
+                },
+            },
         };
     }
 }

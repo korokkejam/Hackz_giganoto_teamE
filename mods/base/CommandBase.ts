@@ -12,5 +12,5 @@ export abstract class CommandBase<T = undefined> {
     }
 
     // 抽象メソッド
-    abstract execute(): CommandResult<T>;
+    abstract execute(): Promise<CommandResult<T>>;
 }

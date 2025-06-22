@@ -1,16 +1,20 @@
 import { CommandBase } from '../base/CommandBase';
 import { Position, CommandResult } from '../commonTypes';
 
-export class CococomaiCommand extends CommandBase<Position[]> {
+interface CococomaiResult {
+    restrictedPositions: Position[];
+}
+
+export class CococomaiCommand extends CommandBase<CococomaiResult> {
     type = 'cococomai';
 
-    execute(): CommandResult<Position[]> {
+    async execute(): Promise<CommandResult<CococomaiResult>> {
         const king = this.gameState.pieces.find(
             (p) => p.type === 'king' && p.owner === this.gameState.turn
         );
 
         if (!king || !king.position) {
-            return { data: [] }; // 王がいない場合は空配列
+            return { data: { restrictedPositions: [] } }; // 王がいない場合は空配列
         }
 
         const { x, y } = king.position;
@@ -28,7 +32,9 @@ export class CococomaiCommand extends CommandBase<Position[]> {
         }
 
         return {
-            data: restrictedPositions,
+            data: {
+                restrictedPositions,
+            },
         };
     }
 }

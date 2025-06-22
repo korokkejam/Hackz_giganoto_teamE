@@ -20,7 +20,7 @@ export class TeleportCommand extends CommandBase<TeleportResult> { // 抽象ク�
   }
 
   // コマンドの機能本体
-  execute(): CommandResult<TeleportResult> { // ←返り値の型をこんなふうにする
+  async execute(): Promise<CommandResult<TeleportResult>> { // ←返り値の型をこんなふうにする
     const updatedPieces = this.gameState.pieces.map(piece => {
       if (piece.id === this.pieceId) {
         return { ...piece, position: this.to };

@@ -8,7 +8,7 @@ interface playSoundResult {
 }
 
 export class PlaySoundCommand extends CommandBase<playSoundResult> {
-    execute(): CommandResult<playSoundResult> {
+    async execute(): Promise<CommandResult<playSoundResult>> {
         throw new Error('Method not implemented.');
     } // 抽象クラスを継承
     // typeを決めて、必要なフィールドを追加
