@@ -2,7 +2,7 @@ import "./styles/Game.css";
 import Board from "../components/layout/Board";
 import { useEffect, useState } from "react";
 import { useSetAtom, useAtomValue, useAtom } from "jotai";
-import { boardAtom, pieceStorageAtom, playerAtom, turnAtom, wsAtom } from "../state";
+import { boardAtom, pieceStorageAtom, pieceTypesAtom, playerAtom, turnAtom, wsAtom } from "../state";
 import StoragePiece from "../components/common/StoragePiece";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -23,12 +23,13 @@ const style:CSSProperties={
 };
 
 export default function Game(){
+  const pieces=useAtomValue(pieceTypesAtom);
   const [board,setBoard]=useAtom(boardAtom);
   const player=useAtomValue(playerAtom);
   const [value,setValue]=useState<string>("");
   const navigate=useNavigate();
   const [text,setText]=useState<string|null>(null);
-  const pieceStorage=useAtomValue(pieceStorageAtom);
+  const [pieceStorage,setPieceStorage]=useAtom(pieceStorageAtom);
   const ws=useAtomValue(wsAtom);
   const setTurn=useSetAtom(turnAtom);
   useEffect(()=>{
@@ -95,6 +96,17 @@ export default function Game(){
           ws.send(JSON.stringify(d));
         }else if (value.split(" ")[0]==="give"){
           const a=value.split(" ");
+          const p=a[1];
+          const piece=pieces.find((piece)=>piece.name===p);
+          if (!piece){
+            return;
+          }
+          const n=a[2]?Number(a[2]):1;
+          let b=[];
+          for (let i=0;n>i;i++){
+            b.push(piece);
+          }
+          setPieceStorage([...pieceStorage,...b]);
         }
         setValue("");
       }}>送信</Button>

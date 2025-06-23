@@ -8,12 +8,12 @@ import {useNavigate} from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Index(){
+  const setPieces=useSetAtom(pieceStorageAtom);
   const [name,setName]=useState<string>("");
   const [error,setError]=useState<string>("");
   const setWs=useSetAtom(wsAtom);
   const setPlayer=useSetAtom(playerAtom);
   const setBoard=useSetAtom(boardAtom);
-  const setStorage=useSetAtom(pieceStorageAtom);
   const navigate=useNavigate();
   const [loading,setLoading]=useState<boolean>(false);
   const checkRoomExists=()=>{
@@ -38,9 +38,10 @@ export default function Index(){
     ws.onmessage=((e:MessageEvent)=>{
       const d:request=JSON.parse(e.data);
       if (d.head==="ready"){
-        const board:boardData=d.content;
+        const board:boardData=d.content.room;
+        const pieces:pieceType[]=d.content.pieces;
+        setPieces(pieces);
         setBoard(board.boards[0]);
-        setStorage(board.player2_storage);
         setWs(ws);
         setPlayer("player2");
         navigate("/game");
@@ -56,15 +57,16 @@ export default function Index(){
       const d:request=JSON.parse(e.data);
       if (d.head==="ready"){
         setLoading(false);
-        const board:boardData=d.content;
-        setStorage(board.player1_storage);
+        const board:boardData=d.content.room;
+        const pieces:pieceType[]=d.content.pieces;
+        setPieces(pieces);
         setBoard(board.boards[0]);
         setWs(ws);
         navigate("/game");
       }
     });
     ws.onopen=()=>{
-        setPlayer("player1");
+      setPlayer("player1");
       setLoading(true);
       setWs(ws);
     }

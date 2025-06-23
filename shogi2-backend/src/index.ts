@@ -7,6 +7,9 @@ import {rooms,setRooms} from "./game/rooms";
 import Data from "./game/board";
 import {request} from "./types/global";
 
+import p1 from "./mods/addpieces/pieces";
+import {pieces} from "./config/piece";
+
 import setup from "./mods/addpieces/index";
 
 const app=new Hono();
@@ -40,16 +43,12 @@ app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
       room.data.change();
       room.data.update(event,room.ws);
     },
-    onOpen(event,ws){
+    onOpen(_event,ws){
       rooms.push({ws:[ws],id,gamemode:"survival",data});
-      console.log(rooms);
+      // console.log(rooms);
     },
     onClose(event){
-      const room=rooms.find((room)=>room.id===id);
-      room?.ws.map((ws)=>ws.send("disconnected"));
-      setRooms(rooms.filter((room)=>room.id!==id));
-      console.log(event.code);
-      console.log(event.reason);
+      console.log(event);
     },
     onError(event){
       console.log(event);
@@ -61,29 +60,25 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
   const id=c.req.param("id");
   const room=rooms.find((room)=>room.id===id);
   return {
-    onMessage(event,ws){
+    onMessage(event,_ws){
       if (!room){
         return;
       }
       room.data.change();
       room.data.update(event,room.ws);
     },
-    onOpen(event,ws){
+    onOpen(_event,ws){
       if (!room){
         return;
       }
-      const d:request={head:"ready",content:{room:room.data.data,piece:[]}};
+      const d:request={head:"ready",content:{room:room.data.data,pieces:[...p1,...pieces]}};
       room.ws[0].send(JSON.stringify(d));
       ws.send(JSON.stringify(d));
       room.ws.push(ws);
       console.log(rooms);
     },
     onClose(event){
-      const room=rooms.find((room)=>room.id===id);
-      room?.ws.map((ws)=>ws.send("disconnected"));
-      setRooms(rooms.filter((room)=>room.id!==id));
-      console.log(event.code);
-      console.log(event.reason);
+      console.log(event);
     },
     onError(event){
       console.log(event);

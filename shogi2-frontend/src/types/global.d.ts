@@ -9,6 +9,13 @@ type request={head:string,content:any,sender?:string};
 type boardData={
   boards:board[],
   turn:"player1"|"player2",
+  player1_current_board:number,
+  player2_current_board:number,
+  player1_point:number,
+  player2_point:number,
+  player1_redbull:number,
+  player2_redbull:number,
+  history: Move[],
   player1_storage:pieceType[],
   player2_storage:pieceType[]
 };
