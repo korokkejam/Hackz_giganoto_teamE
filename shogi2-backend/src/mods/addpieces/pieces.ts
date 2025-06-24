@@ -1,6 +1,6 @@
-import {pieceType} from "../../types/global";
+import {PieceType} from "shogi2-types";
 
-const wall:pieceType={
+const wall:PieceType={
   name:"壁",
   movable:{
     relative:[],
@@ -14,7 +14,7 @@ const wall:pieceType={
   promotion_msg:[],
   king:false
 };
-const knight_chess:pieceType={
+const knight_chess:PieceType={
   name:"騎士",
   movable:{
     relative:[[1,2],[-1,2],[2,1],[2,-1],[-2,1],[-2,-1],[1,-2],[-1,-2]],
@@ -28,7 +28,7 @@ const knight_chess:pieceType={
   promotion_msg:[],
   king:false
 };
-const redbull:pieceType={
+const redbull:PieceType={
   name:"赤牛",
   movable:{
     relative:[[1,0],[0,1],[-1,0],[0,-1]],
@@ -55,7 +55,7 @@ const redbull:pieceType={
   promotion_msg:["翼を授かりますか？","授かる","授からない"],
   king:false
 };
-const superman:pieceType={
+const superman:PieceType={
   name:"超人",
   movable:{
     relative:[[2,2],[-2,2],[2,-2],[-2,-2]],
@@ -69,7 +69,7 @@ const superman:pieceType={
   promotion_msg:[],
   king:false
 };
-const ki:pieceType={
+const ki:PieceType={
   name:"奇",movable:{
     relative:[],
     absolute:[],
@@ -82,7 +82,7 @@ const ki:pieceType={
   promotion_msg:[],
   king:false
 };
-const pawn:pieceType={
+const pawn:PieceType={
   name:"ポ",movable:{
     relative:[[0,1],[0,2]],
     absolute:[],
@@ -95,7 +95,7 @@ const pawn:pieceType={
   promotion_msg:[],
   king:false
 };
-const oh:pieceType={
+const oh:PieceType={
   name:"oh",movable:{
     relative:[[1,2],[-1,1]],
     absolute:[],
@@ -109,7 +109,7 @@ const oh:pieceType={
   promotion_msg:[],
   king:false  
 };
-const emoji:pieceType={
+const emoji:PieceType={
   name:"🤔",movable:{
     relative:[[0,1],[1,0],[-1,0],[0,-1]],
     absolute:[[0,0],[0,8],[8,0],[8,8]],

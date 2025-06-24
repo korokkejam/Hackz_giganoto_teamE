@@ -1,6 +1,6 @@
-import {pieceType} from "../types/global";
+import { PieceType } from "shogi2-types";
 
-const dark_king:pieceType={
+const dark_king:PieceType={
   src:"",
   name:"魔王",
   movable:{
@@ -15,7 +15,7 @@ const dark_king:pieceType={
   king:true
 };
 
-const dragon_king:pieceType={
+const dragon_king:PieceType={
   src:"",
   name:"龍王",
   movable:{
@@ -30,7 +30,7 @@ const dragon_king:pieceType={
   king:false
 };
 
-const promoted_bishop:pieceType={
+const promoted_bishop:PieceType={
   src:"",
   name:"龍馬",
   movable:{
@@ -45,7 +45,7 @@ const promoted_bishop:pieceType={
   king:false
 };
 
-const promoted_silver:pieceType={
+const promoted_silver:PieceType={
   src:"",
   name:"成銀",
   movable:{
@@ -60,7 +60,7 @@ const promoted_silver:pieceType={
   king:false
 };
 
-const promoted_knight:pieceType={
+const promoted_knight:PieceType={
   src:"",
   name:"成桂",
   movable:{
@@ -75,7 +75,7 @@ const promoted_knight:pieceType={
   king:false
 };
 
-const promoted_lance:pieceType={
+const promoted_lance:PieceType={
   src:"",
   name:"成香",
   movable:{
@@ -90,7 +90,7 @@ const promoted_lance:pieceType={
   king:false
 };
 
-const lance:pieceType={
+const lance:PieceType={
   src:"",
   name:"香",
   movable:{
@@ -105,7 +105,7 @@ const lance:pieceType={
   king:false
 };
 
-const knight:pieceType={
+const knight:PieceType={
   src:"",
   name:"桂",
   movable:{
@@ -120,7 +120,7 @@ const knight:pieceType={
   king:false
 };
 
-const silver_general:pieceType={
+const silver_general:PieceType={
   src:"",
   name:"銀",
   movable:{
@@ -135,7 +135,7 @@ const silver_general:pieceType={
   king:false
 };
 
-const gold_general:pieceType={
+const gold_general:PieceType={
   src:"",
   name:"金",
   movable:{
@@ -150,7 +150,7 @@ const gold_general:pieceType={
   king:false
 };
 
-const promoted_pawn:pieceType={
+const promoted_pawn:PieceType={
   src:"",
   name:"と金",
   movable:{
@@ -165,7 +165,7 @@ const promoted_pawn:pieceType={
   king:false
 };
 
-const king1:pieceType={
+const king1:PieceType={
   src:"",
   name:"王",
   movable:{
@@ -180,7 +180,7 @@ const king1:pieceType={
   king:true
 };
 
-const king2:pieceType={
+const king2:PieceType={
   src:"",
   name:"玉",
   movable:{
@@ -195,7 +195,7 @@ const king2:pieceType={
   king:true
 };
 
-const rook:pieceType={
+const rook:PieceType={
   src:"",
   name:"飛",
   movable:{
@@ -210,7 +210,7 @@ const rook:pieceType={
   king:false
 };
 
-const bishop:pieceType={
+const bishop:PieceType={
   src:"",
   name:"角",
   movable:{
@@ -225,7 +225,7 @@ const bishop:pieceType={
   king:false
 };
 
-const pawn:pieceType={
+const pawn:PieceType={
   src:"",
   name:"歩",
   movable:{
@@ -240,7 +240,7 @@ const pawn:pieceType={
   king:false
 };
 
-const pieces:pieceType[]=[lance,knight,silver_general,gold_general,king1,king2,rook,bishop,pawn,]
+const pieces:PieceType[]=[lance,knight,silver_general,gold_general,king1,king2,rook,bishop,pawn,]
 // dragon_king, promoted_bishop, promoted_silver, promoted_knight, promoted_lance, promoted_pawn
 
 

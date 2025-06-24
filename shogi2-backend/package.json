@@ -21,6 +21,7 @@
     "hono": "^4.8.0",
     "nodemon": "^3.1.10",
     "react-router-dom": "^7.6.2",
+    "shogi2-types": "file:../shogi2-types",
     "ws": "^8.18.2"
   }
 }

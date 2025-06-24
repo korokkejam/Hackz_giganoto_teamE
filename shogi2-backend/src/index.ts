@@ -3,14 +3,11 @@ import {serve} from "@hono/node-server";
 import {cors} from "hono/cors";
 import {boards} from "./config/board";
 import {createNodeWebSocket} from "@hono/node-ws";
-import {rooms,setRooms} from "./game/rooms";
+import {rooms} from "./game/rooms";
 import Data from "./game/board";
-import {request} from "./types/global";
-
-import p1 from "./mods/addpieces/pieces";
-import {pieces} from "./config/piece";
-
-import setup from "./mods/addpieces/index";
+import {Request,Square} from "shogi2-types";
+import fs from "fs";
+import {setMods,loadMods} from "./load";
 
 const app=new Hono();
 
@@ -24,6 +21,10 @@ const logger=async (c:Context,next:Next)=>{
 app.use("*",logger);
 app.use("*",cors());
 
+app.get("/test",(c:Context)=>{
+  return c.text("hello");
+});
+
 app.get("/room/check/:id",(c:Context)=>{
   const id=c.req.param("id");
   return c.text(rooms.map((room)=>room.id).includes(id)?"yes":"no");
@@ -31,11 +32,9 @@ app.get("/room/check/:id",(c:Context)=>{
 
 app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
   const id=c.req.param("id");
-  console.log(id);
-  let data=new Data(boards.map((board)=>board.map((row)=>row.map((s)=>{return{...s}}))));
-  setup(data);
+  let data=new Data(boards.map((board:Square[][])=>board.map((row)=>row.map((s)=>{return{...s}}))));
   return {
-    onMessage(event,ws){
+    onMessage(event,_ws){
       const room=rooms.find((room)=>room.id===id);
       if (!room){
         return;
@@ -45,7 +44,6 @@ app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
     },
     onOpen(_event,ws){
       rooms.push({ws:[ws],id,gamemode:"survival",data});
-      // console.log(rooms);
     },
     onClose(event){
       console.log(event);
@@ -71,11 +69,10 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
       if (!room){
         return;
       }
-      const d:request={head:"ready",content:{room:room.data.data,pieces:[...p1,...pieces]}};
+      const d:Request={head:"ready",content:room.data.data};
       room.ws[0].send(JSON.stringify(d));
       ws.send(JSON.stringify(d));
       room.ws.push(ws);
-      console.log(rooms);
     },
     onClose(event){
       console.log(event);
@@ -86,8 +83,14 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
   };
 }));
 
-const server=serve({ fetch: app.fetch, port: 3000 }, () => {
-  console.log("Server is running on http://localhost:3000")
-});
+fs.readdir("src/mods/",(_,d)=>{
+  loadMods(d).then((mods)=>{
+    setMods(mods);
 
-injectWebSocket(server);
+    const server=serve({ fetch: app.fetch, port: 3000 }, () => {
+      console.log("Server is running on http://localhost:3000")
+    });
+
+    injectWebSocket(server);
+  });
+});

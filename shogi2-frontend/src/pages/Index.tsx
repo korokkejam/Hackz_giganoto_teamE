@@ -6,6 +6,7 @@ import {wsAtom,playerAtom,boardAtom, pieceStorageAtom} from "../state";
 import {useSetAtom} from "jotai";
 import {useNavigate} from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Game, PieceType, Request} from "shogi2-types";
 
 export default function Index(){
   const setPieces=useSetAtom(pieceStorageAtom);
@@ -36,12 +37,13 @@ export default function Index(){
     }
     const ws=new WebSocket(`ws://localhost:3000/room/enter/${name}`);
     ws.onmessage=((e:MessageEvent)=>{
-      const d:request=JSON.parse(e.data);
+      const d:Request=JSON.parse(e.data);
       if (d.head==="ready"){
-        const board:boardData=d.content.room;
-        const pieces:pieceType[]=d.content.pieces;
+        const data:Game=d.content;
+        const board=data.boards[0];
+        const pieces:PieceType[]=data.pieces;
         setPieces(pieces);
-        setBoard(board.boards[0]);
+        setBoard(board);
         setWs(ws);
         setPlayer("player2");
         navigate("/game");
@@ -54,13 +56,14 @@ export default function Index(){
     }
     const ws=new WebSocket(`ws://localhost:3000/room/create/${name}`);
     ws.onmessage=((e:MessageEvent)=>{
-      const d:request=JSON.parse(e.data);
+      const d:Request=JSON.parse(e.data);
       if (d.head==="ready"){
+        const data:Game=d.content;
         setLoading(false);
-        const board:boardData=d.content.room;
-        const pieces:pieceType[]=d.content.pieces;
+        const board=data.boards[0];
+        const pieces:PieceType[]=data.pieces;
         setPieces(pieces);
-        setBoard(board.boards[0]);
+        setBoard(board);
         setWs(ws);
         navigate("/game");
       }

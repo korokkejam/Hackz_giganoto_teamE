@@ -1,8 +1,10 @@
 import "./styles/Board.css";
 import {boardAtom,playerAtom,focusedPieceAtom} from "../../state";
 import {useAtomValue} from "jotai";
-import Square from "./Square";
+import SquareComponent from "./Square";
 import {useMemo} from "react";
+import type {board} from "shogi2-types";
+import {Square} from "shogi2-types";
 
 const convert=(board:board)=>{
   return board.map((row,i)=>{
@@ -12,13 +14,13 @@ const convert=(board:board)=>{
   });
 };
 
-const reverse_board=(v:{row:{square:square,index:number}[],index:number}[])=>{
+const reverse_board=(v:{row:{square:Square,index:number}[],index:number}[])=>{
   const index=v.map((_,i)=>i);
   index.reverse();
   return index.map((i)=>v[i]);
 };
 
-const reverse_row=(v:{square:square,index:number}[])=>{
+const reverse_row=(v:{square:Square,index:number}[])=>{
   const index=v.map((_,i)=>i);
   index.reverse();
   return index.map((i)=>v[i]);
@@ -90,7 +92,7 @@ export default function Board(){
       {(player==="player1"?converted_board:reverse_board(converted_board)).map((r)=>
         <div className="row" style={{height:`calc(100% / ${board.length})`}}>
           {(player==="player1"?r.row:reverse_row(r.row)).map((s)=>
-            <Square
+            <SquareComponent
               pos={[s.index,r.index]}
               square={s.square}
               dye={move?move.includes(`${s.index},${r.index}`):false}

@@ -4,8 +4,9 @@ import {boardAtom,focusedPieceAtom, pieceStorageAtom, playerAtom,putPieceAtom,ws
 import {useAtom, useAtomValue} from "jotai";
 import { useState } from "react";
 import PromotionDialog from "./PromotionDialog";
+import {Square,Request} from "shogi2-types";
 
-export default function Square({pos,square,dye}:{pos:number[],square:square,dye?:boolean}){
+export default function Square({pos,square,dye}:{pos:number[],square:Square,dye?:boolean}){
   const [putPiece,setPutPiece]=useAtom(putPieceAtom);
   const [focusedPiece,setFocusPiece]=useAtom(focusedPieceAtom);
   const [board,setBoard]=useAtom(boardAtom);
@@ -32,14 +33,14 @@ export default function Square({pos,square,dye}:{pos:number[],square:square,dye?
       if (!ws){
         return;
       }
-      const d:request={head:"move",content:board_copied,sender:player};
+      const d:Request={head:"move",content:board_copied,sender:player};
       ws.send(JSON.stringify(d));
     }else if (dye && focusedPiece && player){
       let board_copied=board.map((r)=>r.map((s)=>{return {...s}}));
       const s=board_copied[pos[1]][pos[0]];
       if (s.piece?.owner && s.piece.owner!==player){
         if (s.piece.type.king){
-          const data:request={head:"kill",content:"",sender:player};
+          const data:Request={head:"kill",content:"",sender:player};
           ws.send(JSON.stringify(data));
         }
         setPieceStorage([...pieceStorage,s.piece.type]);
@@ -48,7 +49,7 @@ export default function Square({pos,square,dye}:{pos:number[],square:square,dye?
       board_copied[focusedPiece.pos[1]][focusedPiece.pos[0]]={piece:null};
       setBoard(board_copied);
       setFocusPiece(null);
-      const d:request={head:"move",content:board_copied,sender:player};
+      const d:Request={head:"move",content:board_copied,sender:player};
       ws.send(JSON.stringify(d));
       if (((player==="player1" && 0<=pos[1] && pos[1]<=2)
         || (player==="player2" && 6<=pos[1] && pos[1]<=8)) && focusedPiece.piece.type.promotion){

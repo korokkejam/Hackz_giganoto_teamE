@@ -1,0 +1,15 @@
+{
+  "name": "shogi2-types",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build":"tsc",
+    "prepare":"npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "main":"dist/index.js",
+  "types":"dist/index.d.ts"
+}

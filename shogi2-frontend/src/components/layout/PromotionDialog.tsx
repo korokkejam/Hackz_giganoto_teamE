@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import {useAtom, useAtomValue} from "jotai";
 import { boardAtom, playerAtom, wsAtom } from "../../state";
 import { useMemo } from "react";
+import {Piece,Square,Request} from "shogi2-types";
 
 const style:CSSProperties={
   position:"absolute",
@@ -27,8 +28,8 @@ export default function PromotionDialog({open,onClose,pos}:{open:boolean,onClose
     }
     const bb=board.map((row,y)=>row.map((s,x)=>{
       if (x===pos[0] && y===pos[1] && player && piece.type.promotion){
-        const a:piece={type:piece.type.promotion,owner:player,id:""};
-        const b:square={piece:a};
+        const a:Piece={type:piece.type.promotion,owner:player,id:""};
+        const b:Square={piece:a};
         return b;
       }else{
         return {...s};
@@ -38,7 +39,7 @@ export default function PromotionDialog({open,onClose,pos}:{open:boolean,onClose
     if (!ws){
       return;
     }
-    const data:request={head:"promotion",content:bb,sender:player};
+    const data:Request={head:"promotion",content:bb,sender:player};
     ws.send(JSON.stringify(data));
     onClose();
   };

@@ -1,7 +1,7 @@
-import {board} from "../types/global";
+import { Square } from "shogi2-types";
 import {lance,knight,silver_general,gold_general,king1,king2,rook,pawn,bishop} from "./piece";
 
-const boards:board[]=[[
+const boards:Square[][][]=[[
   [
     {piece:{id:crypto.randomUUID(),type:lance,owner:"player2"}},
     {piece:{id:crypto.randomUUID(),type:knight,owner:"player2"}},
