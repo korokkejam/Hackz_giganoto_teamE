@@ -1,9 +1,19 @@
 "use strict";
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 require("./rooms");
-var Data = /** @class */ (function () {
-    function Data(boards) {
-        this.data = {
+var piece_1 = require("../config/piece");
+var GameProcess = /** @class */ (function () {
+    function GameProcess(boards) {
+        this.game = {
             boards: boards,
             turn: "player1",
             player1_current_board: 0,
@@ -14,116 +24,21 @@ var Data = /** @class */ (function () {
             player2_redbull: 0,
             history: [],
             player1_storage: [],
-            player2_storage: []
+            player2_storage: [],
+            pieces: __spreadArray([], piece_1.pieces, true)
         };
     }
-    Data.prototype.change = function () {
-        if (this.data.turn === "player1") {
-            this.data.turn = "player2";
-        }
-        else {
-            this.data.turn = "player1";
-        }
+    GameProcess.prototype.setStorage1 = function (pieces) {
+        this.game.player1_storage = pieces;
     };
-    Data.prototype.setStorage1 = function (pieces) {
-        this.data.player1_storage = pieces;
+    GameProcess.prototype.setStorage2 = function (pieces) {
+        this.game.player2_storage = pieces;
     };
-    Data.prototype.setStorage2 = function (pieces) {
-        this.data.player2_storage = pieces;
-    };
-    Data.prototype.update = function (e, ws) {
+    GameProcess.prototype.update = function (e, _ws) {
         var d = JSON.parse(e.data);
-        console.log(d);
         switch (d.head) {
-            case "move":
-                {
-                    var board = d.content;
-                    var sender = d.sender;
-                    if (sender === "player1") {
-                        this.data.boards[this.data.player1_current_board] = board;
-                        if (this.data.player1_current_board === this.data.player2_current_board) {
-                            var d2 = { head: "move", content: { board: board, next: "player2" } };
-                            ws[1].send(JSON.stringify(d2));
-                        }
-                        var d3 = { head: "change", content: { next: "player2" } };
-                        ws[0].send(JSON.stringify(d3));
-                    }
-                    else {
-                        this.data.boards[this.data.player2_current_board] = board;
-                        if (this.data.player1_current_board === this.data.player2_current_board) {
-                            var d2 = { head: "move", content: { board: board, next: "player1" } };
-                            ws[0].send(JSON.stringify(d2));
-                        }
-                        var d3 = { head: "change", content: { next: "player1" } };
-                        ws[1].send(JSON.stringify(d3));
-                    }
-                }
-                break;
-            case "promotion":
-                {
-                    var board = d.content;
-                    var sender = d.sender;
-                    if (sender === "player1") {
-                        this.data.boards[this.data.player1_current_board] = board;
-                        if (this.data.player1_current_board === this.data.player2_current_board) {
-                            var d2 = { head: "move", content: { board: board, next: "player2" } };
-                            ws[1].send(JSON.stringify(d2));
-                        }
-                        var d3 = { head: "change", content: { next: "player2" } };
-                        ws[0].send(JSON.stringify(d3));
-                    }
-                    else {
-                        this.data.boards[this.data.player2_current_board] = board;
-                        if (this.data.player1_current_board === this.data.player2_current_board) {
-                            var d2 = { head: "move", content: { board: board, next: "player1" } };
-                            ws[0].send(JSON.stringify(d2));
-                        }
-                        var d3 = { head: "change", content: { next: "player1" } };
-                        ws[1].send(JSON.stringify(d3));
-                    }
-                }
-                break;
-            case "kill":
-                {
-                    var sender = d.sender;
-                    var d1 = { head: "lose", content: "" };
-                    var d2 = { head: "win", content: "" };
-                    if (sender === "player1") {
-                        ws[1].send(JSON.stringify(d1));
-                        ws[0].send(JSON.stringify(d2));
-                    }
-                    else {
-                        ws[0].send(JSON.stringify(d1));
-                        ws[1].send(JSON.stringify(d2));
-                    }
-                }
-                break;
-            case "random":
-                {
-                    var board = d.content;
-                    var sender = d.sender;
-                    if (sender === "player1") {
-                        this.data.boards[this.data.player1_current_board] = board;
-                        if (this.data.player1_current_board === this.data.player2_current_board) {
-                            var d2 = { head: "move", content: { board: board, next: "player1" } };
-                            ws[1].send(JSON.stringify(d2));
-                        }
-                        var d3 = { head: "change", content: { next: "player1" } };
-                        ws[0].send(JSON.stringify(d3));
-                    }
-                    else {
-                        this.data.boards[this.data.player2_current_board] = board;
-                        if (this.data.player1_current_board === this.data.player2_current_board) {
-                            var d2 = { head: "move", content: { board: board, next: "player2" } };
-                            ws[0].send(JSON.stringify(d2));
-                        }
-                        var d3 = { head: "change", content: { next: "player2" } };
-                        ws[1].send(JSON.stringify(d3));
-                    }
-                }
-                break;
         }
     };
-    return Data;
+    return GameProcess;
 }());
-exports.default = Data;
+exports.default = GameProcess;

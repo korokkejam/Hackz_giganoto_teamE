@@ -1,9 +1,12 @@
+import { Event } from "./Event";
+
 export type player="player1"|"player2";
 export type board=Square[][];
 
 //駒の種類
 export interface PieceType{
   name:string;
+  id:string;
   src:string|undefined;
   movable:{
     absolute:number[][];
@@ -49,9 +52,9 @@ export interface Game{
 };
 
 //websocketで送受信するデータのフォーマット
-export interface Request{
+export interface Request<T extends Event|any>{
   head:string;
-  content:any;
+  content:T;
   sender?:string;
 };
 

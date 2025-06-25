@@ -1,12 +1,13 @@
 import "./rooms";
 import { WSContext } from "hono/ws";
-import {Game, PieceType, Request, Square,board} from "shogi2-types";
-import {pieces} from "../config/piece";
+import {Game,Request,board} from "shogi2-types";
+import { Event } from "shogi2-types/dist/Event";
+import { pieces } from "../config/piece";
 
-class Data{
-  data:Game;
+class GameProcess{
+  game:Game;
   constructor(boards:board[]){
-    this.data={
+    this.game={
       boards,
       turn:"player1",
       player1_current_board:0,
@@ -21,108 +22,11 @@ class Data{
       pieces:[...pieces]
     };
   }
-  change(){
-    if (this.data.turn==="player1"){
-      this.data.turn="player2";
-    }else{
-      this.data.turn="player1";
-    }
-  }
-  setStorage1(pieces:PieceType[]){
-    this.data.player1_storage=pieces;
-  }
-  setStorage2(pieces:PieceType[]){
-    this.data.player2_storage=pieces;
-  }
-  update(e:MessageEvent,ws:WSContext[]){
-    const d:Request=JSON.parse(e.data);
-    console.log(d);
+  update(e:MessageEvent,_ws1:WSContext,_ws2:WSContext){
+    const d:Request<Event>=JSON.parse(e.data);
     switch (d.head){
-      case "move":
-        {
-          const board:Square[][]=d.content;
-          const sender=d.sender;
-          if (sender==="player1"){
-            this.data.boards[this.data.player1_current_board]=board;
-            if (this.data.player1_current_board===this.data.player2_current_board){
-              const d2:Request={head:"move",content:{board:board,next:"player2"}};
-              ws[1].send(JSON.stringify(d2));
-            }
-            const d3:Request={head:"change",content:{next:"player2"}};
-            ws[0].send(JSON.stringify(d3));
-          }else{
-            this.data.boards[this.data.player2_current_board]=board;
-            if (this.data.player1_current_board===this.data.player2_current_board){
-              const d2:Request={head:"move",content:{board:board,next:"player1"}};
-              ws[0].send(JSON.stringify(d2));
-            }
-            const d3:Request={head:"change",content:{next:"player1"}};
-            ws[1].send(JSON.stringify(d3));
-          }
-        }
-        break;
-      case "promotion":
-        {
-          const board:Square[][]=d.content;
-          const sender=d.sender;
-          if (sender==="player1"){
-            this.data.boards[this.data.player1_current_board]=board;
-            if (this.data.player1_current_board===this.data.player2_current_board){
-              const d2:Request={head:"move",content:{board:board,next:"player2"}};
-              ws[1].send(JSON.stringify(d2));
-            }
-            const d3:Request={head:"change",content:{next:"player2"}};
-            ws[0].send(JSON.stringify(d3));
-          }else{
-            this.data.boards[this.data.player2_current_board]=board;
-            if (this.data.player1_current_board===this.data.player2_current_board){
-              const d2:Request={head:"move",content:{board:board,next:"player1"}};
-              ws[0].send(JSON.stringify(d2));
-            }
-            const d3:Request={head:"change",content:{next:"player1"}};
-            ws[1].send(JSON.stringify(d3));
-          }
-        }
-        break;
-      case "kill":
-        {
-          const sender=d.sender;
-          const d1:Request={head:"lose",content:""};
-          const d2:Request={head:"win",content:""};
-          if (sender==="player1"){
-            ws[1].send(JSON.stringify(d1));
-            ws[0].send(JSON.stringify(d2));
-          }else{
-            ws[0].send(JSON.stringify(d1));
-            ws[1].send(JSON.stringify(d2));
-          }
-        }
-        break;
-      case "random":
-        {
-          const board:Square[][]=d.content;
-          const sender=d.sender;
-          if (sender==="player1"){
-            this.data.boards[this.data.player1_current_board]=board;
-            if (this.data.player1_current_board===this.data.player2_current_board){
-              const d2:Request={head:"move",content:{board:board,next:"player1"}};
-              ws[1].send(JSON.stringify(d2));
-            }
-            const d3:Request={head:"change",content:{next:"player1"}};
-            ws[0].send(JSON.stringify(d3));
-          }else{
-            this.data.boards[this.data.player2_current_board]=board;
-            if (this.data.player1_current_board===this.data.player2_current_board){
-              const d2:Request={head:"move",content:{board:board,next:"player2"}};
-              ws[0].send(JSON.stringify(d2));
-            }
-            const d3:Request={head:"change",content:{next:"player2"}};
-            ws[1].send(JSON.stringify(d3));
-          }
-        }
-        break;
     }
   }
 }
 
-export default Data;
+export default GameProcess;

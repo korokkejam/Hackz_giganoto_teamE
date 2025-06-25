@@ -4,7 +4,7 @@ import {cors} from "hono/cors";
 import {boards} from "./config/board";
 import {createNodeWebSocket} from "@hono/node-ws";
 import {rooms} from "./game/rooms";
-import Data from "./game/board";
+import GameProcess from "./game/board";
 import {Request,Square} from "shogi2-types";
 import fs from "fs";
 import {setMods,loadMods} from "./load";
@@ -32,18 +32,17 @@ app.get("/room/check/:id",(c:Context)=>{
 
 app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
   const id=c.req.param("id");
-  let data=new Data(boards.map((board:Square[][])=>board.map((row)=>row.map((s)=>{return{...s}}))));
+  const data=new GameProcess(boards.map((board:Square[][])=>board.map((row)=>row.map((s)=>{return{...s}}))));
   return {
     onMessage(event,_ws){
       const room=rooms.find((room)=>room.id===id);
-      if (!room){
+      if (!room || !room.ws1 || !room.ws2){
         return;
       }
-      room.data.change();
-      room.data.update(event,room.ws);
+      room.game.update(event,room.ws1,room.ws2);
     },
     onOpen(_event,ws){
-      rooms.push({ws:[ws],id,gamemode:"survival",data});
+      rooms.push({ws1:ws,id,gamemode:"survival",game:data});
     },
     onClose(event){
       console.log(event);
@@ -59,20 +58,19 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
   const room=rooms.find((room)=>room.id===id);
   return {
     onMessage(event,_ws){
-      if (!room){
+      if (!room || !room.ws1 || !room.ws2){
         return;
       }
-      room.data.change();
-      room.data.update(event,room.ws);
+      room.game.update(event,room.ws1,room.ws2);
     },
     onOpen(_event,ws){
-      if (!room){
+      if (!room || !room.ws1){
         return;
       }
-      const d:Request={head:"ready",content:room.data.data};
-      room.ws[0].send(JSON.stringify(d));
+      const d:Request<any>={head:"ready",content:room.game};
+      room.ws1.send(JSON.stringify(d));
       ws.send(JSON.stringify(d));
-      room.ws.push(ws);
+      room.ws2=ws;
     },
     onClose(event){
       console.log(event);

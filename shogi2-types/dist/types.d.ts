@@ -1,3 +1,4 @@
+import { Event } from "./Event";
 export type player = "player1" | "player2";
 export type board = Square[][];
 export interface PieceType {
@@ -36,9 +37,9 @@ export interface Game {
     player2_storage: PieceType[];
     pieces: PieceType[];
 }
-export interface Request {
+export interface Request<T extends Event | any> {
     head: string;
-    content: any;
+    content: T;
     sender?: string;
 }
 export interface Position {

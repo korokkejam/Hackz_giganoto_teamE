@@ -39,7 +39,7 @@ export default function PromotionDialog({open,onClose,pos}:{open:boolean,onClose
     if (!ws){
       return;
     }
-    const data:Request={head:"promotion",content:bb,sender:player};
+    const data:Request<any>={head:"promotion",content:bb,sender:player};
     ws.send(JSON.stringify(data));
     onClose();
   };

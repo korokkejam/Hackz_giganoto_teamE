@@ -35,7 +35,8 @@ export default function Game(){
       return;
     }
     ws.onmessage=(e:MessageEvent)=>{
-      const d:Request=JSON.parse(e.data);
+      const data=e.data;
+      const d:Request<any>=JSON.parse(data);
       switch (d.head){
         case "move":
           {

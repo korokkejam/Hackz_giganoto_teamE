@@ -1,5 +1,5 @@
 import {WSContext} from "hono/ws";
-import Data from "../game/board";
+import GameProcess from "../game/board";
 
 //部屋の情報
-export type room={ws:WSContext[],id:string,gamemode:"survival"|"creative",data:Data};
+export type room={ws1:WSContext|undefined,ws2?:WSContext,id:string,gamemode:"survival"|"creative",game:GameProcess};
