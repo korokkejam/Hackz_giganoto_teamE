@@ -1,0 +1,1 @@
+{"version":3,"file":"ChangeBoard.js","sourceRoot":"","sources":["../../../src/events/ChangeBoard.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,KAAK,EAAC,MAAM,UAAU,CAAC;AAK9B,CAAC;AAEF,MAAM,OAAO,WAAY,SAAQ,KAAsB;IACrD,IAAI,CAAiB;IACrB,YAAY,MAAc;QACxB,KAAK,CAAC,MAAM,CAAC,CAAC;QACd,IAAI,CAAC,IAAI,GAAC,EAAC,MAAM,EAAC,CAAC;IACrB,CAAC;CACF"}

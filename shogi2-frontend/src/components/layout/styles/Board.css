@@ -3,15 +3,15 @@
   display:flex;
 }
 
-@media screen and (min-width: 100vh) {
+@media screen and (min-width: calc(100vh - 40px)) {
   .board{
-    width:100vh;
-    height:100vh;
-    margin-left:calc(50vw - 50vh);
+    width:calc(100vh - 40px);
+    height:calc(100vh - 40px);
+    margin-left:calc(50vw - 50vh + 20px);
   }
 }
 
-@media screen and (max-width: 100vh) {
+@media screen and (max-width: calc(100vh - 40px)) {
   .board{
     width:100vw;
     height:100vw;

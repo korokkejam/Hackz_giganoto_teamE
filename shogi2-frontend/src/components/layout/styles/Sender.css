@@ -1,0 +1,26 @@
+.sender{
+  display:flex;
+  height:60px;
+  align-items:end;
+  background:#00000050;
+}
+
+.sender > div > label{
+  color:white !important;
+}
+
+.sender > div > div > input{
+  color:white !important;
+  font-family:hackgen;
+}
+
+.sender-button{
+  font-size:20px;
+  background:none;
+  border:none;
+  color:#af0;
+}
+
+.sender-button:hover{
+  cursor:pointer;
+}

@@ -27,3 +27,8 @@ body{
   font-family: "kk";
   src: url("../assets/KaiseiTokumin-Bold.ttf");
 }
+
+@font-face{
+  font-family:"hackgen";
+  src:url("../assets/HackGen.ttf");
+}

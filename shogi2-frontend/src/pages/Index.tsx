@@ -2,14 +2,14 @@ import "./styles/Index.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useState} from "react";
-import {wsAtom,playerAtom,boardAtom, pieceStorageAtom} from "../state";
-import {useSetAtom} from "jotai";
+import {wsAtom,playerAtom,boardAtom, zAtom} from "../state";
+import {useAtomValue, useSetAtom} from "jotai";
 import {useNavigate} from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Game, PieceType, Request} from "shogi2-types";
+import { Game, Request} from "shogi2-types";
 
 export default function Index(){
-  const setPieces=useSetAtom(pieceStorageAtom);
+  const z=useAtomValue(zAtom);
   const [name,setName]=useState<string>("");
   const [error,setError]=useState<string>("");
   const setWs=useSetAtom(wsAtom);
@@ -37,12 +37,10 @@ export default function Index(){
     }
     const ws=new WebSocket(`ws://localhost:3000/room/enter/${name}`);
     ws.onmessage=((e:MessageEvent)=>{
-      const d:Request=JSON.parse(e.data);
+      const d:Request<any>=JSON.parse(e.data);
       if (d.head==="ready"){
-        const data:Game=d.content;
-        const board=data.boards[0];
-        const pieces:PieceType[]=data.pieces;
-        setPieces(pieces);
+        const game:Game=d.content;
+        const board=game.boards[z];
         setBoard(board);
         setWs(ws);
         setPlayer("player2");
@@ -56,13 +54,11 @@ export default function Index(){
     }
     const ws=new WebSocket(`ws://localhost:3000/room/create/${name}`);
     ws.onmessage=((e:MessageEvent)=>{
-      const d:Request=JSON.parse(e.data);
+      const d:Request<any>=JSON.parse(e.data);
       if (d.head==="ready"){
-        const data:Game=d.content;
+        const game:Game=d.content;
         setLoading(false);
-        const board=data.boards[0];
-        const pieces:PieceType[]=data.pieces;
-        setPieces(pieces);
+        const board=game.boards[z];
         setBoard(board);
         setWs(ws);
         navigate("/game");

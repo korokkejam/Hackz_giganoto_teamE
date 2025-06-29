@@ -1,7 +1,9 @@
-export abstract class Event<T>{
+export abstract class Event<T=any>{
   type:string;
+  id:string
   abstract data:T;
-  constructor(type:string){
+  constructor(type:string,id:string){
     this.type=type;
+    this.id=id;
   }
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"CaptureEvent.js","sourceRoot":"","sources":["../../../src/events/CaptureEvent.ts"],"names":[],"mappings":";;;AAAA,oCAA+B;AAQ9B,CAAC;AAEF,MAAa,YAAa,SAAQ,aAAuB;IAEvD,YAAY,MAAY,EAAC,MAAY,EAAC,IAAa,EAAC,IAAa,EAAC,EAAS;QACzE,KAAK,CAAC,SAAS,EAAC,EAAE,CAAC,CAAC;QACpB,IAAI,CAAC,IAAI,GAAC,EAAC,MAAM,EAAC,MAAM,EAAC,IAAI,EAAC,IAAI,EAAC,CAAC;IACtC,CAAC;CACF;AAND,oCAMC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"CommandEvent.js","sourceRoot":"","sources":["../../../src/events/CommandEvent.ts"],"names":[],"mappings":";;;AAAA,oCAA+B;AAK9B,CAAC;AAEF,MAAa,YAAa,SAAQ,aAAuB;IAEvD,YAAY,KAAsB,EAAC,EAAS;QAC1C,KAAK,CAAC,SAAS,EAAC,EAAE,CAAC,CAAC;QACpB,IAAI,CAAC,IAAI,GAAC,KAAK,CAAC;IAClB,CAAC;CACF;AAND,oCAMC"}

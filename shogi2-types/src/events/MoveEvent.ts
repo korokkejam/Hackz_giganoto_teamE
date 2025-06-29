@@ -1,12 +1,16 @@
 import {Event} from "../Event";
+import { Piece } from "../types";
 
 export interface MoveEventType{
+  piece:Piece,
+  before_pos:number[],
+  after_pos:number[]
 };
 
 export class MoveEvent extends Event<MoveEventType>{
   data:MoveEventType;
-  constructor(){
-    super("move");
-    this.data={};
+  constructor(piece:Piece,before_pos:number[],after_pos:number[],id:string){
+    super("move",id);
+    this.data={piece,before_pos,after_pos};
   }
 }

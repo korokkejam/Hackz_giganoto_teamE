@@ -37,8 +37,7 @@ export default function Board(){
     }
     const {pos,piece}=focusedPiece;
     const b=[...board];
-    const absolute=piece.type.movable.absolute.filter((p)=>b[p[1]][p[0]].piece?.owner!==player)
-      // .map((p)=>player==="player2"?[8-p[0],8-p[1]]:p);
+    const absolute=piece.type.movable.absolute.filter((p)=>b[p[1]][p[0]].piece?.owner!==player);
     const positions=piece.type.movable.relative.map((p)=>[p[0],p[1]*(player==="player2"?-1:1)])
       .map((p)=>[pos[0]-p[0],pos[1]-p[1]])
       .filter((p)=>0<=p[1] && b.length>p[1] && 0<=p[0] && b[p[1]].length>p[0]);

@@ -1,16 +1,18 @@
 {
   "name": "shogi2-types",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module":"dist/esm/index.js",
   "scripts": {
-    "build": "tsc",
-    "prepare": "npm run build",
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:cjs":"tsc -p tsconfig.cjs.json",
+    "build:esm":"tsc -p tsconfig.esm.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "description": "",
-  "types": "dist/index.d.ts",
+  "types": "dist/esm/index.d.ts",
   "dependencies": {
     "hono": "^4.8.3"
   }

@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/lodash": "^4.17.19",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
@@ -19,6 +20,7 @@
     "@hono/node-ws": "^1.1.7",
     "@types/ws": "^8.18.1",
     "hono": "^4.8.0",
+    "lodash": "^4.17.21",
     "nodemon": "^3.1.10",
     "react-router-dom": "^7.6.2",
     "shogi2-types": "file:../shogi2-types",

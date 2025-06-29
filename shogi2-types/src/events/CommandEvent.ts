@@ -6,10 +6,9 @@ export interface CommandEventType{
 };
 
 export class CommandEvent extends Event<CommandEventType>{
-  type="capture";
   data:CommandEventType;
-  constructor(event:CommandEventType){
-    super("capture");
+  constructor(event:CommandEventType,id:string){
+    super("command",id);
     this.data=event;
   }
 }

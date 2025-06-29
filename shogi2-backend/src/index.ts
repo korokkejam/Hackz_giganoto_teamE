@@ -3,9 +3,9 @@ import {serve} from "@hono/node-server";
 import {cors} from "hono/cors";
 import {boards} from "./config/board";
 import {createNodeWebSocket} from "@hono/node-ws";
-import {rooms} from "./game/rooms";
+import {rooms, setRooms} from "./game/rooms";
 import GameProcess from "./game/board";
-import {Request,Square} from "shogi2-types";
+import {Request,Square, StartEvent} from "shogi2-types";
 import fs from "fs";
 import {setMods,loadMods} from "./load";
 
@@ -44,8 +44,16 @@ app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
     onOpen(_event,ws){
       rooms.push({ws1:ws,id,gamemode:"survival",game:data});
     },
-    onClose(event){
-      console.log(event);
+    onClose(_event){
+      const room=rooms.find((room)=>room.id===id);
+      if (!room){
+        return;
+      }
+      const request:Request<any>={head:"close",content:""};
+      room.ws1?.send(JSON.stringify(request));
+      room.ws2?.send(JSON.stringify(request));
+      setRooms(rooms.filter((r)=>r.id!==room.id));
+      console.log(room);
     },
     onError(event){
       console.log(event);
@@ -67,13 +75,23 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
       if (!room || !room.ws1){
         return;
       }
-      const d:Request<any>={head:"ready",content:room.game};
-      room.ws1.send(JSON.stringify(d));
-      ws.send(JSON.stringify(d));
       room.ws2=ws;
+      const d:Request<any>={head:"ready",content:room.game.game};
+      const event:Request<StartEvent>={head:"event",content:{type:"start",data:{},id:crypto.randomUUID()}};
+      room.game.event(event,room.ws1,room.ws2);
+      room.ws1.send(JSON.stringify(d));
+      room.ws2.send(JSON.stringify(d));
     },
-    onClose(event){
-      console.log(event);
+    onClose(_event){
+      const room=rooms.find((room)=>room.id===id);
+      if (!room){
+        return;
+      }
+      const request:Request<any>={head:"close",content:""};
+      room.ws1?.send(JSON.stringify(request));
+      room.ws2?.send(JSON.stringify(request));
+      setRooms(rooms.filter((r)=>r.id!==room.id));
+      console.log(room);
     },
     onError(event){
       console.log(event);
@@ -86,6 +104,7 @@ fs.readdir("src/mods/",(_,d)=>{
     setMods(mods);
 
     const server=serve({ fetch: app.fetch, port: 3000 }, () => {
+      console.log(mods);
       console.log("Server is running on http://localhost:3000")
     });
 

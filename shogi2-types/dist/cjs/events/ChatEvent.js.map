@@ -1,0 +1,1 @@
+{"version":3,"file":"ChatEvent.js","sourceRoot":"","sources":["../../../src/events/ChatEvent.ts"],"names":[],"mappings":";;;AAAA,oCAA+B;AAK9B,CAAC;AAEF,MAAa,SAAU,SAAQ,aAAoB;IAEjD,YAAY,GAAU,EAAC,MAAa,EAAC,EAAS;QAC5C,KAAK,CAAC,MAAM,EAAC,EAAE,CAAC,CAAC;QACjB,IAAI,CAAC,IAAI,GAAC,EAAC,GAAG,EAAC,MAAM,EAAC,CAAC;IACzB,CAAC;CACF;AAND,8BAMC"}

@@ -1,0 +1,9 @@
+.messages{
+  width:100%;
+  height:calc(100% - 60px - 36px) !important;
+  padding:10px;
+  height:300px;
+  overflow-y:scroll;
+  display:flex;
+  flex-direction:column-reverse;
+}

@@ -1,0 +1,14 @@
+.message{
+  display:flex;
+  align-items:center;
+}
+
+.message > h3{
+  margin-right:10px;
+}
+
+.message > *{
+  margin:0;
+  color:#ffffff77;
+  font-family:hackgen;
+}

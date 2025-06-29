@@ -3,10 +3,10 @@ import "./styles/PromotionDialog.css";
 import Modal from "@mui/material/Modal";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import {useAtom, useAtomValue} from "jotai";
-import { boardAtom, playerAtom, wsAtom } from "../../state";
+import {useAtomValue} from "jotai";
+import {playerAtom, wsAtom } from "../../state";
 import { useMemo } from "react";
-import {Piece,Square,Request} from "shogi2-types";
+import {Request, PromotionCheckEvent} from "shogi2-types";
 
 const style:CSSProperties={
   position:"absolute",
@@ -17,40 +17,46 @@ const style:CSSProperties={
   transform:"translate(-50%,-50%)"
 };
 
-export default function PromotionDialog({open,onClose,pos}:{open:boolean,onClose:()=>void,pos:number[]}){
-  const [board,setBoard]=useAtom(boardAtom);
+export default function PromotionDialog({event,onClose}:{event:PromotionCheckEvent|null,onClose:()=>void}){
   const player=useAtomValue(playerAtom);
   const ws=useAtomValue(wsAtom);
-  const piece=useMemo(()=>board[pos[1]][pos[0]].piece,[board]);
+  const piece=useMemo(()=>event?.data.piece,[event]);
   const promotion=()=>{
-    if (!piece || !player || !piece.type.promotion){
+    if (!event || !ws){
       return;
     }
-    const bb=board.map((row,y)=>row.map((s,x)=>{
-      if (x===pos[0] && y===pos[1] && player && piece.type.promotion){
-        const a:Piece={type:piece.type.promotion,owner:player,id:""};
-        const b:Square={piece:a};
-        return b;
-      }else{
-        return {...s};
+    const data:Request<PromotionCheckEvent>={head:"event",content:{
+      ...event,
+      data:{
+        ...event.data,
+        answer:true
       }
-    }));
-    setBoard(bb);
-    if (!ws){
+    },sender:player};
+    ws.send(JSON.stringify(data));
+    onClose();
+  };
+  const cancel=()=>{
+    if (!ws || !event){
       return;
     }
-    const data:Request<any>={head:"promotion",content:bb,sender:player};
+    const data:Request<PromotionCheckEvent>={head:"event",content:{
+      ...event,
+      data:{
+        ...event.data,
+        answer:false
+      }
+    },sender:player};
     ws.send(JSON.stringify(data));
     onClose();
   };
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={!!event} onClose={cancel}>
       <Paper sx={style}>
         <div className="promotiondialog">
           <h4>{piece?.type.promotion_msg[0]?piece.type.promotion_msg[0]:"成る？"}</h4>
           <div>
             <Button onClick={promotion}>{piece?.type.promotion_msg[1]?piece.type.promotion_msg[1]:"成る"}</Button>
-            <Button onClick={onClose}>{piece?.type.promotion_msg[2]?piece.type.promotion_msg[2]:"成らない"}</Button>
+            <Button onClick={cancel}>{piece?.type.promotion_msg[2]?piece.type.promotion_msg[2]:"成らない"}</Button>
           </div>
         </div>
       </Paper>

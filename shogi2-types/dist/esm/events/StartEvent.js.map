@@ -1,0 +1,1 @@
+{"version":3,"file":"StartEvent.js","sourceRoot":"","sources":["../../../src/events/StartEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,KAAK,EAAC,MAAM,UAAU,CAAC;AAG9B,CAAC;AAEF,MAAM,OAAO,UAAW,SAAQ,KAAqB;IACnD,IAAI,CAAgB;IACpB,YAAY,EAAS;QACnB,KAAK,CAAC,OAAO,EAAC,EAAE,CAAC,CAAC;QAClB,IAAI,CAAC,IAAI,GAAC,EAAE,CAAC;IACf,CAAC;CACF"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"MoveEvent.js","sourceRoot":"","sources":["../../../src/events/MoveEvent.ts"],"names":[],"mappings":";;;AAAA,oCAA+B;AAO9B,CAAC;AAEF,MAAa,SAAU,SAAQ,aAAoB;IAEjD,YAAY,KAAW,EAAC,UAAmB,EAAC,SAAkB,EAAC,EAAS;QACtE,KAAK,CAAC,MAAM,EAAC,EAAE,CAAC,CAAC;QACjB,IAAI,CAAC,IAAI,GAAC,EAAC,KAAK,EAAC,UAAU,EAAC,SAAS,EAAC,CAAC;IACzC,CAAC;CACF;AAND,8BAMC"}

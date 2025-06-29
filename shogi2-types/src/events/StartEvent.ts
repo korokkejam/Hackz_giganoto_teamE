@@ -5,8 +5,8 @@ export interface StartEventType{
 
 export class StartEvent extends Event<StartEventType>{
   data:StartEventType;
-  constructor(){
-    super("start");
+  constructor(id:string){
+    super("start",id);
     this.data={};
   }
 }

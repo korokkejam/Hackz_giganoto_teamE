@@ -1,4 +1,6 @@
 import { Event } from "./Event";
+import { ChatEventType } from "./events/ChatEvent";
+import { ReturnRequest } from "./ModBase";
 
 export type player="player1"|"player2";
 export type board=Square[][];
@@ -32,9 +34,6 @@ export interface Square{
   piece:Piece|null;
 };
 
-//盤面
-// export type board=Square[][];
-
 //ゲームのデータ
 export interface Game{
   boards:Square[][][]; //今の盤面
@@ -45,23 +44,26 @@ export interface Game{
   player2_point:number; //プレイヤー2のポイント
   player1_redbull:number; //プレイヤー1のレッドブル
   player2_redbull:number; //プレイヤー2のレッドブル
-  history: Move[]; //盤面の履歴
-  player1_storage:PieceType[]; //持ち駒
-  player2_storage:PieceType[]; //持ち駒
+  history: Move[][]; //盤面の履歴
+  player1_storage:Piece[]; //持ち駒
+  player2_storage:Piece[]; //持ち駒
   pieces:PieceType[]; //使用可能な駒の一覧
+  messages:ChatEventType[];
+  requests:ReturnRequest[];
 };
 
 //websocketで送受信するデータのフォーマット
 export interface Request<T extends Event|any>{
   head:string;
   content:T;
-  sender?:string;
+  sender?:player;
 };
 
 // 駒の位置情報
 export interface Position {
     x: number;
     y: number;
+    z: number;
 }
 
 // 移動履歴

@@ -1,7 +1,7 @@
 import "./styles/Piece.css";
 import pieceImg from "../../assets/piece.png";
-import {boardAtom,playerAtom,turnAtom,focusedPieceAtom} from "../../state";
-import {useAtomValue,useAtom} from "jotai";
+import {boardAtom,playerAtom,turnAtom,focusedPieceAtom, putPieceAtom} from "../../state";
+import {useAtomValue,useAtom, useSetAtom} from "jotai";
 import {useMemo} from "react";
 
 const eq=(v1:number[],v2:number[]|undefined)=>{
@@ -17,6 +17,7 @@ export default function Piece({pos}:{pos:number[]}){
   const turn=useAtomValue(turnAtom);
   const [focusedPiece,setFocusedPiece]=useAtom(focusedPieceAtom);
   const piece=useMemo(()=>board[pos[1]][pos[0]].piece,board);
+  const setPutPiece=useSetAtom(putPieceAtom);
   const onFocus=()=>{
     if (!piece){
       return;
@@ -26,6 +27,7 @@ export default function Piece({pos}:{pos:number[]}){
         setFocusedPiece(null);
       }else{
         setFocusedPiece({pos,piece});
+        setPutPiece(undefined);
       }
     }
   };

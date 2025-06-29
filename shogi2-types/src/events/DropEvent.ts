@@ -1,12 +1,15 @@
 import {Event} from "../Event";
+import { Piece, Position } from "../types";
 
 export interface DropEventType{
+  piece:Piece;
+  pos:Position;
 };
 
 export class DropEvent extends Event<DropEventType>{
   data:DropEventType;
-  constructor(){
-    super("drop");
-    this.data={};
+  constructor(piece:Piece,pos:Position,id:string){
+    super("drop",id);
+    this.data={piece,pos};
   }
 }

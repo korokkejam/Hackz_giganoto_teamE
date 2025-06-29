@@ -1,0 +1,1 @@
+{"version":3,"file":"DropEvent.js","sourceRoot":"","sources":["../../../src/events/DropEvent.ts"],"names":[],"mappings":";;;AAAA,oCAA+B;AAM9B,CAAC;AAEF,MAAa,SAAU,SAAQ,aAAoB;IAEjD,YAAY,KAAW,EAAC,GAAY,EAAC,EAAS;QAC5C,KAAK,CAAC,MAAM,EAAC,EAAE,CAAC,CAAC;QACjB,IAAI,CAAC,IAAI,GAAC,EAAC,KAAK,EAAC,GAAG,EAAC,CAAC;IACxB,CAAC;CACF;AAND,8BAMC"}

@@ -1,19 +1,26 @@
 import "./styles/StoragePiece.css";
 import pieceImg from "../../assets/piece.png";
-import { useAtom } from "jotai";
-import { putPieceAtom } from "../../state";
-import {PieceType} from "shogi2-types";
+import {useAtom, useAtomValue, useSetAtom} from "jotai";
+import {focusedPieceAtom, playerAtom, putPieceAtom, turnAtom} from "../../state";
+import {Piece} from "shogi2-types";
 
-export default function StoragePiece({piece,index}:{piece:PieceType,index:number}){
+export default function StoragePiece({piece}:{piece:Piece}){
   const [putPiece,setPutPiece]=useAtom(putPieceAtom);
+  const turn=useAtomValue(turnAtom);
+  const player=useAtomValue(playerAtom);
+  const setFocusedPiece=useSetAtom(focusedPieceAtom);
   const onFocus=()=>{
-    setPutPiece(index);
+    if (piece.id===putPiece){
+      setPutPiece(undefined);
+    }else if (player===turn){
+      setPutPiece(piece.id);
+      setFocusedPiece(null);
+    }
   };
-  console.log(piece);
   return (
-    <div className={`storagepiece ${index===putPiece?"focus":""}`} onClick={onFocus}>
+    <div className={`storagepiece ${piece.id===putPiece?"focus":""}`} onClick={onFocus}>
       <img src={pieceImg}/>
-      <p>{piece?.name}</p>
+      <p>{piece.type.name}</p>
       <div className="cover"/>
     </div>
   );

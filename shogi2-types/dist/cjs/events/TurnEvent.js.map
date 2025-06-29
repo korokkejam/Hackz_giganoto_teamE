@@ -1,0 +1,1 @@
+{"version":3,"file":"TurnEvent.js","sourceRoot":"","sources":["../../../src/events/TurnEvent.ts"],"names":[],"mappings":";;;AAAA,oCAA+B;AAK9B,CAAC;AAEF,MAAa,SAAU,SAAQ,aAAoB;IAEjD,YAAY,MAAa,EAAC,EAAS;QACjC,KAAK,CAAC,MAAM,EAAC,EAAE,CAAC,CAAC;QACjB,IAAI,CAAC,IAAI,GAAC,EAAC,MAAM,EAAC,CAAC;IACrB,CAAC;CACF;AAND,8BAMC"}
