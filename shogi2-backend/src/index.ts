@@ -5,9 +5,11 @@ import {boards} from "./config/board";
 import {createNodeWebSocket} from "@hono/node-ws";
 import {rooms, setRooms} from "./game/rooms";
 import GameProcess from "./game/board";
-import {Request,Square, StartEvent} from "shogi2-types";
+import {Request,Square,StartEvent} from "shogi2-types";
 import fs from "fs";
 import {setMods,loadMods} from "./load";
+
+import "./test";
 
 const app=new Hono();
 

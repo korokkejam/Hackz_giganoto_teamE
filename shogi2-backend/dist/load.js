@@ -69,36 +69,56 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setMods = exports.mods = void 0;
+exports.setMods = exports.configs = exports.mods = void 0;
 exports.loadMods = loadMods;
+// const p=new GameProcess([]);
+//
+// class Dog extends ModBase {
+//   type="dog";
+//   constructor(game:Game){
+//     super(game);
+//   }
+// }
+// type ModBaseConstructor = new (game:Game) => ModBase;
+//
+// const a:ModBaseConstructor=Dog;
+// const b=new a(p.game);
 function loadMods(d) {
     return __awaiter(this, void 0, void 0, function () {
-        var mods, _i, d_1, dir, mod;
+        var mods, configs, _i, d_1, dir, mod, config;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     mods = [];
+                    configs = [];
                     _i = 0, d_1 = d;
                     _a.label = 1;
                 case 1:
-                    if (!(_i < d_1.length)) return [3 /*break*/, 4];
+                    if (!(_i < d_1.length)) return [3 /*break*/, 5];
                     dir = d_1[_i];
                     return [4 /*yield*/, Promise.resolve("".concat("./mods/".concat(dir, "/index"))).then(function (s) { return __importStar(require(s)); })];
                 case 2:
                     mod = _a.sent();
-                    mods.push(mod.setup());
-                    _a.label = 3;
+                    return [4 /*yield*/, Promise.resolve("".concat("./mods/".concat(dir, "/config"))).then(function (s) { return __importStar(require(s)); })];
                 case 3:
+                    config = _a.sent();
+                    mods.push(mod.default);
+                    configs.push(config.default);
+                    _a.label = 4;
+                case 4:
                     _i++;
                     return [3 /*break*/, 1];
-                case 4: return [2 /*return*/, mods];
+                case 5: return [2 /*return*/, { mods: mods, configs: configs }];
             }
         });
     });
 }
 var mods = [];
 exports.mods = mods;
+var configs = [];
+exports.configs = configs;
 var setMods = function (p) {
-    exports.mods = mods = p;
+    exports.mods = mods = p.mods;
+    exports.configs = configs = p.configs;
 };
 exports.setMods = setMods;

@@ -88,16 +88,25 @@ app.get("/room/create/:id", upgradeWebSocket(function (c) {
     return {
         onMessage: function (event, _ws) {
             var room = rooms_1.rooms.find(function (room) { return room.id === id; });
+            if (!room || !room.ws1 || !room.ws2) {
+                return;
+            }
+            room.game.update(event, room.ws1, room.ws2);
+        },
+        onOpen: function (_event, ws) {
+            rooms_1.rooms.push({ ws1: ws, id: id, gamemode: "survival", game: data });
+        },
+        onClose: function (_event) {
+            var _a, _b;
+            var room = rooms_1.rooms.find(function (room) { return room.id === id; });
             if (!room) {
                 return;
             }
-            room.game.update(event, room.ws);
-        },
-        onOpen: function (_event, ws) {
-            rooms_1.rooms.push({ ws: [ws], id: id, gamemode: "survival", game: data });
-        },
-        onClose: function (event) {
-            console.log(event);
+            var request = { head: "close", content: "" };
+            (_a = room.ws1) === null || _a === void 0 ? void 0 : _a.send(JSON.stringify(request));
+            (_b = room.ws2) === null || _b === void 0 ? void 0 : _b.send(JSON.stringify(request));
+            (0, rooms_1.setRooms)(rooms_1.rooms.filter(function (r) { return r.id !== room.id; }));
+            console.log(room);
         },
         onError: function (event) {
             console.log(event);
@@ -109,22 +118,33 @@ app.get("/room/enter/:id", upgradeWebSocket(function (c) {
     var room = rooms_1.rooms.find(function (room) { return room.id === id; });
     return {
         onMessage: function (event, _ws) {
-            if (!room) {
+            if (!room || !room.ws1 || !room.ws2) {
                 return;
             }
-            room.game.update(event, room.ws);
+            room.game.update(event, room.ws1, room.ws2);
         },
         onOpen: function (_event, ws) {
+            if (!room || !room.ws1) {
+                return;
+            }
+            room.ws2 = ws;
+            var d = { head: "ready", content: room.game.game };
+            var event = { head: "event", content: { type: "start", data: {}, id: crypto.randomUUID() } };
+            room.game.event(event, room.ws1, room.ws2);
+            room.ws1.send(JSON.stringify(d));
+            room.ws2.send(JSON.stringify(d));
+        },
+        onClose: function (_event) {
+            var _a, _b;
+            var room = rooms_1.rooms.find(function (room) { return room.id === id; });
             if (!room) {
                 return;
             }
-            var d = { head: "ready", content: room.game };
-            room.ws[0].send(JSON.stringify(d));
-            ws.send(JSON.stringify(d));
-            room.ws.push(ws);
-        },
-        onClose: function (event) {
-            console.log(event);
+            var request = { head: "close", content: "" };
+            (_a = room.ws1) === null || _a === void 0 ? void 0 : _a.send(JSON.stringify(request));
+            (_b = room.ws2) === null || _b === void 0 ? void 0 : _b.send(JSON.stringify(request));
+            (0, rooms_1.setRooms)(rooms_1.rooms.filter(function (r) { return r.id !== room.id; }));
+            console.log(room);
         },
         onError: function (event) {
             console.log(event);
@@ -135,6 +155,7 @@ fs_1.default.readdir("src/mods/", function (_, d) {
     (0, load_1.loadMods)(d).then(function (mods) {
         (0, load_1.setMods)(mods);
         var server = (0, node_server_1.serve)({ fetch: app.fetch, port: 3000 }, function () {
+            console.log(mods);
             console.log("Server is running on http://localhost:3000");
         });
         injectWebSocket(server);

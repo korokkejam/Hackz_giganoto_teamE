@@ -13,9 +13,13 @@ import {CommandConstructor, createCommand} from "./CommandFactory";
 import {CommandEvent} from "./events/CommandEvent";
 import { QuestionEvent } from "./events/QuestionEvent";
 import { PromotionCheckEvent } from "./events/PromotionCheckEvent";
+import { CommandBase } from "./CommandBase";
+import { AudioEvent } from "./events/AudioEvent";
+import { ReservationEvent } from "./events/ReservationEvent";
+import { WarpEvent } from "./events/WarpEvent";
 
 export interface ReturnRequest{
-  request:Request<Event>;
+  request:Request<Event|any>;
   target:player|undefined;
   overwritten?:boolean;
   owner:string; //mod名
@@ -24,11 +28,15 @@ export interface ReturnRequest{
 export abstract class ModBase{
   abstract type:string;
   game:Game;
-  commands:CommandConstructor[];
+  commands:CommandBase[];
 
   constructor(game:Game){
     this.game=game;
     this.commands=[];
+  }
+
+  addCommands(commands:CommandConstructor[]){
+    this.commands=commands.map((commandClass)=>createCommand(commandClass,this.game));
   }
 
   event(request:Request<Event>,game:Game):ReturnRequest[]{
@@ -37,6 +45,16 @@ export abstract class ModBase{
       case "chat":
         {
           const rs=this.onMessage(request.content,game);
+          if (rs){
+            rs.forEach((r)=>{
+              requests.push(r);
+            });
+          }
+        }
+        break;
+      case "command":
+        {
+          const rs=this.onCommand(request.content,game);
           if (rs){
             rs.forEach((r)=>{
               requests.push(r);
@@ -144,8 +162,35 @@ export abstract class ModBase{
           }
         }
         break;
-      case "command":
-        this.onCommand(request.content);
+      case "audio":
+        {
+          const rs=this.onAudio(request.content,game);
+          if (rs){
+            rs.forEach((r)=>{
+              requests.push(r);
+            });
+          }
+        }
+        break;
+      case "reservation":
+        {
+          const rs=this.onReservation(request.content,game);
+          if (rs){
+            rs.forEach((r)=>{
+              requests.push(r);
+            });
+          }
+        }
+        break;
+      case "warp":
+        {
+          const rs=this.onWarp(request.content,game);
+          if (rs){
+            rs.forEach((r)=>{
+              requests.push(r);
+            });
+          }
+        }
         break;
     }
     const rs=this.onEvent(request.content,game);
@@ -170,13 +215,17 @@ export abstract class ModBase{
   onCapture(_e:CaptureEvent,_game:Game):ReturnRequest[]|void{}
   onQuestion(_e:QuestionEvent,_game:Game):ReturnRequest[]|void{}
   onPromotionCheck(_e:PromotionCheckEvent,_game:Game):ReturnRequest[]|void{}
+  onAudio(_e:AudioEvent,_game:Game):ReturnRequest[]|void{}
+  onReservation(_e:ReservationEvent,_game:Game):ReturnRequest[]|void{}
+  onWarp(_e:WarpEvent,_game:Game):ReturnRequest[]|void{}
 
-  onCommand(e:CommandEvent){
-    const command=this.commands.map((commandClass)=>createCommand(commandClass,e.data,this.game)).find((command)=>command.type===e.data.type);
+  onCommand(e:CommandEvent,game:Game):ReturnRequest[]|void{
+    console.log(e);
+    const command=this.commands.find((command)=>command.type===e.data.type);
     if (!command){
       return;
     }
-    command.execute();
+    return command.execute(e,game);
   }
 
   onEvent(_e:Event,_game:Game):ReturnRequest[]|void{}

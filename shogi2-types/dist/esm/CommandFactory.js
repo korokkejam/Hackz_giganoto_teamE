@@ -1,5 +1,5 @@
 // Command execution function
-export function createCommand(CommandClass, raw, game) {
-    return new CommandClass(raw, game);
+export function createCommand(CommandClass, game) {
+    return new CommandClass(game);
 }
 //# sourceMappingURL=CommandFactory.js.map

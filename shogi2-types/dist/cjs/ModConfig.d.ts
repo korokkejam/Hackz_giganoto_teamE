@@ -3,6 +3,7 @@ import { Game } from "./types";
 export declare abstract class ModConfig<T = any> {
     abstract type: string;
     abstract config: T;
+    abstract load: boolean;
     abstract hierarchy: number;
     protected game: Game;
     protected mod: ModBase;

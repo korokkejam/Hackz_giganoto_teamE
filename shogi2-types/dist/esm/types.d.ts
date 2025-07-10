@@ -3,19 +3,26 @@ import { ChatEventType } from "./events/ChatEvent";
 import { ReturnRequest } from "./ModBase";
 export type player = "player1" | "player2";
 export type board = Square[][];
+export interface File {
+    content: string;
+    mimetype: string;
+    id: string;
+}
 export interface PieceType {
     name: string;
     id: string;
-    src: string | undefined;
+    src?: string;
+    color?: string;
     movable: {
         absolute: number[][];
         relative: number[][];
-        func: string;
+        func: string[];
     };
     jumpable: boolean;
-    promotion: PieceType | undefined;
+    promotion?: PieceType;
     promotion_callback: string;
     promotion_msg: string[];
+    promotion_check?: boolean;
     king: boolean;
 }
 export interface Piece {
@@ -23,8 +30,16 @@ export interface Piece {
     owner: player;
     type: PieceType;
 }
+export interface Effect {
+    src: string;
+    x?: number | string;
+    y?: number | string;
+    width?: number | string;
+    height?: number | string;
+}
 export interface Square {
     piece: Piece | null;
+    effect?: Effect;
 }
 export interface Game {
     boards: Square[][][];
@@ -35,7 +50,11 @@ export interface Game {
     player2_point: number;
     player1_redbull: number;
     player2_redbull: number;
-    history: Move[][];
+    history: {
+        boards: Square[][][];
+        id: string;
+    }[];
+    boards_id: string;
     player1_storage: Piece[];
     player2_storage: Piece[];
     pieces: PieceType[];
@@ -56,7 +75,4 @@ export interface Move {
     pieceId: string;
     from: Position | null;
     to: Position | null;
-}
-export interface CommandResult<T = undefined> {
-    data?: T;
 }

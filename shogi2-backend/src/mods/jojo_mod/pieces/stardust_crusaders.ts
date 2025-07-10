@@ -1,0 +1,49 @@
+import {PieceType} from "shogi2-types";
+
+export const stardust_crusaders_pieces:PieceType[]=[
+  {
+    name:"白金",
+    id:"star_platinum",
+    movable:{
+      absolute:[],
+      relative:[
+        ...[...Array(5)].map((_,i)=>[i+1,0]),
+        ...[...Array(5)].map((_,i)=>[-i-1,0]),
+        ...[...Array(5)].map((_,i)=>[0,i+1]),
+        ...[...Array(5)].map((_,i)=>[0,-i-1]),
+        ...[...Array(5)].map((_,i)=>[i+1,i+1]),
+        ...[...Array(5)].map((_,i)=>[-i-1,i+1]),
+        ...[...Array(5)].map((_,i)=>[i+1,-i-1]),
+        ...[...Array(5)].map((_,i)=>[-i-1,-i-1]),
+      ],
+      func:[]
+    },
+    jumpable:false,
+    promotion:{
+      name:"白金世界",
+      id:"star_platinum_the_world",
+      movable:{
+        absolute:[],
+        relative:[
+          ...[...Array(5)].map((_,i)=>[i+1,0]),
+          ...[...Array(5)].map((_,i)=>[-i-1,0]),
+          ...[...Array(5)].map((_,i)=>[0,i+1]),
+          ...[...Array(5)].map((_,i)=>[0,-i-1]),
+          ...[...Array(5)].map((_,i)=>[i+1,i+1]),
+          ...[...Array(5)].map((_,i)=>[-i-1,i+1]),
+          ...[...Array(5)].map((_,i)=>[i+1,-i-1]),
+          ...[...Array(5)].map((_,i)=>[-i-1,-i-1]),
+        ],
+        func:[]
+      },
+      jumpable:false,
+      promotion:undefined,
+      promotion_callback:"",
+      promotion_msg:[],
+      king:false
+    },
+    promotion_callback:"",
+    promotion_msg:[],
+    king:false
+  },
+];

@@ -21,7 +21,8 @@
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "serve": "^14.2.4",
-    "shogi2-types": "file:../shogi2-types"
+    "shogi2-types": "file:../shogi2-types",
+    "use-sound": "^5.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.8",

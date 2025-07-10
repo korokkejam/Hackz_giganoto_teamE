@@ -32,4 +32,11 @@ __exportStar(require("./events/TurnEvent"), exports);
 __exportStar(require("./events/QuestionEvent"), exports);
 __exportStar(require("./events/PromotionCheckEvent"), exports);
 __exportStar(require("./events/ChangeBoardEvent"), exports);
+__exportStar(require("./events/FileEvent"), exports);
+__exportStar(require("./events/AudioEvent"), exports);
+__exportStar(require("./events/ReservationEvent"), exports);
+__exportStar(require("./events/WarpEvent"), exports);
+__exportStar(require("./events/UIEvent"), exports);
+__exportStar(require("./UI"), exports);
+__exportStar(require("./Syntax"), exports);
 //# sourceMappingURL=index.js.map

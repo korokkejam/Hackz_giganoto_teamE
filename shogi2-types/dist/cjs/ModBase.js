@@ -7,12 +7,25 @@ class ModBase {
         this.game = game;
         this.commands = [];
     }
+    addCommands(commands) {
+        this.commands = commands.map((commandClass) => (0, CommandFactory_1.createCommand)(commandClass, this.game));
+    }
     event(request, game) {
         let requests = [];
         switch (request.content.type) {
             case "chat":
                 {
                     const rs = this.onMessage(request.content, game);
+                    if (rs) {
+                        rs.forEach((r) => {
+                            requests.push(r);
+                        });
+                    }
+                }
+                break;
+            case "command":
+                {
+                    const rs = this.onCommand(request.content, game);
                     if (rs) {
                         rs.forEach((r) => {
                             requests.push(r);
@@ -120,8 +133,35 @@ class ModBase {
                     }
                 }
                 break;
-            case "command":
-                this.onCommand(request.content);
+            case "audio":
+                {
+                    const rs = this.onAudio(request.content, game);
+                    if (rs) {
+                        rs.forEach((r) => {
+                            requests.push(r);
+                        });
+                    }
+                }
+                break;
+            case "reservation":
+                {
+                    const rs = this.onReservation(request.content, game);
+                    if (rs) {
+                        rs.forEach((r) => {
+                            requests.push(r);
+                        });
+                    }
+                }
+                break;
+            case "warp":
+                {
+                    const rs = this.onWarp(request.content, game);
+                    if (rs) {
+                        rs.forEach((r) => {
+                            requests.push(r);
+                        });
+                    }
+                }
                 break;
         }
         const rs = this.onEvent(request.content, game);
@@ -145,12 +185,16 @@ class ModBase {
     onCapture(_e, _game) { }
     onQuestion(_e, _game) { }
     onPromotionCheck(_e, _game) { }
-    onCommand(e) {
-        const command = this.commands.map((commandClass) => (0, CommandFactory_1.createCommand)(commandClass, e.data, this.game)).find((command) => command.type === e.data.type);
+    onAudio(_e, _game) { }
+    onReservation(_e, _game) { }
+    onWarp(_e, _game) { }
+    onCommand(e, game) {
+        console.log(e);
+        const command = this.commands.find((command) => command.type === e.data.type);
         if (!command) {
             return;
         }
-        command.execute();
+        return command.execute(e, game);
     }
     onEvent(_e, _game) { }
 }

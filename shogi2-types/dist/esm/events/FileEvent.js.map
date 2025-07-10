@@ -1,0 +1,1 @@
+{"version":3,"file":"FileEvent.js","sourceRoot":"","sources":["../../../src/events/FileEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,KAAK,EAAC,MAAM,UAAU,CAAC;AAG/B,MAAM,OAAO,SAAU,SAAQ,KAAW;IACxC,IAAI,CAAM;IACV,YAAY,EAAS,EAAC,IAAS;QAC7B,KAAK,CAAC,MAAM,EAAC,EAAE,CAAC,CAAC;QACjB,IAAI,CAAC,IAAI,GAAC,IAAI,CAAC;IACjB,CAAC;CACF"}

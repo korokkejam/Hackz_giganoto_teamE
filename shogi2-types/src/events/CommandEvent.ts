@@ -2,7 +2,8 @@ import {Event} from "../Event";
 
 export interface CommandEventType{
   type:string;
-  option:any;
+  option:string[];
+  sender:string;
 };
 
 export class CommandEvent extends Event<CommandEventType>{

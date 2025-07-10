@@ -10,21 +10,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pieces = exports.pawn = exports.bishop = exports.rook = exports.king2 = exports.king1 = exports.gold_general = exports.silver_general = exports.knight = exports.lance = void 0;
-var dark_king = {
-    src: "",
-    name: "魔王",
-    movable: {
-        relative: __spreadArray(__spreadArray(__spreadArray(__spreadArray(__spreadArray(__spreadArray(__spreadArray(__spreadArray([], __spreadArray([], Array(8), true).map(function (_, i) { return [0, i + 1]; }), true), __spreadArray([], Array(8), true).map(function (_, i) { return [i + 1, 0]; }), true), __spreadArray([], Array(8), true).map(function (_, i) { return [0, -i - 1]; }), true), __spreadArray([], Array(8), true).map(function (_, i) { return [-i - 1, 0]; }), true), __spreadArray([], Array(8), true).map(function (_, i) { return [i + 1, i + 1]; }), true), __spreadArray([], Array(8), true).map(function (_, i) { return [i + 1, -i - 1]; }), true), __spreadArray([], Array(8), true).map(function (_, i) { return [-i - 1, i + 1]; }), true), __spreadArray([], Array(8), true).map(function (_, i) { return [-i - 1, -i - 1]; }), true),
-        absolute: [],
-        func: ""
-    },
-    jumpable: false,
-    promotion: undefined,
-    promotion_callback: "",
-    promotion_msg: [],
-    king: true
-};
 var dragon_king = {
+    id: "dragon_king",
     src: "",
     name: "龍王",
     movable: {
@@ -39,6 +26,7 @@ var dragon_king = {
     king: false
 };
 var promoted_bishop = {
+    id: "promoted_bishop",
     src: "",
     name: "龍馬",
     movable: {
@@ -53,6 +41,7 @@ var promoted_bishop = {
     king: false
 };
 var promoted_silver = {
+    id: "promoted_silver",
     src: "",
     name: "成銀",
     movable: {
@@ -67,6 +56,7 @@ var promoted_silver = {
     king: false
 };
 var promoted_knight = {
+    id: "promoted_knight",
     src: "",
     name: "成桂",
     movable: {
@@ -81,6 +71,7 @@ var promoted_knight = {
     king: false
 };
 var promoted_lance = {
+    id: "promoted_lance",
     src: "",
     name: "成香",
     movable: {
@@ -95,6 +86,7 @@ var promoted_lance = {
     king: false
 };
 var lance = {
+    id: "lance",
     src: "",
     name: "香",
     movable: {
@@ -110,6 +102,7 @@ var lance = {
 };
 exports.lance = lance;
 var knight = {
+    id: "knight",
     src: "",
     name: "桂",
     movable: {
@@ -125,6 +118,7 @@ var knight = {
 };
 exports.knight = knight;
 var silver_general = {
+    id: "silver_general",
     src: "",
     name: "銀",
     movable: {
@@ -140,6 +134,7 @@ var silver_general = {
 };
 exports.silver_general = silver_general;
 var gold_general = {
+    id: "gold_general",
     src: "",
     name: "金",
     movable: {
@@ -155,6 +150,7 @@ var gold_general = {
 };
 exports.gold_general = gold_general;
 var promoted_pawn = {
+    id: "promoted_pawn",
     src: "",
     name: "と金",
     movable: {
@@ -169,6 +165,7 @@ var promoted_pawn = {
     king: false
 };
 var king1 = {
+    id: "king1",
     src: "",
     name: "王",
     movable: {
@@ -177,13 +174,14 @@ var king1 = {
         func: ""
     },
     jumpable: false,
-    promotion: dark_king,
+    promotion: undefined,
     promotion_callback: "",
     promotion_msg: ["更なる力が欲しいか？", "欲しい", "欲しくない"],
     king: true
 };
 exports.king1 = king1;
 var king2 = {
+    id: "king2",
     src: "",
     name: "玉",
     movable: {
@@ -192,13 +190,14 @@ var king2 = {
         func: ""
     },
     jumpable: false,
-    promotion: dark_king,
+    promotion: undefined,
     promotion_callback: "",
     promotion_msg: ["更なる力が欲しいか？", "欲しい", "欲しくない"],
     king: true
 };
 exports.king2 = king2;
 var rook = {
+    id: "rook",
     src: "",
     name: "飛",
     movable: {
@@ -214,6 +213,7 @@ var rook = {
 };
 exports.rook = rook;
 var bishop = {
+    id: "bishop",
     src: "",
     name: "角",
     movable: {
@@ -229,6 +229,7 @@ var bishop = {
 };
 exports.bishop = bishop;
 var pawn = {
+    id: "pawn",
     src: "",
     name: "歩",
     movable: {

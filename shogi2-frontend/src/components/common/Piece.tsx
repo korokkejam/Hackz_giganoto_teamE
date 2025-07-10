@@ -1,22 +1,26 @@
 import "./styles/Piece.css";
 import pieceImg from "../../assets/piece.png";
-import {boardAtom,playerAtom,turnAtom,focusedPieceAtom, putPieceAtom} from "../../state";
+import {boardAtom,playerAtom,turnAtom,focusedPieceAtom, putPieceAtom, filesAtom, zAtom} from "../../state";
 import {useAtomValue,useAtom, useSetAtom} from "jotai";
 import {useMemo} from "react";
+import { Position } from "shogi2-types";
 
-const eq=(v1:number[],v2:number[]|undefined)=>{
+const eq=(v1:Position,v2:Position|undefined)=>{
   if (!v2){
     return false;
   }
-  return v1[0]===v2[0] && v1[1]===v2[1];
+  return v1.x===v2.x && v1.y===v2.y;
 };
 
-export default function Piece({pos}:{pos:number[]}){
-  const board=useAtomValue(boardAtom);
+export default function Piece({pos}:{pos:Position}){
+  const files=useAtomValue(filesAtom);
+  const z=useAtomValue(zAtom);
+  const boards=useAtomValue(boardAtom);
+  const board=useMemo(()=>boards[z],[boards,z]);
   const player=useAtomValue(playerAtom);
   const turn=useAtomValue(turnAtom);
   const [focusedPiece,setFocusedPiece]=useAtom(focusedPieceAtom);
-  const piece=useMemo(()=>board[pos[1]][pos[0]].piece,board);
+  const piece=useMemo(()=>board[pos.y][pos.x].piece,board);
   const setPutPiece=useSetAtom(putPieceAtom);
   const onFocus=()=>{
     if (!piece){
@@ -33,8 +37,8 @@ export default function Piece({pos}:{pos:number[]}){
   };
   return (
     <div className={`piece ${piece?.owner===player?"":"turn"} ${turn===player && piece?.owner===player?"movable":""} ${eq(pos,focusedPiece?.pos)?"focus":""}`} onClick={onFocus}>
-      <img src={pieceImg}/>
-      <p>{piece?.type.name}</p>
+      <img src={piece?.type.src?files.find((file)=>file.id===piece.type.src)?.url:pieceImg}/>
+      <p style={{color:piece?.type.color?piece?.type.color:"black"}}>{piece?.type.name}</p>
       <div className="cover"/>
     </div>
   );

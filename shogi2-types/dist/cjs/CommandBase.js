@@ -3,8 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommandBase = void 0;
 // 抽象クラス
 class CommandBase {
-    constructor(raw, game) {
-        this.raw = raw;
+    constructor(game) {
         this.game = game;
     }
 }

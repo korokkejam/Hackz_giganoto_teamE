@@ -2,20 +2,21 @@ import "./styles/Index.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useState} from "react";
-import {wsAtom,playerAtom,boardAtom, zAtom} from "../state";
-import {useAtomValue, useSetAtom} from "jotai";
+import {wsAtom,playerAtom,boardAtom, filesAtom, additionalUIAtom} from "../state";
+import {useSetAtom} from "jotai";
 import {useNavigate} from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Game, Request} from "shogi2-types";
+import { ChangeBoardEvent, FileEvent, Game, Request, UIEvent} from "shogi2-types";
 
 export default function Index(){
-  const z=useAtomValue(zAtom);
+  const setFiles=useSetAtom(filesAtom);
   const [name,setName]=useState<string>("");
   const [error,setError]=useState<string>("");
   const setWs=useSetAtom(wsAtom);
   const setPlayer=useSetAtom(playerAtom);
   const setBoard=useSetAtom(boardAtom);
   const navigate=useNavigate();
+  const setAdditionalUI=useSetAtom(additionalUIAtom);
   const [loading,setLoading]=useState<boolean>(false);
   const checkRoomExists=()=>{
     if (!name){
@@ -40,11 +41,12 @@ export default function Index(){
       const d:Request<any>=JSON.parse(e.data);
       if (d.head==="ready"){
         const game:Game=d.content;
-        const board=game.boards[z];
-        setBoard(board);
+        setBoard(game.boards);
         setWs(ws);
         setPlayer("player2");
         navigate("/game");
+      }else{
+        message(e);
       }
     });
   };
@@ -58,16 +60,51 @@ export default function Index(){
       if (d.head==="ready"){
         const game:Game=d.content;
         setLoading(false);
-        const board=game.boards[z];
-        setBoard(board);
+        setBoard(game.boards);
         setWs(ws);
         navigate("/game");
+      }else{
+        message(e);
       }
     });
     ws.onopen=()=>{
       setPlayer("player1");
       setLoading(true);
       setWs(ws);
+    }
+  };
+  const message=(e:MessageEvent)=>{
+    const data=e.data;
+    const d:Request<any>=JSON.parse(data);
+    switch (d.head){
+      case "event":
+        const event:Event=d.content;
+        switch (event.type){
+          case "change_board":
+            {
+              const data:Request<ChangeBoardEvent>=d;
+              setBoard(data.content.data.boards);
+            }
+            break;
+          case "file":
+            {
+              const data:Request<FileEvent>=d;
+              const bin=atob(data.content.data.content);
+              const byte=new Uint8Array([...bin].map((char)=>char.charCodeAt(0)));
+              const blob=new Blob([byte],{type:data.content.data.mimetype});
+              const url = URL.createObjectURL(blob);
+              const id=data.content.data.id;
+              setFiles((files)=>[...files,{id,url}]);
+            }
+            break;
+          case "ui":
+            {
+              const data:Request<UIEvent>=d;
+              setAdditionalUI(data.content.data);
+            }
+            break;
+        }
+        break;
     }
   };
   return (

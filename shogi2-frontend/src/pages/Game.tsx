@@ -2,23 +2,23 @@ import "./styles/Game.css";
 import Board from "../components/layout/Board";
 import {useEffect,useState} from "react";
 import {useAtom, useAtomValue, useSetAtom} from "jotai";
-import {boardAtom, focusedPieceAtom, menubarStateAtom, messagesAtom,pieceStorage2Atom,pieceStorageAtom,pieceTypesAtom,playerAtom,putPieceAtom,turnAtom,wsAtom, zAtom} from "../state";
+import {additionalUIAtom, boardAtom, filesAtom, focusedPieceAtom, menubarStateAtom, messagesAtom,pieceStorage2Atom,pieceStorageAtom,pieceTypesAtom,playerAtom,putPieceAtom,turnAtom,wsAtom, zAtom} from "../state";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Paper from "@mui/material/Paper";
 import {useNavigate} from "react-router-dom";
-import {ChangeBoardEvent,CaptureEvent, ChatEvent, DropEvent, EndEvent, MoveEvent, Piece, PromotionCheckEvent, PromotionEvent, Request, TurnEvent} from "shogi2-types";
+import {AudioEvent, CaptureEvent, ChangeBoardEvent, ChatEvent, DropEvent, EndEvent, MoveEvent, Piece, PromotionCheckEvent, PromotionEvent, Request, TurnEvent, UIEvent, WarpEvent} from "shogi2-types";
 import {CSSProperties} from "@mui/material";
 import PieceStorage from "../components/layout/PieceStorage";
 import Menu from "../components/layout/Menu";
 import Chat from "../components/layout/Chat";
 import PromotionDialog from "../components/layout/PromotionDialog";
+import { ReservationEvent } from "shogi2-types/dist/esm/events/ReservationEvent";
 
 const style:CSSProperties={
   position:"absolute",
   width:"300px",
   textAlign:"center",
-  height:"200px",
   left:"50%",
   top:"30%",
   transform:"translate(-50%,-50%)",
@@ -26,7 +26,9 @@ const style:CSSProperties={
 };
 
 export default function Game(){
-  const z=useAtomValue(zAtom);
+  const boards=useAtomValue(boardAtom);
+  const files=useAtomValue(filesAtom);
+  const setZ=useSetAtom(zAtom);
   const [player,setPlayer]=useAtom(playerAtom);
   const navigate=useNavigate();
   const setTurn=useSetAtom(turnAtom);
@@ -39,7 +41,9 @@ export default function Game(){
   const [ws,setWs]=useAtom(wsAtom);
   const [promotionEvent,setPromotionEvent]=useState<PromotionCheckEvent|null>(null);
   const setFocusedPiece=useSetAtom(focusedPieceAtom);
+  const setFiles=useSetAtom(filesAtom);
   const setPutPiece=useSetAtom(putPieceAtom);
+  const setAdditionalUI=useSetAtom(additionalUIAtom);
   const setPieceTypes=useSetAtom(pieceTypesAtom);
   useEffect(()=>{
     if (!ws){
@@ -62,25 +66,61 @@ export default function Game(){
                 setMessages(prev=>[data.content.data,...prev]);
               }
               break;
-            case "move":
+            case "ui":
               {
-                const data:Request<MoveEvent>=d;
-                const e=data.content.data;
-                setBoard((board)=>board.map((row,y)=>row.map((s,x)=>{
-                  if (e.before_pos[0]===x && e.before_pos[1]===y){
-                    return {piece:null};
-                  }else if (e.after_pos[0]===x && e.after_pos[1]===y){
-                    return {piece:e.piece};
-                  }else{
-                    return s;
-                  }
-                })));
+                const data:Request<UIEvent>=d;
+                setAdditionalUI(data.content.data);
+              }
+              break;
+            case "reservation":
+              {
+                const data:Request<ReservationEvent>=d;
+                setTimeout(()=>{
+                  const req:Request<ReservationEvent>={
+                    head:"event",
+                    content:new ReservationEvent(crypto.randomUUID(),{...data.content.data}),
+                    sender:player
+                  };
+                  ws.send(JSON.stringify(req));
+                },data.content.data.millis);
+              }
+              break;
+            case "warp":
+              {
+              console.log(boards);
+                const data:Request<WarpEvent>=d;
+                setZ(data.content.data.z);
+              }
+              break;
+            case "audio":
+              {
+                const data:Request<AudioEvent>=d;
+                const file=files.find((f)=>f.id===data.content.data.id);
+                if (file){
+                  const audio=new Audio(file.url);
+                  audio.play();
+                }
               }
               break;
             case "change_board":
               {
                 const data:Request<ChangeBoardEvent>=d;
-                setBoard(data.content.data.boards[z]);
+                setBoard(data.content.data.boards);
+              }
+              break;
+            case "move":
+              {
+                const data:Request<MoveEvent>=d;
+                const e=data.content.data;
+                setBoard((boards)=>boards.map((board,pz)=>board.map((row,py)=>row.map((s,px)=>{
+                  if (e.before_pos.x===px && e.before_pos.y===py && e.before_pos.z===pz){
+                    return {...s,piece:null};
+                  }else if (e.after_pos.x===px && e.after_pos.y===py && e.after_pos.z===pz){
+                    return {...s,piece:e.piece};
+                  }else{
+                    return {...s};
+                  }
+                }))));
               }
               break;
             case "turn":
@@ -98,13 +138,13 @@ export default function Game(){
             case "promotion":
               {
                 const data:Request<PromotionEvent>=d;
-                setBoard((board)=>board.map((row,y)=>row.map((s,x)=>{
-                  if (x===data.content.data.pos.x && y===data.content.data.pos.y){
+                setBoard((boards)=>boards.map((board,z)=>board.map((row,y)=>row.map((s,x)=>{
+                  if (x===data.content.data.pos.x && y===data.content.data.pos.y && z===data.content.data.pos.z){
                     return {piece:data.content.data.piece};
                   }else{
                     return {...s};
                   }
-                })));
+                }))));
               }
               break;
             case "capture":
@@ -128,23 +168,23 @@ export default function Game(){
               {
                 const data:Request<DropEvent>=d;
                 if (data.content.data.piece.owner===player){
-                  setStorage1((storage1)=>storage1.filter((p)=>p.id===data.content.data.piece.id));
-                  setBoard((board)=>board.map((row,y)=>row.map((s,x)=>{
-                    if (x===data.content.data.pos.x && y===data.content.data.pos.y){
-                      return {piece:data.content.data.piece};
+                  setStorage1((storage1)=>storage1.filter((p)=>p.id!==data.content.data.piece.id));
+                  setBoard((boards)=>boards.map((board,z)=>board.map((row,y)=>row.map((s,x)=>{
+                    if (x===data.content.data.pos.x && y===data.content.data.pos.y && z===data.content.data.pos.z){
+                      return {...s,piece:data.content.data.piece};
                     }else{
                       return {...s};
                     }
-                  })));
+                  }))));
                 }else{
-                  setStorage2((storage2)=>storage2.filter((p)=>p.id===data.content.data.piece.id));
-                  setBoard((board)=>board.map((row,y)=>row.map((s,x)=>{
-                    if (x===data.content.data.pos.x && y===data.content.data.pos.y){
-                      return {piece:data.content.data.piece};
+                  setStorage2((storage2)=>storage2.filter((p)=>p.id!==data.content.data.piece.id));
+                  setBoard((boards)=>boards.map((board,z)=>board.map((row,y)=>row.map((s,x)=>{
+                    if (x===data.content.data.pos.x && y===data.content.data.pos.y && z===data.content.data.pos.z){
+                      return {...s,piece:data.content.data.piece};
                     }else{
                       return {...s};
                     }
-                  })));
+                  }))));
                 }
               }
               break;
@@ -181,6 +221,9 @@ export default function Game(){
       setPieceTypes([]);
       setMessages([]);
       setMenubarState({chat:false,storage:false});
+      setZ(0);
+      setFiles([]);
+      setAdditionalUI({menu1:[],menu2:[]});
     };
   },[]);
   return (

@@ -1,11 +1,11 @@
 import {ModBase,Game,ModConfig} from "shogi2-types";
-// import GameProcess from "./game/board";
 
 type ModBaseClass=new (game:Game)=>ModBase;
 type ModConfigClass=new (game:Game,mod:ModBase)=>ModConfig;
 
+// import GameProcess from "./game/board";
 // const p=new GameProcess([]);
-//
+
 // class Dog extends ModBase {
 //   type="dog";
 //   constructor(game:Game){
@@ -13,7 +13,7 @@ type ModConfigClass=new (game:Game,mod:ModBase)=>ModConfig;
 //   }
 // }
 // type ModBaseConstructor = new (game:Game) => ModBase;
-//
+
 // const a:ModBaseConstructor=Dog;
 // const b=new a(p.game);
 

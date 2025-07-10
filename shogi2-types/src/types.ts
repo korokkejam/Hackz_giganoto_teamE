@@ -5,20 +5,29 @@ import { ReturnRequest } from "./ModBase";
 export type player="player1"|"player2";
 export type board=Square[][];
 
+// ファイル
+export interface File{
+  content:string;
+  mimetype:string;
+  id:string;
+};
+
 //駒の種類
 export interface PieceType{
   name:string;
   id:string;
-  src:string|undefined;
+  src?:string;
+  color?:string;
   movable:{
     absolute:number[][];
     relative:number[][];
-    func:string
+    func:string[] //(pos:number[],board:board)=>number[]
   };
   jumpable:boolean;
-  promotion:PieceType|undefined;
+  promotion?:PieceType;
   promotion_callback:string;
   promotion_msg:string[];
+  promotion_check?:boolean;
   king:boolean;
 };
 
@@ -29,9 +38,18 @@ export interface Piece{
   type:PieceType;
 };
 
+export interface Effect{
+  src:string;
+  x?:number|string;
+  y?:number|string;
+  width?:number|string;
+  height?:number|string;
+}
+
 //マス
 export interface Square{
   piece:Piece|null;
+  effect?:Effect;
 };
 
 //ゲームのデータ
@@ -44,7 +62,8 @@ export interface Game{
   player2_point:number; //プレイヤー2のポイント
   player1_redbull:number; //プレイヤー1のレッドブル
   player2_redbull:number; //プレイヤー2のレッドブル
-  history: Move[][]; //盤面の履歴
+  history: {boards:Square[][][],id:string}[]; //盤面の履歴
+  boards_id:string;
   player1_storage:Piece[]; //持ち駒
   player2_storage:Piece[]; //持ち駒
   pieces:PieceType[]; //使用可能な駒の一覧
@@ -71,9 +90,4 @@ export interface Move {
     pieceId: string;
     from: Position | null;
     to: Position | null;
-}
-
-// 各コマンドの返り値定義
-export interface CommandResult<T = undefined> {
-    data?: T;
 }

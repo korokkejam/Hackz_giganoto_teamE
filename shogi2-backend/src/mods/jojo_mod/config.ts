@@ -7,6 +7,7 @@ interface Config{
 export default class JoJoConfig extends ModConfig<Config>{
   type="jojo";
   config:Config;
+  load=true;
   hierarchy:number;
   constructor(game:Game,mod:JoJo){
     super(game,mod);

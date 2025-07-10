@@ -27,3 +27,10 @@
 .square.dye:has(> div) .move-indicator {
   z-index: 0;
 }
+
+.square-effect{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  z-index:20;
+  pointer-events:none;
+}

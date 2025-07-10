@@ -1,0 +1,50 @@
+import {PieceType} from "shogi2-types";
+
+export const steel_ball_run_pieces:PieceType[]=[
+  {
+    name:"再実行",
+    id:"mandom",
+    movable:{
+      absolute:[],
+      relative:[
+        ...[...Array(3)].map((_,i)=>[i+1,0]),
+        ...[...Array(3)].map((_,i)=>[-i-1,0]),
+        ...[...Array(3)].map((_,i)=>[0,i+1]),
+        ...[...Array(3)].map((_,i)=>[0,-i-1]),
+        [1,1],
+        [1,-1],
+        [-1,1],
+        [-1,-1]
+      ],
+      func:[]
+    },
+    jumpable:false,
+    promotion:undefined,
+    promotion_callback:"",
+    promotion_msg:[],
+    king:false
+  },
+  {
+    name:"異渡",
+    id:"d4c",
+    movable:{
+      absolute:[],
+      relative:[
+        ...[...Array(5)].map((_,i)=>[i+1,0]),
+        ...[...Array(5)].map((_,i)=>[-i-1,0]),
+        ...[...Array(5)].map((_,i)=>[0,i+1]),
+        ...[...Array(5)].map((_,i)=>[0,-i-1]),
+        ...[...Array(5)].map((_,i)=>[i+1,i+1]),
+        ...[...Array(5)].map((_,i)=>[-i-1,i+1]),
+        ...[...Array(5)].map((_,i)=>[i+1,-i-1]),
+        ...[...Array(5)].map((_,i)=>[-i-1,-i-1]),
+      ],
+      func:[]
+    },
+    jumpable:false,
+    promotion:undefined,
+    promotion_callback:"",
+    promotion_msg:[],
+    king:false
+  }
+];

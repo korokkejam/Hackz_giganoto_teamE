@@ -1,1 +1,1 @@
-{"version":3,"file":"CommandBase.js","sourceRoot":"","sources":["../../src/CommandBase.ts"],"names":[],"mappings":"AAEA,QAAQ;AACR,MAAM,OAAgB,WAAW;IAKE;IAFrB,IAAI,CAAO;IAErB,YAA+B,GAAQ,EAAE,IAAU;QAApB,QAAG,GAAH,GAAG,CAAK;QACnC,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;IACrB,CAAC;CAIJ"}
+{"version":3,"file":"CommandBase.js","sourceRoot":"","sources":["../../src/CommandBase.ts"],"names":[],"mappings":"AAIA,QAAQ;AACR,MAAM,OAAgB,WAAW;IAGnB,IAAI,CAAO;IAErB,YAAY,IAAU;QAClB,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;IACrB,CAAC;CAIJ"}

@@ -1,15 +1,16 @@
 import "./rooms";
 import { WSContext } from "hono/ws";
-import {Event,ChatEvent, Game,ModBase,ModConfig,Request,ReturnRequest,board, MoveEvent, Move, CaptureEvent, TurnEvent, PromotionEvent, Piece, PromotionCheckEvent, EndEvent, DropEvent} from "shogi2-types";
+import {Event,ChatEvent, Game,ModBase,ModConfig,Request,ReturnRequest,board, MoveEvent, Move, CaptureEvent, TurnEvent, PromotionEvent, Piece, PromotionCheckEvent, EndEvent, DropEvent, CommandEvent, ChatEventType} from "shogi2-types";
 import { pieces } from "../config/piece";
 import {configs, mods} from "../load";
 import cloneDeep from 'lodash/cloneDeep';
 
-class GameProcess{
+export default class GameProcess{
   game:Game;
   mods:ModBase[];
   configs:ModConfig[];
   constructor(boards:board[]){
+    const id=crypto.randomUUID();
     const game:Game={
       boards,
       turn:"player1",
@@ -19,12 +20,13 @@ class GameProcess{
       player2_point:0,
       player1_redbull:0,
       player2_redbull:0,
-      history:[],
+      history:[{boards:cloneDeep(boards),id}],
       player1_storage:[],
       player2_storage:[],
       pieces:[...pieces],
       messages:[],
-      requests:[]
+      requests:[],
+      boards_id:id
     };
     this.game=game;
     this.mods=mods.map((modClass)=>new modClass(game));
@@ -38,6 +40,8 @@ class GameProcess{
       return config1.hierarchy-config2.hierarchy;
     });
     this.configs.sort((config1,config2)=>config1.hierarchy-config2.hierarchy);
+    this.mods=this.mods.filter((mod)=>this.configs.find((config)=>config.type===mod.type)?.load);
+    this.configs=this.configs.filter((config)=>config.load);
   }
   clone_game():Game{
     return cloneDeep(this.game);
@@ -52,7 +56,6 @@ class GameProcess{
     switch (request.head){
       case "event":
         const event:Event=(request as Request<Event>).content;
-        console.log(event);
         switch (event.type){
           case "chat":
             {
@@ -66,20 +69,50 @@ class GameProcess{
               this.game.requests.push(req);
             }
             break;
+          case "command":
+            {
+              if (request.sender===undefined){
+                return;
+              }
+              const e:CommandEvent=event;
+              const msg=`/${e.data.type} ${e.data.option.join(" ")}`
+              console.log(`${e.data.sender}:${msg}`);
+              const c:ChatEventType={
+                msg,
+                sender:e.data.sender
+              };
+              this.game.messages.push(c);
+              const req:ReturnRequest={
+                request:{
+                  head:"event",
+                  content:{
+                    type:"chat",
+                    data:c,
+                    id:e.id
+                  },
+                  sender:request.sender
+                },
+                target:undefined,
+                owner:"main"
+              };
+              this.game.requests.push(req);
+            }
+            break;
           case "move":
             {
               let end_flag=false;
               const e:MoveEvent=event;
               const move:Move={
                 pieceId:e.data.piece.id,
-                from:{x:e.data.before_pos[0],y:e.data.before_pos[1],z:0},
-                to:{x:e.data.after_pos[0],y:e.data.after_pos[1],z:0}
+                from:{...e.data.before_pos},
+                to:{...e.data.after_pos}
               };
-              this.game.history.push([move]);
               const piece1=e.data.piece;
-              const piece2=this.game.boards[0][e.data.after_pos[1]][e.data.after_pos[0]].piece;
-              this.game.boards[0][e.data.after_pos[1]][e.data.after_pos[0]]={piece:piece1};
-              this.game.boards[0][e.data.before_pos[1]][e.data.before_pos[0]]={piece:null};
+              const piece2=this.game.boards[e.data.after_pos.z][e.data.after_pos.y][e.data.after_pos.x].piece;
+              const s1=this.game.boards[e.data.after_pos.z][e.data.after_pos.y][e.data.after_pos.x];
+              const s2=this.game.boards[e.data.before_pos.z][e.data.before_pos.y][e.data.before_pos.x];
+              this.game.boards[e.data.after_pos.z][e.data.after_pos.y][e.data.after_pos.x]={...s1,piece:piece1};
+              this.game.boards[e.data.before_pos.z][e.data.before_pos.y][e.data.before_pos.x]={...s2,piece:null};
               if (piece2){ //piece2が取られた時
                 const capture:CaptureEvent={
                   type:"capture",
@@ -87,8 +120,8 @@ class GameProcess{
                   data:{
                     piece1,
                     piece2,
-                    pos1:{x:e.data.before_pos[0],y:e.data.before_pos[1],z:0},
-                    pos2:{x:e.data.after_pos[0],y:e.data.after_pos[1],z:0}
+                    pos1:{...e.data.before_pos},
+                    pos2:{...e.data.after_pos}
                   }
                 };
                 if (piece2.type.king){
@@ -105,7 +138,7 @@ class GameProcess{
                 const req:Request<CaptureEvent>={head:"event",content:capture,sender:request.sender};
                 this.game.requests.push({request:req,target:undefined,owner:"main"});
               }
-              if (move.to && ((this.game.turn==="player1" && 3>move.to.y) || (this.game.turn==="player2" && move.to.y>5)) && piece1.type.promotion && !end_flag){
+              if (move.to && ((this.game.turn==="player1" && 3>move.to.y) || (this.game.turn==="player2" && move.to.y>this.game.boards[this.game.player2_current_board].length-3)) && piece1.type.promotion && !end_flag && !piece1.type.promotion_check){
                 const promotion_check:PromotionCheckEvent={
                   type:"promotion_check",
                   id:crypto.randomUUID(),
@@ -135,7 +168,8 @@ class GameProcess{
               if (piece.type.promotion){
                 if (e.data.answer){
                   const promotedPiece:Piece={id:piece.id,type:piece.type.promotion,owner:piece.owner};
-                  this.game.boards[pos.z][pos.y][pos.x]={piece:promotedPiece};
+                  const s=this.game.boards[pos.z][pos.y][pos.x];
+                  this.game.boards[pos.z][pos.y][pos.x]={...s,piece:promotedPiece};
 
                   const promotion:PromotionEvent={
                     type:"promotion",
@@ -159,9 +193,9 @@ class GameProcess{
             {
               const e:DropEvent=event;
               if (request.sender==="player1"){
-                this.game.player1_storage=this.game.player1_storage.filter((p)=>p.id===e.data.piece.id);
+                this.game.player1_storage=this.game.player1_storage.filter((p)=>p.id!==e.data.piece.id);
               }else{
-                this.game.player2_storage=this.game.player2_storage.filter((p)=>p.id===e.data.piece.id);
+                this.game.player2_storage=this.game.player2_storage.filter((p)=>p.id!==e.data.piece.id);
               }
               const req1:Request<DropEvent>={head:"event",content:e};
               this.game.requests.push({request:req1,target:undefined,owner:"main"});
@@ -171,21 +205,32 @@ class GameProcess{
               this.game.requests.push({request:req2,target:undefined,owner:"main"});
             }
             break;
+          case "warp":
+            {
+              if (request.sender==="player1"){
+                this.game.player1_current_board+=1;
+              }else{
+                this.game.player2_current_board+=1;
+              }
+              this.game.requests.push({request,owner:"main",target:request.sender});
+            }
+            break;
         }
         break;
     }
     for (const mod of this.mods){
       const rs=mod.event(request,cloneDeep(before));
       for (const r of rs){
-        const type=r.request.content.type;
-        const target=r.target;
-        this.game.requests=this.game.requests.filter((req)=>(req.request.content.type!==type || req.target!==target) && req.overwritten);
         this.game.requests.push(r);
       }
     }
-    this.game.requests.forEach((request)=>{
+    if (this.game.requests.map((r)=>r.request.content.type).includes("turn")){
+      this.game.history.push({boards:cloneDeep(this.game.boards),id:this.game.boards_id});
+      this.game.boards_id=crypto.randomUUID();
+    }
+    this.game.requests.forEach((r)=>{
       let wss:WSContext[]=[];
-      switch (request.target){
+      switch (r.target){
         case "player1":
           wss.push(ws1);
           break;
@@ -198,10 +243,8 @@ class GameProcess{
           break;
       }
       wss.map((ws)=>{
-        ws.send(JSON.stringify(request.request));
+        ws.send(JSON.stringify(r.request));
       });
     });
   }
 }
-
-export default GameProcess;

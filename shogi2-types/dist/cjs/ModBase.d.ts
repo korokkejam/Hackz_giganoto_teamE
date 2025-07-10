@@ -13,8 +13,12 @@ import { CommandConstructor } from "./CommandFactory";
 import { CommandEvent } from "./events/CommandEvent";
 import { QuestionEvent } from "./events/QuestionEvent";
 import { PromotionCheckEvent } from "./events/PromotionCheckEvent";
+import { CommandBase } from "./CommandBase";
+import { AudioEvent } from "./events/AudioEvent";
+import { ReservationEvent } from "./events/ReservationEvent";
+import { WarpEvent } from "./events/WarpEvent";
 export interface ReturnRequest {
-    request: Request<Event>;
+    request: Request<Event | any>;
     target: player | undefined;
     overwritten?: boolean;
     owner: string;
@@ -22,8 +26,9 @@ export interface ReturnRequest {
 export declare abstract class ModBase {
     abstract type: string;
     game: Game;
-    commands: CommandConstructor[];
+    commands: CommandBase[];
     constructor(game: Game);
+    addCommands(commands: CommandConstructor[]): void;
     event(request: Request<Event>, game: Game): ReturnRequest[];
     onStart(_e: StartEvent, _game: Game): ReturnRequest[] | void;
     onMessage(_e: ChatEvent, _game: Game): ReturnRequest[] | void;
@@ -36,6 +41,9 @@ export declare abstract class ModBase {
     onCapture(_e: CaptureEvent, _game: Game): ReturnRequest[] | void;
     onQuestion(_e: QuestionEvent, _game: Game): ReturnRequest[] | void;
     onPromotionCheck(_e: PromotionCheckEvent, _game: Game): ReturnRequest[] | void;
-    onCommand(e: CommandEvent): void;
+    onAudio(_e: AudioEvent, _game: Game): ReturnRequest[] | void;
+    onReservation(_e: ReservationEvent, _game: Game): ReturnRequest[] | void;
+    onWarp(_e: WarpEvent, _game: Game): ReturnRequest[] | void;
+    onCommand(e: CommandEvent, game: Game): ReturnRequest[] | void;
     onEvent(_e: Event, _game: Game): ReturnRequest[] | void;
 }

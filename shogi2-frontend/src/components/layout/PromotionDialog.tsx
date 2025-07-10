@@ -10,8 +10,7 @@ import {Request, PromotionCheckEvent} from "shogi2-types";
 
 const style:CSSProperties={
   position:"absolute",
-  width:"200px",
-  height:"100px",
+  width:"300px",
   left:"50%",
   top:"30%",
   transform:"translate(-50%,-50%)"

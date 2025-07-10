@@ -1,1 +1,1 @@
-{"version":3,"file":"ModConfig.js","sourceRoot":"","sources":["../../src/ModConfig.ts"],"names":[],"mappings":";;;AAGA,MAAsB,SAAS;IAQ7B,YAAY,IAAS,EAAC,GAAW;QAC/B,IAAI,CAAC,IAAI,GAAC,IAAI,CAAC;QACf,IAAI,CAAC,GAAG,GAAC,GAAG,CAAC;IACf,CAAC;CACF;AAZD,8BAYC"}
+{"version":3,"file":"ModConfig.js","sourceRoot":"","sources":["../../src/ModConfig.ts"],"names":[],"mappings":";;;AAGA,MAAsB,SAAS;IAS7B,YAAY,IAAS,EAAC,GAAW;QAC/B,IAAI,CAAC,IAAI,GAAC,IAAI,CAAC;QACf,IAAI,CAAC,GAAG,GAAC,GAAG,CAAC;IACf,CAAC;CACF;AAbD,8BAaC"}
