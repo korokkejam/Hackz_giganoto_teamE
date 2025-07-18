@@ -1,7 +1,7 @@
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useMemo } from "react";
 import { Button, Container, convert, Image, Operatable, parser, Request, restore, Text, UI } from "shogi2-types";
-import { boardAtom, filesAtom, messagesAtom, pieceStorage2Atom, pieceStorageAtom, pieceTypesAtom, playerAtom, turnAtom, wsAtom, zAtom } from "../../state";
+import { boardAtom, filesAtom, messagesAtom, pieceStorage2Atom, pieceStorageAtom, pieceTypesAtom, playerAtom, turnAtom, wsAtom, zAtom, fieldAtom } from "../../state";
 import "./styles/CustomUI.css";
 
 export function CustomUI({ui}:{ui:UI}){
@@ -15,6 +15,7 @@ export function CustomUI({ui}:{ui:UI}){
   const messages=useAtomValue(messagesAtom);
   const pieceTypes=useAtomValue(pieceTypesAtom);
   const ws=useAtomValue(wsAtom);
+  const [field,setField]=useAtom(fieldAtom);
   const element=useMemo(()=>{
     switch (ui.type){
       case "text":
@@ -30,11 +31,10 @@ export function CustomUI({ui}:{ui:UI}){
           z,
           files
         };
-        const converted=convert({...v,field:{},requests:[]});
+        const converted=convert({...v,field,requests:[]});
         if (converted.object){
           const value=parser(text.content);
           const s=value.execute(converted.object);
-          console.log(s);
           if (s.string!==undefined){
             return <div style={text.style}>{s.string}</div>;
           }else if (s.number!==undefined){
@@ -58,16 +58,18 @@ export function CustomUI({ui}:{ui:UI}){
             z,
             files
           };
-          const converted=convert({...v,field:{},requests:[]});
+          const converted=convert({...v,field,requests:[]});
           if (converted.object){
             const func=parser(button.onClick);
             func.execute(converted.object);
             const restored=restore(converted);
+            setField(restored.field);
             const requests:Request<any>[]=restored.requests;
             if (!ws){
               return;
             }
             requests.forEach((request)=>{
+              console.log(request);
               ws.send(JSON.stringify(request));
             });
           }
@@ -75,13 +77,13 @@ export function CustomUI({ui}:{ui:UI}){
         return <button style={button.style} onClick={onClick} className="custom-button"><CustomUI ui={button.content}/></button>
       case "image":
         const image=ui as Image;
-        const src=files.find((file)=>file.url===image.src);
+        const src=files.find((file)=>file.id===image.src);
         return <img style={image.style} src={src?.url}/>
       case "container":
         const container=ui as Container;
         return <div style={container.style}>{container.children.map((child)=><CustomUI ui={child}/>)}</div>
     }
-  },[ui,boards,player,turn,storage1,storage2,pieceTypes,messages,z,files]);
+  },[ui,boards,player,turn,storage1,storage2,pieceTypes,messages,z,files,field]);
   return (
     element
   );

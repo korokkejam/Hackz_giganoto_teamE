@@ -21,5 +21,5 @@ export declare class Image extends UI {
 }
 export declare class Container extends UI {
     children: UI[];
-    constructor(id: string, children: UI[], style: CSSProperties);
+    constructor(id: string, children: UI[], style?: CSSProperties);
 }

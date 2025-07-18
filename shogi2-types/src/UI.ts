@@ -40,7 +40,7 @@ export class Image extends UI{
 
 export class Container extends UI{
   children:UI[];
-  constructor(id:string,children:UI[],style:CSSProperties){
+  constructor(id:string,children:UI[],style?:CSSProperties){
     super(id,"container",style);
     this.children=children;
   }

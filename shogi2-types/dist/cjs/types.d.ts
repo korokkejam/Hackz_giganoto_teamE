@@ -1,5 +1,6 @@
 import { Event } from "./Event";
 import { ChatEventType } from "./events/ChatEvent";
+import { UIEventType } from "./events/UIEvent";
 import { ReturnRequest } from "./ModBase";
 export type player = "player1" | "player2";
 export type board = Square[][];
@@ -60,6 +61,12 @@ export interface Game {
     pieces: PieceType[];
     messages: ChatEventType[];
     requests: ReturnRequest[];
+    ui1: UIEventType;
+    ui2: UIEventType;
+    mods: {
+        name: string;
+        load: boolean;
+    }[];
 }
 export interface Request<T extends Event | any> {
     head: string;

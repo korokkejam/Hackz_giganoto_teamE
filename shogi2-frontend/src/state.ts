@@ -16,3 +16,4 @@ export const menubarStateAtom=atom<{chat:boolean,storage:boolean}>({chat:false,s
 export const zAtom=atom<number>(0);
 export const filesAtom=atom<{id:string,url:string}[]>([]);
 export const additionalUIAtom=atom<UIEventType>({menu1:[],menu2:[]});
+export const fieldAtom=atom<any>({});

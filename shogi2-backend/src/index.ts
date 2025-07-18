@@ -5,11 +5,14 @@ import {boards} from "./config/board";
 import {createNodeWebSocket} from "@hono/node-ws";
 import {rooms, setRooms} from "./game/rooms";
 import GameProcess from "./game/board";
-import {Request,Square,StartEvent} from "shogi2-types";
+import {Request,StartEvent} from "shogi2-types";
 import fs from "fs";
 import {setMods,loadMods} from "./load";
 
 import "./test";
+import { cloneDeep } from "lodash";
+
+import os from 'os';
 
 const app=new Hono();
 
@@ -34,7 +37,7 @@ app.get("/room/check/:id",(c:Context)=>{
 
 app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
   const id=c.req.param("id");
-  const data=new GameProcess(boards.map((board:Square[][])=>board.map((row)=>row.map((s)=>{return{...s}}))));
+  const data=new GameProcess(cloneDeep(boards));
   return {
     onMessage(event,_ws){
       const room=rooms.find((room)=>room.id===id);
@@ -55,7 +58,7 @@ app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
       room.ws1?.send(JSON.stringify(request));
       room.ws2?.send(JSON.stringify(request));
       setRooms(rooms.filter((r)=>r.id!==room.id));
-      console.log(room);
+      // console.log(room);
     },
     onError(event){
       console.log(event);
@@ -93,7 +96,7 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
       room.ws1?.send(JSON.stringify(request));
       room.ws2?.send(JSON.stringify(request));
       setRooms(rooms.filter((r)=>r.id!==room.id));
-      console.log(room);
+      // console.log(room);
     },
     onError(event){
       console.log(event);
@@ -101,13 +104,31 @@ app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
   };
 }));
 
+function getLocalIpAddress(): string | null {
+  const interfaces = os.networkInterfaces();
+
+  for (const interfaceName in interfaces) {
+    const networkInterface = interfaces[interfaceName];
+    if (!networkInterface) continue;
+
+    for (const iface of networkInterface) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address; // 最初に見つけたIPv4アドレスを返す
+      }
+    }
+  }
+
+  return null; // 見つからなければnull
+}
+
 fs.readdir("src/mods/",(_,d)=>{
   loadMods(d).then((mods)=>{
     setMods(mods);
 
-    const server=serve({ fetch: app.fetch, port: 3000 }, () => {
+    const ipAddress = getLocalIpAddress();
+    const server=serve({ fetch: app.fetch, port: 3000 ,hostname:"0.0.0.0"}, () => {
       console.log(mods);
-      console.log("Server is running on http://localhost:3000")
+      console.log(`Server is running on http://${ipAddress}:3000`)
     });
 
     injectWebSocket(server);

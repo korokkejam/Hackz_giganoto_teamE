@@ -39,7 +39,7 @@ export const stone_ocean_pieces:PieceType[]=[
         id:"made_in_heaven",
               movable:{
           absolute:[],
-          relative:[...[...Array(8)].map((_,i)=>[0,i+1]),...[...Array(8)].map((_,i)=>[i+1,0]),...[...Array(8)].map((_,i)=>[0,-i-1]),...[...Array(8)].map((_,i)=>[-i-1,0]),...[...Array(8)].map((_,i)=>[i+1,i+1]),...[...Array(8)].map((_,i)=>[i+1,-i-1]),...[...Array(8)].map((_,i)=>[-i-1,i+1]),...[...Array(8)].map((_,i)=>[-i-1,-i-1])],
+          relative:[...[...Array(3)].map((_,i)=>[0,i+1]),...[...Array(3)].map((_,i)=>[i+1,0]),...[...Array(3)].map((_,i)=>[0,-i-1]),...[...Array(3)].map((_,i)=>[-i-1,0]),...[...Array(3)].map((_,i)=>[i+1,i+1]),...[...Array(3)].map((_,i)=>[i+1,-i-1]),...[...Array(3)].map((_,i)=>[-i-1,i+1]),...[...Array(3)].map((_,i)=>[-i-1,-i-1])],
           func:[]
         },
         jumpable:false,

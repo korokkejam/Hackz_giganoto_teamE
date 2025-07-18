@@ -4,6 +4,7 @@ import {boardAtom,filesAtom,focusedPieceAtom,pieceStorageAtom,playerAtom,putPiec
 import {useAtom, useAtomValue} from "jotai";
 import {DropEvent, MoveEvent, Position, Request, Square} from "shogi2-types";
 import { useMemo } from "react";
+import {generateUUID} from "../../features/uuid";
 
 // dye:駒の移動先候補として色がついてる
 // square:マスの情報
@@ -30,7 +31,7 @@ export default function Square({pos,square,dye}:{pos:Position,square:Square,dye?
         const data:Request<DropEvent>={
           head:"event",
           content:{
-            id:crypto.randomUUID(),
+            id:generateUUID(),
             type:"drop",
             data:{
               piece,
@@ -52,7 +53,7 @@ export default function Square({pos,square,dye}:{pos:Position,square:Square,dye?
             before_pos:{...focusedPiece.pos,z},
             after_pos:{...pos,z}
           },
-          id:crypto.randomUUID()
+          id:generateUUID()
         };
         const request:Request<MoveEvent>={head:"event",content:event,sender:player};
         ws.send(JSON.stringify(request));

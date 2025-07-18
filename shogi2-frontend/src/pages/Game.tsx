@@ -1,19 +1,21 @@
 import "./styles/Game.css";
 import Board from "../components/layout/Board";
-import {useEffect,useState} from "react";
+import {useEffect,useRef,useState} from "react";
 import {useAtom, useAtomValue, useSetAtom} from "jotai";
 import {additionalUIAtom, boardAtom, filesAtom, focusedPieceAtom, menubarStateAtom, messagesAtom,pieceStorage2Atom,pieceStorageAtom,pieceTypesAtom,playerAtom,putPieceAtom,turnAtom,wsAtom, zAtom} from "../state";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Paper from "@mui/material/Paper";
 import {useNavigate} from "react-router-dom";
-import {AudioEvent, CaptureEvent, ChangeBoardEvent, ChatEvent, DropEvent, EndEvent, MoveEvent, Piece, PromotionCheckEvent, PromotionEvent, Request, TurnEvent, UIEvent, WarpEvent} from "shogi2-types";
+import {AudioEvent, CaptureEvent, ChangeBoardEvent, ChatEvent, DropEvent, EndEvent, FileEvent, Game, MoveEvent, Piece, PromotionCheckEvent, PromotionEvent, Request, ReturnEvent, TurnEvent, UIEvent, WarpEvent} from "shogi2-types";
 import {CSSProperties} from "@mui/material";
 import PieceStorage from "../components/layout/PieceStorage";
 import Menu from "../components/layout/Menu";
 import Chat from "../components/layout/Chat";
 import PromotionDialog from "../components/layout/PromotionDialog";
 import { ReservationEvent } from "shogi2-types/dist/esm/events/ReservationEvent";
+import { CustomUI } from "../components/layout/CustomUI";
+import {generateUUID} from "../features/uuid";
 
 const style:CSSProperties={
   position:"absolute",
@@ -26,7 +28,6 @@ const style:CSSProperties={
 };
 
 export default function Game(){
-  const boards=useAtomValue(boardAtom);
   const files=useAtomValue(filesAtom);
   const setZ=useSetAtom(zAtom);
   const [player,setPlayer]=useAtom(playerAtom);
@@ -43,8 +44,9 @@ export default function Game(){
   const setFocusedPiece=useSetAtom(focusedPieceAtom);
   const setFiles=useSetAtom(filesAtom);
   const setPutPiece=useSetAtom(putPieceAtom);
-  const setAdditionalUI=useSetAtom(additionalUIAtom);
+  const [additionalUI,setAdditionalUI]=useAtom(additionalUIAtom);
   const setPieceTypes=useSetAtom(pieceTypesAtom);
+  const filesRef=useRef<{id:string,url:string}[]>([]);
   useEffect(()=>{
     if (!ws){
       return;
@@ -56,6 +58,26 @@ export default function Game(){
         case "close":
           setText("接続が切れました");
           ws.close();
+          break;
+        case "ready":
+          {
+            const game:Game=d.content;
+            setBoard(game.boards);
+            setTurn(game.turn);
+            if (player==="player1"){
+              setZ(game.player1_current_board)
+              setStorage1(game.player1_storage);
+              setStorage2(game.player2_storage);
+              // setAdditionalUI(game.ui1);
+            }else{
+              setZ(game.player2_current_board)
+              setStorage1(game.player2_storage);
+              setStorage2(game.player1_storage);
+              // setAdditionalUI(game.ui2);
+            }
+            setPieceTypes(game.pieces);
+            setMessages(game.messages);
+          }
           break;
         case "event":
           const event:Event=d.content;
@@ -78,7 +100,7 @@ export default function Game(){
                 setTimeout(()=>{
                   const req:Request<ReservationEvent>={
                     head:"event",
-                    content:new ReservationEvent(crypto.randomUUID(),{...data.content.data}),
+                    content:new ReservationEvent(generateUUID(),{...data.content.data}),
                     sender:player
                   };
                   ws.send(JSON.stringify(req));
@@ -87,19 +109,8 @@ export default function Game(){
               break;
             case "warp":
               {
-              console.log(boards);
                 const data:Request<WarpEvent>=d;
                 setZ(data.content.data.z);
-              }
-              break;
-            case "audio":
-              {
-                const data:Request<AudioEvent>=d;
-                const file=files.find((f)=>f.id===data.content.data.id);
-                if (file){
-                  const audio=new Audio(file.url);
-                  audio.play();
-                }
               }
               break;
             case "change_board":
@@ -127,6 +138,7 @@ export default function Game(){
               {
                 const data:Request<TurnEvent>=d;
                 setTurn(data.content.data.player);
+                console.log(data.content.data.player);
               }
               break;
             case "promotion_check":
@@ -188,6 +200,39 @@ export default function Game(){
                 }
               }
               break;
+            case "file":
+              {
+                const data:Request<FileEvent>=d;
+                const bin=atob(data.content.data.content);
+                const byte=new Uint8Array([...bin].map((char)=>char.charCodeAt(0)));
+                const blob=new Blob([byte],{type:data.content.data.mimetype});
+                const url = URL.createObjectURL(blob);
+                const id=data.content.data.id;
+                setFiles((files)=>[...files,{id,url}]);
+                console.log({id,url});
+              }
+              break;
+            case "return":
+              {
+                const data:Request<ReturnEvent>=d;
+                const {request,millis}=data.content.data;
+                setTimeout(()=>{
+                  ws.send(JSON.stringify(request));
+                },millis);
+              }
+              break;
+            case "audio":
+              {
+                const data:Request<AudioEvent>=d;
+                const file=filesRef.current.find((f)=>f.id===data.content.data.id);
+                if (file){
+                  const audio=new Audio(file.url);
+                  audio.play();
+                }
+                console.log(filesRef.current);
+                console.log(file);
+              }
+              break;
             case "end":
               {
                 const data:Request<EndEvent>=d;
@@ -226,8 +271,14 @@ export default function Game(){
       setAdditionalUI({menu1:[],menu2:[]});
     };
   },[]);
+  useEffect(()=>{
+    filesRef.current=files;
+  },[files]);
   return (
     <div className="game">
+      <div className="container">
+        {additionalUI.background?<CustomUI ui={additionalUI.background}/>:null}
+      </div>
       <Modal open={!!text} onClose={()=>{setText(null)}}>
         <Paper sx={style}>
           <h4>{text}</h4>
@@ -243,6 +294,9 @@ export default function Game(){
       <PromotionDialog event={promotionEvent} onClose={()=>{setPromotionEvent(null)}}/>
       <Menu/>
       <Board/>
+      <div className="container">
+        {additionalUI.foreground?<CustomUI ui={additionalUI.foreground}/>:null}
+      </div>
     </div>
   );
 }

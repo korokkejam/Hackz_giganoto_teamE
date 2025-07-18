@@ -7,11 +7,17 @@ export default class CMoon extends Base{
   }
   onEvent(_e:Event,_before:Game){
     const r=this.game.boards.map((board,z)=>board.map((row,y)=>row.map((s,x)=>{
-      return {
-        piece:s.piece,
-        pos:{x,y,z}
-      };
-    }))).flat(2).filter(({piece})=>piece?.type.id==="c-moon").map((d)=>{
+      if (s.piece){
+        return {
+          piece:s.piece,
+          pos:{x,y,z}
+        };
+      }else{
+        return undefined;
+      }
+    }))).flat(2).filter((s)=>!!s).filter(({piece})=>{
+      return piece.type.id==="c-moon";
+    }).map((d)=>{
       if (d){
         const {piece:c_moon,pos}=d;
         if (c_moon){

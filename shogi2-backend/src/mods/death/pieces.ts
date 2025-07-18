@@ -1,0 +1,383 @@
+import { PieceType } from "shogi2-types";
+
+export const death_promoted_silver:PieceType={
+  id:"promoted_silver",
+  name:"死成銀",
+  movable:{
+    relative:[
+      [1,1],
+      [0,1],
+      [-1,1],
+      [1,0],
+      [-1,0],
+      [0,-1],
+      [1,-1],
+      [-1,-1],
+      [1,2],
+      [1,-2],
+      [-1,2],
+      [-1,-2],
+      [2,1],
+      [2,-1],
+      [-2,1],
+      [-2,-1]
+    ],
+    absolute:[],
+    func:[]
+  },
+  jumpable:false,
+  promotion:undefined,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_promoted_knight:PieceType={
+  id:"promoted_knight",
+  name:"死成桂",
+  movable:{
+    relative:[[1,1],[0,1],[-1,1],[1,0],[-1,0],[0,-1],[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]],
+    absolute:[],
+    func:[]
+  },
+  jumpable:false,
+  promotion:undefined,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_promoted_lance:PieceType={
+  id:"promoted_lance",
+  name:"死成香",
+  movable:{
+    relative:[],
+    absolute:[],
+    func:[
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x,p.y+i+1])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x,p.y-i-1])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x-1,p.y+i+1])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x-1,p.y-i-1])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x+1,p.y+i+1])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x+1,p.y-i-1])]`,
+    ]
+  },
+  jumpable:false,
+  promotion:undefined,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_knight:PieceType={
+  id:"knight",
+  name:"死桂",
+  movable:{
+    relative:[[1,2],[1,-2],[-1,2],[-1,-2],[2,1],[2,-1],[-2,1],[-2,-1],[2,4],[2,-4],[-2,4],[-2,-4],[4,2],[4,-2],[-4,2],[-4,-2],[3,6],[3,-6],[-3,6],[-3,-6],[6,3],[6,-3],[-6,3],[-6,-3],[4,8],[4,-8],[-4,8],[-4,-8],[8,4],[8,-4],[-8,4],[-8,-4]],
+    absolute:[],
+    func:[]
+  },
+  jumpable:true,
+  promotion:death_promoted_knight,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_silver_general:PieceType={
+  id:"silver_general",
+  name:"死銀",
+  movable:{
+    relative:[...[...Array(5)].map((_,i)=>[...Array(4)].map((_,j)=>[i-2,j-1])).flat(),...[...Array(3)].map((_,i)=>[i-1,-2])],
+    absolute:[],
+    func:[]
+  },
+  jumpable:false,
+  promotion:death_promoted_silver,
+  promotion_callback:"",
+  promotion_msg:["成りますか？","嫌じゃないかもしれない","嫌です"],
+  king:false
+};
+
+export const death_gold_general:PieceType={
+  id:"gold_general",
+  name:"死金",
+  movable:{
+    relative:[...Array(5)].map((_,i)=>[...Array(5)].map((_,j)=>[i-2,j-2])).flat(),
+    absolute:[],
+    func:[]
+  },
+  jumpable:false,
+  promotion:undefined,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_promoted_pawn:PieceType={
+  id:"promoted_pawn",
+  name:"死と金",
+  movable:{
+    relative:[...[...Array(3)].map((_,i)=>[...Array(3)].map((_,j)=>[i-1,j-1])).flat(),[2,0],[-2,0],[0,-2],[0,2]],
+    absolute:[],
+    func:[]
+  },
+  jumpable:false,
+  promotion:undefined,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_promoted_king:PieceType={
+  id:"promoted_king",
+  name:"死神王",
+  movable:{
+    relative:[],
+    absolute:[],
+    func:[]
+  },
+  jumpable:false,
+  promotion:undefined,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:true
+};
+
+export const death_king1:PieceType={
+  id:"king1",
+  name:"死王",
+  movable:{
+    relative:[],
+    absolute:[],
+    func:[
+      `(p,_,board)=>[...[...Array(board[p.y].length)].map((_,i)=>[p.x+i+1,p.y])]`,
+      `(p,_,board)=>[...[...Array(board[p.y].length)].map((_,i)=>[p.x-i-1,p.y])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x,p.y+i+1])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x,p.y-i-1])]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x+i+1,p.y+i+1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x+i+1,p.y-i-1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x-i-1,p.y+i+1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x-i-1,p.y-i-1])
+      ]`
+    ]
+  },
+  jumpable:false,
+  promotion:death_promoted_king,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:true
+};
+
+export const death_king2:PieceType={
+  id:"king2",
+  name:"死玉",
+  movable:{
+    relative:[],
+    absolute:[],
+    func:[
+      `(p,_,board)=>[...[...Array(board[p.y].length)].map((_,i)=>[p.x+i+1,p.y])]`,
+      `(p,_,board)=>[...[...Array(board[p.y].length)].map((_,i)=>[p.x-i-1,p.y])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x,p.y+i+1])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x,p.y-i-1])]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x+i+1,p.y+i+1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x+i+1,p.y-i-1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x-i-1,p.y+i+1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x-i-1,p.y-i-1])
+      ]`
+    ]
+  },
+  jumpable:false,
+  promotion:death_promoted_king,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:true
+};
+
+export const death_pawn:PieceType={
+  id:"pawn",
+  name:"死歩",
+  movable:{
+    relative:[[1,1],[-1,1],[0,1],[0,2]],
+    absolute:[],
+    func:[]
+  },
+  jumpable:false,
+  promotion:death_promoted_pawn,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_dragon_king:PieceType={
+  id:"dragon_king",
+  name:"死龍王",
+  movable:{
+    relative:[[1,1],[1,-1],[-1,1],[-1,-1]],
+    absolute:[],
+    func:[
+      `(p,_,board)=>[...[...Array(board[p.y].length)].map((_,i)=>[p.x+i+1,p.y])]`,
+      `(p,_,board)=>[...[...Array(board[p.y].length)].map((_,i)=>[p.x-i-1,p.y])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x,p.y+i+1])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x,p.y-i-1])]`,
+    ]
+  },
+  jumpable:true,
+  promotion:undefined,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_promoted_bishop:PieceType={
+  id:"promoted_bishop",
+  name:"死龍馬",
+  movable:{
+    relative:[[0,1],[0,-1],[-1,0],[1,0]],
+    absolute:[],
+    func:[
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x+i+1,p.y+i+1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x+i+1,p.y-i-1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x-i-1,p.y+i+1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x-i-1,p.y-i-1])
+      ]`
+    ]
+  },
+  jumpable:true,
+  promotion:undefined,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_bishop:PieceType={
+  id:"bishop",
+  name:"死角",
+  movable:{
+    relative:[[3,0],[-3,0],[0,3],[0,-3]],
+    absolute:[],
+    func:[
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x+i+1,p.y+i+1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x+i+1,p.y-i-1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x-i-1,p.y+i+1])
+      ]`,
+      `(p,_,board)=>[
+        ...[
+          ...Array(board.length<board[p.y].length?board[p.y].length:board.length)
+        ].map((_,i)=>[p.x-i-1,p.y-i-1])
+      ]`
+    ]
+  },
+  jumpable:false,
+  promotion:death_promoted_bishop,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_rook:PieceType={
+  id:"rook",
+  name:"死飛",
+  movable:{
+    relative:[[3,3],[3,-3],[-3,3],[-3,-3]],
+    absolute:[],
+    func:[
+      `(p,_,board)=>[...[...Array(board[p.y].length)].map((_,i)=>[p.x+i+1,p.y])]`,
+      `(p,_,board)=>[...[...Array(board[p.y].length)].map((_,i)=>[p.x-i-1,p.y])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x,p.y+i+1])]`,
+      `(p,_,board)=>[...[...Array(board.length)].map((_,i)=>[p.x,p.y-i-1])]`,
+    ]
+  },
+  jumpable:false,
+  promotion:death_dragon_king,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const death_lance:PieceType={
+  id:"lance",
+  name:"死香",
+  movable:{
+    relative:[],
+    absolute:[],
+    func:[
+      `(p,_,board)=>[...[...Array(board[p.y].length)].map((_,i)=>[p.x+i+1,p.y])]`,
+      `(p,_,board)=>[...[...Array(board[p.y].length)].map((_,i)=>[p.x-i-1,p.y])]`,
+      `(p,turn,board)=>[...Array(board.length)].map((_,i)=>[p.x,p.y+(i+1)*(turn==="player1"?-1:1)])`
+    ]
+  },
+  jumpable:true,
+  promotion:death_promoted_lance,
+  promotion_callback:"",
+  promotion_msg:[],
+  king:false
+};
+
+export const pieces:PieceType[]=[
+  death_lance,
+  death_knight,
+  death_silver_general,
+  death_gold_general,
+  death_king1,
+  death_king2,
+  death_rook,
+  death_bishop,
+  death_pawn
+]

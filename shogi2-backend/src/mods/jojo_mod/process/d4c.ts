@@ -1,45 +1,26 @@
-import { board, ChangeBoardEvent, File, FileEvent, Game, MoveEvent, Piece, Position, Request, ReturnRequest, StartEvent, UIEvent } from "shogi2-types";
+import { ChangeBoardEvent, Event, File, FileEvent, Game, MoveEvent, Piece, Position, Request, ReturnRequest, StartEvent, UIEvent } from "shogi2-types";
 import Base from "./base";
 import fs from "fs";
 import {down_button, rise_button, show_z} from "./d4c_ui";
 
-export class D4C extends Base{
+export default class D4C extends Base{
   constructor(game:Game){
     super(game);
   }
   onStart(_e:StartEvent,_before:Game){
-    let d4c:{piece:Piece,pos:Position}|undefined;
-    const board0:board=this.game.boards[0].map((row,y)=>row.map((s,x)=>{
-      if (s.piece && s.piece?.type.id==="d4c"){
-        d4c={piece:{...s.piece},pos:{x,y,z:0}};
-      }
-      if (s.piece?.type.king || s.piece?.type.id==="d4c"){
-        return {...s,piece:null};
-      }else{
-        return {...s};
-      }
-    }));
-    for (let i=0;i < 3;i++){
-      let positions:Position[]=[];
-      const board=board0.map((row,y)=>row.map((s,x)=>{
-        if (s.piece){
-          return {...s,piece:{...s.piece,type:{...s.piece.type,src:"piece_inversion",color:"white"}}};
-        }else{
-          const z=this.game.boards.length;
-          positions.push({x,y,z});
-          return {...s};
-        }
-      }));
-      const pos=positions[Math.floor(Math.random()*(positions.length-1))];
-      if (d4c){
-        const another={...d4c.piece,type:{...d4c.piece.type,src:"piece_inversion",color:"white"}};
-        board[pos.y][pos.x].piece=another;
-      }
+    const pieces=this.game.boards.map((board,z)=>board.map((row,y)=>row.map((s,x)=>({piece:s.piece,pos:{x,y,z}})))).flat(2);
+    const d4c=pieces.filter(({piece})=>piece?.type.id==="d4c");
+    [...Array(3)].forEach(()=>{
+      const board=this.game.boards[0].map((row)=>row.map((s)=>s.piece?s.piece.type.king?{...s,piece:null}:{...s,piece:{...s.piece,type:{...s.piece.type,color:"white",src:"piece_inversion"}}}:{...s}));
+      d4c.forEach(({pos})=>{
+        const empty=board.map((row,y)=>row.map((_,x)=>({x,y}))).flat().filter(({x,y})=>board[y][x].piece===null);
+        const random_pos=empty[Math.floor(Math.random()*(empty.length-1))];
+        board[random_pos.y][random_pos.x].piece={...board[pos.y][pos.x].piece} as Piece;
+        board[pos.y][pos.x].piece=null;
+      });
       this.game.boards.push(board);
-    }
-    this.game.history[0].boards=this.game.boards.map((board)=>board.map((row)=>row.map((s)=>{
-      return {...s};
-    })));
+    });
+    this.game.history[0].boards=this.game.boards.map((board)=>board.map((row)=>row.map((s)=>({...s}))));
     const filedata:{name:string,type:string,id:string}[]=[
       {name:"src/mods/jojo_mod/assets/piece_inversion.png",type:"image/png",id:"piece_inversion"},
     ];
@@ -67,20 +48,64 @@ export class D4C extends Base{
       };
       return fileRequest
     });
-    const ui:UIEvent={
-      type:"ui",
-      id:crypto.randomUUID(),
-      data:{
-        menu1:[down_button],
-        menu2:[rise_button,show_z]
+    const owners=this.game.boards[0].map((row)=>row.map((s)=>s.piece?.type.id==="d4c"?s.piece?.owner:undefined)).flat().filter((o)=>!!o);
+    if (owners.length!==0){
+      let rs=[];
+      if (owners.includes("player1")){
+        if (!this.game.ui1.menu1.map((ui)=>ui.id).includes(down_button.id)){
+          this.game.ui1.menu1=[...this.game.ui1.menu1,down_button];
+        }
+        if (!this.game.ui1.menu2.map((ui)=>ui.id).includes(show_z.id)){
+          this.game.ui1.menu2=[show_z,...this.game.ui1.menu2];
+        }
+        if (!this.game.ui1.menu2.map((ui)=>ui.id).includes(rise_button.id)){
+          this.game.ui1.menu2=[rise_button,...this.game.ui1.menu2];
+        }
+        const ui1:UIEvent={
+          type:"ui",
+          id:crypto.randomUUID(),
+          data:this.game.ui1
+        };
+        const request1:Request<UIEvent>={
+          head:"event",
+          content:ui1
+        };
+        const r:ReturnRequest={
+          request:request1,
+          target:"player1",
+          owner:"jojo"
+        };
+        rs.push(r);
       }
-    };
-    const request:Request<UIEvent>={
-      head:"event",
-      content:ui
-    };
-    const r:ReturnRequest={request,target:"player1",owner:"jojo"};
-    return [...requests,r];
+      if (owners.includes("player2")){
+        if (!this.game.ui2.menu1.map((ui)=>ui.id).includes(down_button.id)){
+          this.game.ui2.menu1=[...this.game.ui2.menu1,down_button];
+        }
+        if (!this.game.ui2.menu2.map((ui)=>ui.id).includes(show_z.id)){
+          this.game.ui2.menu2=[show_z,...this.game.ui2.menu2];
+        }
+        if (!this.game.ui2.menu2.map((ui)=>ui.id).includes(rise_button.id)){
+          this.game.ui2.menu2=[rise_button,...this.game.ui2.menu2];
+        }
+        const ui2:UIEvent={
+          type:"ui",
+          id:crypto.randomUUID(),
+          data:this.game.ui2
+        };
+        const request2:Request<UIEvent>={
+          head:"event",
+          content:ui2
+        };
+        const r:ReturnRequest={
+          request:request2,
+          target:"player2",
+          owner:"jojo"
+        };
+        rs.push(r);
+      }
+      return [...requests,...rs];
+    }
+    return [...requests];
   }
   onMove(e:MoveEvent,before:Game){
     if (e.data.piece.type.id==="d4c"){
@@ -148,6 +173,43 @@ export class D4C extends Base{
       this.game.requests=this.game.requests.filter((request)=>{
         return request.request.content.type!=="turn";
       });
+    }
+  }
+  onEvent(_e:Event,_before:Game){
+    const board0=this.game.boards[0];
+    const pieces=board0.map((row,y)=>row.map((s,x)=>{
+      if (s.piece){
+        return {pos:{x,y},id:s.piece.id};
+      }else{
+        return undefined;
+      }
+    })).flat().filter((p)=>!!p);
+    let flag=false;
+    pieces.forEach(({pos,id})=>{
+      const p=pieces.find((p)=>p.id===id && p.pos.x!==pos.x && p.pos.y!==pos.y);
+      if (p){
+        const dx=Math.abs(pos.x-p.pos.x);
+        const dy=Math.abs(pos.y-p.pos.y);
+        if (dx <= 1 && dy <= 1){
+          this.game.boards[0][pos.y][pos.x].piece=null;
+          this.game.boards[0][p.pos.y][p.pos.x].piece=null;
+          flag=true;
+        }
+      }
+    });
+    if (flag){
+      const change:ChangeBoardEvent={
+        type:"change_board",
+        id:crypto.randomUUID(),
+        data:{
+          boards:this.game.boards
+        }
+      };
+      const req:Request<ChangeBoardEvent>={
+        head:"event",
+        content:change
+      };
+      return [{request:req,target:undefined,owner:"jojo"}];
     }
   }
 }

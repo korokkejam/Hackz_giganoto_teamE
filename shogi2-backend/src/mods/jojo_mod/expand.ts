@@ -1,6 +1,6 @@
-import { ChangeBoardEvent, Game, Piece, PieceType, player, Request, ReturnRequest, Square } from "shogi2-types";
+import { Game, Piece, PieceType, player, Square } from "shogi2-types";
 
-export default function expand(game:Game):ReturnRequest[]{
+export default function expand(game:Game){
   const king1=game.pieces.find((p)=>p.id==="king1");
   const king2=game.pieces.find((p)=>p.id==="king2");
   const bishop=game.pieces.find((p)=>p.id==="bishop");
@@ -43,13 +43,13 @@ export default function expand(game:Game):ReturnRequest[]{
     ],
     [
       {piece:null},
-      create(stand_arrow,"player2"),
-      {piece:null},{piece:null},
       create(bishop,"player2"),
-      {piece:null},{piece:null},{piece:null},{piece:null},{piece:null},
-      create(rook,"player2"),
       {piece:null},{piece:null},
+      create(stand_arrow,"player2"),
+      {piece:null},{piece:null},{piece:null},{piece:null},{piece:null},
       create(gold_experience,"player2"),
+      {piece:null},{piece:null},
+      create(rook,"player2"),
       {piece:null}
     ],
     [...Array(15)].map((_,i)=>create(i%2?harvest:pawn,"player2")),
@@ -57,13 +57,13 @@ export default function expand(game:Game):ReturnRequest[]{
     [...Array(15)].map((_,i)=>create(i%2?bad_campany:pawn,"player1")),
     [
       {piece:null},
-      create(green_baby,"player1"),
-      {piece:null},{piece:null},
       create(bishop,"player1"),
-      {piece:null},{piece:null},{piece:null},{piece:null},{piece:null},
-      create(rook,"player1"),
       {piece:null},{piece:null},
+      create(green_baby,"player1"),
+      {piece:null},{piece:null},{piece:null},{piece:null},{piece:null},
       create(white_snake,"player1"),
+      {piece:null},{piece:null},
+      create(rook,"player1"),
       {piece:null}
     ],
     [
@@ -84,25 +84,7 @@ export default function expand(game:Game):ReturnRequest[]{
       create(lance,"player1"),
     ]
   ]];
-  game.boards=game.boards.map((board)=>board.map((row)=>row.map((s)=>{
-    if (s.piece){
-      return create(d4c,s.piece.owner);
-    }else{
-      return s;
-    }
-  })));
-  const change:ChangeBoardEvent={
-    id:crypto.randomUUID(),
-    type:"change",
-    data:{
-      boards:game.boards
-    }
-  };
-  const req:Request<ChangeBoardEvent>={
-    head:"event",
-    content:change
-  };
-  return [{request:req,target:undefined,owner:"jojo"}];
+  return game;
 }
 
 function create(type:PieceType|undefined,owner:player):Square{

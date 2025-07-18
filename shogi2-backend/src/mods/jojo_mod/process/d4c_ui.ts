@@ -63,21 +63,21 @@ const style:CSSProperties={
 };
 
 export const rise_button:Button=new Button(
-  crypto.randomUUID(),
-  new Text(crypto.randomUUID(),new Literal({string:"↑"})),
+  "d4c_rise_button",
+  new Text("",new Literal({string:"↑"})),
   rise,
   style
 );
 
 export const down_button:Button=new Button(
-  crypto.randomUUID(),
-  new Text(crypto.randomUUID(),new Literal({string:"↓"})),
+  "d4c_down_button",
+  new Text("",new Literal({string:"↓"})),
   down,
   style
 );
 
 export const show_z:Text=new Text(
-  crypto.randomUUID(),
+  "d4c_z_text",
   new Variable([
     new Literal({string:"z"})
   ])

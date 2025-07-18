@@ -7,11 +7,11 @@ interface Config{
 export default class JoJoConfig extends ModConfig<Config>{
   type="jojo";
   config:Config;
-  load=true;
+  load=false;
   hierarchy:number;
   constructor(game:Game,mod:JoJo){
     super(game,mod);
     this.config={};
-    this.hierarchy=0;
+    this.hierarchy=2;
   }
 }

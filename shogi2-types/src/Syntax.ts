@@ -11,7 +11,7 @@ export interface Value{
   object?:Record<string,Value>;
 }
 
-export type types=""|"function"|"if"|"for"|"while"|"variable"|"literal"|"not"|"and"|"or"|"surplus"|"greater"|"less"|"equal"|"greaterequal"|"lessequal"|"plus"|"minus"|"times"|"per"|"eval";
+export type types=""|"function"|"if"|"for"|"while"|"variable"|"literal"|"not"|"and"|"or"|"surplus"|"greater"|"less"|"equal"|"greaterequal"|"lessequal"|"plus"|"minus"|"times"|"per"|"eval"|"len";
 
 export abstract class Syntax{
   type:types;
@@ -74,6 +74,21 @@ export class If extends Syntax{
   }
 }
 
+export class Len extends Syntax{
+  syntax:Syntax;
+  constructor(syntax:Syntax){
+    super("len");
+    this.syntax=syntax;
+  }
+  execute(variables:Record<string,Value>):Value{
+    const value=this.syntax.execute(variables).array;
+    if (value!==undefined){
+      return {number:value.length};
+    }
+    return {null:null};
+  }
+}
+
 export class For extends Syntax{
   init:Syntax;
   condition:Syntax;
@@ -131,7 +146,9 @@ export class Variable extends Syntax{
           if (this.syntax!==undefined){
             variables[key.string]=this.syntax.execute(variables);
           }
-          return v;
+          if (v!==undefined){
+            return v;
+          }
         }else{
           for (let i = 1;i < this.name.length-1; i++){
             const key=this.name[i].execute(variables);
@@ -149,12 +166,22 @@ export class Variable extends Syntax{
             if (this.syntax!==undefined){
               v.object[key.string]=this.syntax.execute(variables);
             }
-            return v.object[key.string];
+            if (v.object[key.string]!==undefined){
+              const d=v.object[key.string];
+              if (d!==undefined){
+                return d;
+              }
+            }
           }else if (key.number!==undefined && v.array!==undefined){
             if (this.syntax!==undefined){
               v.array[key.number]=this.syntax.execute(variables);
             }
-            return v.array[key.number];
+            if (v.array[key.number]!==undefined){
+              const d=v.array[key.number];
+              if (d!==undefined){
+                return d;
+              }
+            }
           }
         }
       }
@@ -361,6 +388,8 @@ export class Plus extends Operator{
     }
     if (v1.number!==undefined && v2.number!==undefined){
       return {number:v1.number+v2.number};
+    }else if (v1.string!==undefined && v2.string!==undefined){
+      return {string:v1.string+v2.string};
     }else{
       return {error:"Addition with non-numeric types"};
     }
@@ -474,10 +503,11 @@ export const syntax_base:Record<types,Syntax>={
   "minus":new Minus(new Empty(),new Empty()),
   "times":new Times(new Empty(),new Empty()),
   "per":new Per(new Empty(),new Empty()),
-  "eval":new Eval([])
+  "eval":new Eval([]),
+  "len":new Len(new Empty())
 };
 
-function clone<T>(value:T):T{
+export function clone<T>(value:T):T{
   const v=Object.create(Object.getPrototypeOf(value));
   Object.getOwnPropertyNames(value).forEach((item)=>{
     const child=(value as any)[item];

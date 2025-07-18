@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.syntax_base = exports.Eval = exports.Per = exports.Times = exports.Minus = exports.Plus = exports.LessEqual = exports.GreaterEqual = exports.Equal = exports.Less = exports.Greater = exports.Surplus = exports.Or = exports.And = exports.Operator = exports.Not = exports.Literal = exports.Variable = exports.While = exports.For = exports.If = exports.Function = exports.Empty = exports.Syntax = void 0;
+exports.syntax_base = exports.Eval = exports.Per = exports.Times = exports.Minus = exports.Plus = exports.LessEqual = exports.GreaterEqual = exports.Equal = exports.Less = exports.Greater = exports.Surplus = exports.Or = exports.And = exports.Operator = exports.Not = exports.Literal = exports.Variable = exports.While = exports.For = exports.Len = exports.If = exports.Function = exports.Empty = exports.Syntax = void 0;
+exports.clone = clone;
 exports.parser = parser;
 exports.convert = convert;
 exports.restore = restore;
@@ -60,6 +61,20 @@ class If extends Syntax {
     }
 }
 exports.If = If;
+class Len extends Syntax {
+    constructor(syntax) {
+        super("len");
+        this.syntax = syntax;
+    }
+    execute(variables) {
+        const value = this.syntax.execute(variables).array;
+        if (value !== undefined) {
+            return { number: value.length };
+        }
+        return { null: null };
+    }
+}
+exports.Len = Len;
 class For extends Syntax {
     constructor(init, condition, last_process, process) {
         super("for");
@@ -109,7 +124,9 @@ class Variable extends Syntax {
                     if (this.syntax !== undefined) {
                         variables[key.string] = this.syntax.execute(variables);
                     }
-                    return v;
+                    if (v !== undefined) {
+                        return v;
+                    }
                 }
                 else {
                     for (let i = 1; i < this.name.length - 1; i++) {
@@ -130,13 +147,23 @@ class Variable extends Syntax {
                         if (this.syntax !== undefined) {
                             v.object[key.string] = this.syntax.execute(variables);
                         }
-                        return v.object[key.string];
+                        if (v.object[key.string] !== undefined) {
+                            const d = v.object[key.string];
+                            if (d !== undefined) {
+                                return d;
+                            }
+                        }
                     }
                     else if (key.number !== undefined && v.array !== undefined) {
                         if (this.syntax !== undefined) {
                             v.array[key.number] = this.syntax.execute(variables);
                         }
-                        return v.array[key.number];
+                        if (v.array[key.number] !== undefined) {
+                            const d = v.array[key.number];
+                            if (d !== undefined) {
+                                return d;
+                            }
+                        }
                     }
                 }
             }
@@ -348,6 +375,9 @@ class Plus extends Operator {
         if (v1.number !== undefined && v2.number !== undefined) {
             return { number: v1.number + v2.number };
         }
+        else if (v1.string !== undefined && v2.string !== undefined) {
+            return { string: v1.string + v2.string };
+        }
         else {
             return { error: "Addition with non-numeric types" };
         }
@@ -464,7 +494,8 @@ exports.syntax_base = {
     "minus": new Minus(new Empty(), new Empty()),
     "times": new Times(new Empty(), new Empty()),
     "per": new Per(new Empty(), new Empty()),
-    "eval": new Eval([])
+    "eval": new Eval([]),
+    "len": new Len(new Empty())
 };
 function clone(value) {
     const v = Object.create(Object.getPrototypeOf(value));

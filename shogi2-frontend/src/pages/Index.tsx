@@ -2,11 +2,14 @@ import "./styles/Index.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useState} from "react";
-import {wsAtom,playerAtom,boardAtom, filesAtom, additionalUIAtom} from "../state";
+import {wsAtom,playerAtom,boardAtom, filesAtom, additionalUIAtom, turnAtom} from "../state";
 import {useSetAtom} from "jotai";
 import {useNavigate} from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ChangeBoardEvent, FileEvent, Game, Request, UIEvent} from "shogi2-types";
+import { ChangeBoardEvent, FileEvent, Game, Request, TurnEvent, UIEvent} from "shogi2-types";
+
+const host="localhost:3000";
+// const host="10.19.7.67:3000";
 
 export default function Index(){
   const setFiles=useSetAtom(filesAtom);
@@ -18,11 +21,12 @@ export default function Index(){
   const navigate=useNavigate();
   const setAdditionalUI=useSetAtom(additionalUIAtom);
   const [loading,setLoading]=useState<boolean>(false);
+  const setTurn=useSetAtom(turnAtom);
   const checkRoomExists=()=>{
     if (!name){
       return;
     }
-    fetch(`http://localhost:3000/room/check/${name}`).then((d)=>{
+    fetch(`http://${host}/room/check/${name}`).then((d)=>{
       d.text().then((text)=>{
         if (text==="yes"){
           enterRoom();
@@ -36,7 +40,7 @@ export default function Index(){
     if (!name){
       return;
     }
-    const ws=new WebSocket(`ws://localhost:3000/room/enter/${name}`);
+    const ws=new WebSocket(`ws://${host}/room/enter/${name}`);
     ws.onmessage=((e:MessageEvent)=>{
       const d:Request<any>=JSON.parse(e.data);
       if (d.head==="ready"){
@@ -54,7 +58,7 @@ export default function Index(){
     if (!name){
       return;
     }
-    const ws=new WebSocket(`ws://localhost:3000/room/create/${name}`);
+    const ws=new WebSocket(`ws://${host}/room/create/${name}`);
     ws.onmessage=((e:MessageEvent)=>{
       const d:Request<any>=JSON.parse(e.data);
       if (d.head==="ready"){
@@ -80,6 +84,12 @@ export default function Index(){
       case "event":
         const event:Event=d.content;
         switch (event.type){
+          case "turn":
+            {
+              const data:Request<TurnEvent>=d;
+              setTurn(data.content.data.player);
+            }
+            break;
           case "change_board":
             {
               const data:Request<ChangeBoardEvent>=d;

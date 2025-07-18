@@ -14,6 +14,7 @@ export default class Cheat extends ModBase{
     this.addCommands([Betrayal,PlaySound,Highlight,Move,Rise,Down]);
   }
   onStart(_e:StartEvent,_before:Game){
+    console.log("cheat mod loaded!");
     const filedata:{name:string,type:string,id:string}[]=[
       {name:"src/mods/cheat/assets/the_world.wav",type:"audio/wav",id:"the_world"},
       {name:"src/mods/cheat/assets/effect1.png",type:"image/png",id:"effect1"},

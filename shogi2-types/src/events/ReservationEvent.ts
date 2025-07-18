@@ -2,7 +2,7 @@ import { Event } from "../Event";
 
 export interface ReservationEventType{
   millis:number;
-  id:string
+  id:string;
 };
 
 export class ReservationEvent extends Event<ReservationEventType>{

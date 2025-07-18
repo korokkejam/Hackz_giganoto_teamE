@@ -17,7 +17,9 @@ import {
   CaptureEvent,
   QuestionEvent,
   AudioEvent,
-  WarpEvent
+  WarpEvent,
+  File,
+  FileEvent,
 } from "shogi2-types";
 import {stone_ocean_pieces} from "./pieces/stone_ocean";
 import Base from "./process/base";
@@ -35,11 +37,16 @@ import { steel_ball_run_pieces } from "./pieces/steel_ball_run";
 import CMoon from "./process/c_moon";
 import { ReservationEvent } from "shogi2-types/dist/esm/events/ReservationEvent";
 import Mandom from "./process/mandom";
-import { D4C } from "./process/d4c";
+import D4C from "./process/d4c";
+import TheWorld from "./process/the_world";
+import MadeInHeaven from "./process/made_in_heaven";
+import fs from "fs";
+import ToBeContinued from "./process/to_be_continued";
 
 export default class JoJo extends ModBase{
   type="jojo";
   processes:Base[];
+  filedata:{name:string,type:string,id:string}[];
   constructor(game:Game){
     super(game);
     this.processes=[
@@ -49,7 +56,15 @@ export default class JoJo extends ModBase{
       new Harvest(game),
       new CMoon(game),
       new Mandom(game),
-      new D4C(game)
+      new D4C(game),
+      new TheWorld(game),
+      new MadeInHeaven(game),
+      new ToBeContinued(game)
+    ];
+    this.filedata=[
+      {name:"src/mods/jojo_mod/assets/ban.mp3",type:"audio/mp3",id:"ban"},
+      {name:"src/mods/jojo_mod/assets/to_be_continued.wav",type:"audio/wav",id:"to_be_continued_wav"},
+      {name:"src/mods/jojo_mod/assets/to_be_continued.gif",type:"image/gif",id:"to_be_continued_gif"}
     ];
   }
   onStart(e:StartEvent,before:Game){
@@ -61,8 +76,8 @@ export default class JoJo extends ModBase{
     this.game.pieces=this.game.pieces.concat(item_pieces);
     this.game.pieces=this.game.pieces.concat(steel_ball_run_pieces);
     console.log("jojo mod loaded!");
-    // this.game.pieces=this.game.pieces.map((piece)=>{return{...piece,src:"kinniku"}});
-    expand(this.game);
+    // this.game.pieces=this.game.pieces.map((piece)=>({...piece,src:"kinniku"}));
+    this.game=expand(this.game);
     this.game.history[0].boards=this.game.boards.map((board)=>board.map((row)=>row.map((s)=>{
       return {...s};
     })));
@@ -70,7 +85,31 @@ export default class JoJo extends ModBase{
     const change:ChangeBoardEvent={type:"change_board",data:{boards:this.game.boards},id:crypto.randomUUID()};
     const request:Request<ChangeBoardEvent>={head:"event",content:change};
     const r:ReturnRequest={request,owner:"jojo",target:undefined};
-    return [r,...requests];
+    const files:File[]=this.filedata.map((file)=>{
+      return {
+        content:fs.readFileSync(file.name).toString("base64"),
+        mimetype:file.type,
+        id:file.id
+      };
+    });
+    const req=files.map((file)=>{
+      const e:FileEvent={
+        type:"file",
+        id:crypto.randomUUID(),
+        data:file
+      };
+      const req:Request<FileEvent>={
+        head:"event",
+        content:e
+      };
+      const fileRequest:ReturnRequest={
+        request:req,
+        owner:"jojo",
+        target:undefined
+      };
+      return fileRequest
+    });
+    return [r,...requests,...req];
   }
   onMove(e:MoveEvent,before:Game){
     const requests=this.processes.map((process)=>process.onMove(e,before)).filter((request)=>!!request).flat();
@@ -86,7 +125,18 @@ export default class JoJo extends ModBase{
   }
   onDrop(e:DropEvent,before:Game){
     const request=this.processes.map((process)=>process.onDrop(e,before)).filter((request)=>!!request).flat();
-    return request;
+    const audio:AudioEvent={
+      type:"audio",
+      id:crypto.randomUUID(),
+      data:{
+        id:"ban"
+      }
+    };
+    const req:Request<AudioEvent>={
+      head:"event",
+      content:audio
+    };
+    return [...request,{request:req,target:undefined,owner:"jojo"}];
   }
   onPromotion(e:PromotionEvent,before:Game){
     const request=this.processes.map((process)=>process.onPromotion(e,before)).filter((request)=>!!request).flat();
@@ -98,7 +148,7 @@ export default class JoJo extends ModBase{
   }
   onEnd(e:EndEvent,before:Game){
     const request=this.processes.map((process)=>process.onEnd(e,before)).filter((request)=>!!request).flat();
-    return request;
+    return [...request];
   }
   onDelete(e:DeleteEvent,before:Game){
     const request=this.processes.map((process)=>process.onDelete(e,before)).filter((request)=>!!request).flat();

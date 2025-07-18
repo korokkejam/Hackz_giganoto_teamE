@@ -9,7 +9,7 @@ export interface Value {
     array?: Value[];
     object?: Record<string, Value>;
 }
-export type types = "" | "function" | "if" | "for" | "while" | "variable" | "literal" | "not" | "and" | "or" | "surplus" | "greater" | "less" | "equal" | "greaterequal" | "lessequal" | "plus" | "minus" | "times" | "per" | "eval";
+export type types = "" | "function" | "if" | "for" | "while" | "variable" | "literal" | "not" | "and" | "or" | "surplus" | "greater" | "less" | "equal" | "greaterequal" | "lessequal" | "plus" | "minus" | "times" | "per" | "eval" | "len";
 export declare abstract class Syntax {
     type: types;
     constructor(type: types);
@@ -29,6 +29,11 @@ export declare class If extends Syntax {
     process1: Syntax[];
     process2?: Syntax[];
     constructor(condition: Syntax, process1: Syntax[], process2?: Syntax[]);
+    execute(variables: Record<string, Value>): Value;
+}
+export declare class Len extends Syntax {
+    syntax: Syntax;
+    constructor(syntax: Syntax);
     execute(variables: Record<string, Value>): Value;
 }
 export declare class For extends Syntax {
@@ -120,6 +125,7 @@ export declare class Eval extends Syntax {
     execute(variables: Record<string, Value>): Value;
 }
 export declare const syntax_base: Record<types, Syntax>;
+export declare function clone<T>(value: T): T;
 export declare function parser(s1: Syntax): Syntax;
 export declare function convert(object: any): Value;
 export declare function restore(value: Value): any;

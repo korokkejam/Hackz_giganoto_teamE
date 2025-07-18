@@ -1,5 +1,6 @@
 import { Event } from "./Event";
 import { ChatEventType } from "./events/ChatEvent";
+import { UIEventType } from "./events/UIEvent";
 import { ReturnRequest } from "./ModBase";
 
 export type player="player1"|"player2";
@@ -69,6 +70,9 @@ export interface Game{
   pieces:PieceType[]; //使用可能な駒の一覧
   messages:ChatEventType[];
   requests:ReturnRequest[];
+  ui1:UIEventType;
+  ui2:UIEventType;
+  mods:{name:string,load:boolean}[];
 };
 
 //websocketで送受信するデータのフォーマット

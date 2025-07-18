@@ -20,7 +20,7 @@ export default function Piece({pos}:{pos:Position}){
   const player=useAtomValue(playerAtom);
   const turn=useAtomValue(turnAtom);
   const [focusedPiece,setFocusedPiece]=useAtom(focusedPieceAtom);
-  const piece=useMemo(()=>board[pos.y][pos.x].piece,board);
+  const piece=useMemo(()=>board[pos.y][pos.x].piece,[board]);
   const setPutPiece=useSetAtom(putPieceAtom);
   const onFocus=()=>{
     if (!piece){

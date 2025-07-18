@@ -5,6 +5,7 @@ import {Request,ChatEvent, CommandEvent, CommandEventType} from "shogi2-types";
 import TextField from "@mui/material/TextField";
 import "./styles/Sender.css";
 import InputAdornment from "@mui/material/InputAdornment";
+import {generateUUID} from "../../features/uuid";
 
 export default function Sender(){
   const [value,setValue]=useState<string>("");
@@ -23,14 +24,14 @@ export default function Sender(){
       };
       const request:Request<CommandEvent>={
         head:"event",
-        content:new CommandEvent(e,crypto.randomUUID()),
+        content:new CommandEvent(e,generateUUID()),
         sender:player
       };
       ws.send(JSON.stringify(request));
     }else{
       const request:Request<ChatEvent>={
         head:"event",
-        content:new ChatEvent(value,player,crypto.randomUUID()),
+        content:new ChatEvent(value,player,generateUUID()),
         sender:player
       };
       ws.send(JSON.stringify(request));

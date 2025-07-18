@@ -1,6 +1,27 @@
 import "./rooms";
 import { WSContext } from "hono/ws";
-import {Event,ChatEvent, Game,ModBase,ModConfig,Request,ReturnRequest,board, MoveEvent, Move, CaptureEvent, TurnEvent, PromotionEvent, Piece, PromotionCheckEvent, EndEvent, DropEvent, CommandEvent, ChatEventType} from "shogi2-types";
+import {
+  Event,
+  ChatEvent,
+  Game,
+  ModBase,
+  ModConfig,
+  Request,
+  ReturnRequest,
+  board,
+  MoveEvent,
+  CaptureEvent,
+  TurnEvent,
+  PromotionEvent,
+  Piece,
+  PromotionCheckEvent,
+  EndEvent,
+  DropEvent,
+  CommandEvent,
+  ChatEventType,
+  StartEvent,
+  UIEvent
+} from "shogi2-types";
 import { pieces } from "../config/piece";
 import {configs, mods} from "../load";
 import cloneDeep from 'lodash/cloneDeep';
@@ -9,10 +30,19 @@ export default class GameProcess{
   game:Game;
   mods:ModBase[];
   configs:ModConfig[];
+  boards:board[];
   constructor(boards:board[]){
+    this.boards=cloneDeep(boards);
+    const game=this.init();
+    this.game=game;
+    this.mods=mods.map((modClass)=>new modClass(game));
+    this.configs=configs.map((configClass,i)=>new configClass(game,this.mods[i]));
+    this.init2();
+  }
+  init():Game{
     const id=crypto.randomUUID();
     const game:Game={
-      boards,
+      boards:cloneDeep(this.boards),
       turn:"player1",
       player1_current_board:0,
       player2_current_board:0,
@@ -20,17 +50,26 @@ export default class GameProcess{
       player2_point:0,
       player1_redbull:0,
       player2_redbull:0,
-      history:[{boards:cloneDeep(boards),id}],
+      history:[{boards:cloneDeep(this.boards),id}],
       player1_storage:[],
       player2_storage:[],
       pieces:[...pieces],
       messages:[],
       requests:[],
-      boards_id:id
+      boards_id:id,
+      ui1:{
+        menu1:[],
+        menu2:[]
+      },
+      ui2:{
+        menu1:[],
+        menu2:[]
+      },
+      mods:[]
     };
-    this.game=game;
-    this.mods=mods.map((modClass)=>new modClass(game));
-    this.configs=configs.map((configClass,i)=>new configClass(game,this.mods[i]));
+    return game;
+  }
+  init2(){
     this.mods.sort((mod1,mod2)=>{
       const config1=this.configs.find((config)=>config.type===mod1.type);
       const config2=this.configs.find((config)=>config.type===mod2.type);
@@ -40,8 +79,7 @@ export default class GameProcess{
       return config1.hierarchy-config2.hierarchy;
     });
     this.configs.sort((config1,config2)=>config1.hierarchy-config2.hierarchy);
-    this.mods=this.mods.filter((mod)=>this.configs.find((config)=>config.type===mod.type)?.load);
-    this.configs=this.configs.filter((config)=>config.load);
+    this.game.mods=this.configs.map((config)=>({name:config.type,load:config.load}));
   }
   clone_game():Game{
     return cloneDeep(this.game);
@@ -54,6 +92,48 @@ export default class GameProcess{
     const before=this.clone_game();
     this.game.requests=[];
     switch (request.head){
+      case "reset":
+        const mods:Record<string,boolean>=request.content;
+        this.game.mods=Object.keys(mods).map((name)=>({name,load:mods[name]}));
+        
+        const id=crypto.randomUUID();
+        this.game.boards=cloneDeep(this.boards),
+        this.game.turn="player1",
+        this.game.player1_current_board=0,
+        this.game.player2_current_board=0,
+        this.game.player1_point=0,
+        this.game.player2_point=0,
+        this.game.player1_redbull=0,
+        this.game.player2_redbull=0,
+        this.game.history=[{boards:cloneDeep(this.boards),id}],
+        this.game.player1_storage=[],
+        this.game.player2_storage=[],
+        this.game.pieces=[...pieces],
+        this.game.messages=[],
+        this.game.requests=[],
+        this.game.boards_id=id,
+        this.game.ui1={ menu1:[], menu2:[] },
+        this.game.ui2={ menu1:[], menu2:[] },
+
+        this.init2();
+        Object.keys(mods).forEach((name)=>{
+          const config=this.configs.find((config)=>config.type===name);
+          if (config){
+            config.load=mods[name];
+          }
+        });
+        this.game.ui1={...this.game.ui1,foreground:undefined};
+        this.game.ui2={...this.game.ui2,foreground:undefined};
+        const e2_1:Request<UIEvent>={head:"event",content:{type:"ui",id:crypto.randomUUID(),data:this.game.ui1}};
+        const e2_2:Request<UIEvent>={head:"event",content:{type:"ui",id:crypto.randomUUID(),data:this.game.ui2}};
+        ws1.send(JSON.stringify(e2_1));
+        ws2.send(JSON.stringify(e2_2));
+        const e:Request<StartEvent>={head:"event",content:{type:"start",data:{},id:crypto.randomUUID()}};
+        this.event(e,ws1,ws2);
+        const d:Request<any>={head:"ready",content:this.game};
+        ws1.send(JSON.stringify(d));
+        ws2.send(JSON.stringify(d));
+        return;
       case "event":
         const event:Event=(request as Request<Event>).content;
         switch (event.type){
@@ -102,11 +182,6 @@ export default class GameProcess{
             {
               let end_flag=false;
               const e:MoveEvent=event;
-              const move:Move={
-                pieceId:e.data.piece.id,
-                from:{...e.data.before_pos},
-                to:{...e.data.after_pos}
-              };
               const piece1=e.data.piece;
               const piece2=this.game.boards[e.data.after_pos.z][e.data.after_pos.y][e.data.after_pos.x].piece;
               const s1=this.game.boards[e.data.after_pos.z][e.data.after_pos.y][e.data.after_pos.x];
@@ -138,18 +213,18 @@ export default class GameProcess{
                 const req:Request<CaptureEvent>={head:"event",content:capture,sender:request.sender};
                 this.game.requests.push({request:req,target:undefined,owner:"main"});
               }
-              if (move.to && ((this.game.turn==="player1" && 3>move.to.y) || (this.game.turn==="player2" && move.to.y>this.game.boards[this.game.player2_current_board].length-3)) && piece1.type.promotion && !end_flag && !piece1.type.promotion_check){
+              if (((this.game.turn==="player1" && e.data.after_pos.y < 3) || (this.game.turn==="player2" && this.game.boards[this.game.player2_current_board].length-3-1 < e.data.after_pos.y)) && piece1.type.promotion && !end_flag && !piece1.type.promotion_check){
                 const promotion_check:PromotionCheckEvent={
                   type:"promotion_check",
                   id:crypto.randomUUID(),
                   data:{
                     piece:piece1,
-                    pos:move.to,
+                    pos:e.data.after_pos,
                     answer:false
                   }
                 };
                 const req:Request<PromotionCheckEvent>={head:"event",content:promotion_check};
-                this.game.requests.push({request:req,target:this.game.turn,owner:"main"});
+                this.game.requests.push({request:req,target:e.data.piece.owner,owner:"main"});
               }else{
                 this.game.turn=this.game.turn==="player1"?"player2":"player1";
                 const turn:TurnEvent={type:"turn",data:{player:this.game.turn},id:crypto.randomUUID()};
@@ -218,7 +293,7 @@ export default class GameProcess{
         }
         break;
     }
-    for (const mod of this.mods){
+    for (const mod of this.mods.filter((mod)=>this.configs.find((config)=>config.type===mod.type)?.load)){
       const rs=mod.event(request,cloneDeep(before));
       for (const r of rs){
         this.game.requests.push(r);
