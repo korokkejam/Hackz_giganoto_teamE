@@ -1,9 +1,8 @@
 export class Event {
-    type;
-    id;
-    constructor(type, id) {
-        this.type = type;
-        this.id = id;
+    json() {
+        return JSON.stringify(this);
     }
+    ;
 }
+;
 //# sourceMappingURL=Event.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"StartRequest.js","sourceRoot":"","sources":["../../../src/requests/StartRequest.ts"],"names":[],"mappings":";;;AAAA,oCAAmE;AAEnE,MAAa,YAAa,SAAQ,eAAO;IAIvC,YAAY,EAAgB,EAAC,UAAqB;QAChD,KAAK,EAAE,CAAC;QACR,IAAI,CAAC,IAAI,GAAC,OAAO,CAAC;QAClB,IAAI,CAAC,EAAE,GAAC,EAAE,CAAC;QACX,IAAI,CAAC,UAAU,GAAC,UAAU,CAAC;IAC7B,CAAC;CACF;AAVD,oCAUC"}

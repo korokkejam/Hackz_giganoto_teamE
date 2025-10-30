@@ -1,21 +1,14 @@
 import {Hono,Context,Next} from "hono";
-import {serve} from "@hono/node-server";
 import {cors} from "hono/cors";
-import {boards} from "./config/board";
 import {createNodeWebSocket} from "@hono/node-ws";
-import {rooms, setRooms} from "./game/rooms";
-import GameProcess from "./game/board";
-import {Request,StartEvent} from "shogi2-types";
+import { check_room_name, connect, create_room, enter_room, get_modlist } from "./requests";
+import { serve } from "@hono/node-server";
+import { getLocalIpAddress } from "./utils";
 import fs from "fs";
-import {setMods,loadMods} from "./load";
-
-import "./test";
-import { cloneDeep } from "lodash";
-
-import os from 'os';
+import {loadMods} from "./load";
+import { setMods } from "./state";
 
 const app=new Hono();
-
 const {injectWebSocket,upgradeWebSocket}=createNodeWebSocket({app});
 
 const logger=async (c:Context,next:Next)=>{
@@ -26,108 +19,20 @@ const logger=async (c:Context,next:Next)=>{
 app.use("*",logger);
 app.use("*",cors());
 
-app.get("/test",(c:Context)=>{
-  return c.text("hello");
-});
+app.get("/mod/list",get_modlist);
+app.get("/room/check/:id",check_room_name);
+app.get("/room/enter/:id",enter_room);
+app.get("/room/connect/:id/:player",connect(upgradeWebSocket));
 
-app.get("/room/check/:id",(c:Context)=>{
-  const id=c.req.param("id");
-  return c.text(rooms.map((room)=>room.id).includes(id)?"yes":"no");
-});
-
-app.get("/room/create/:id",upgradeWebSocket((c:Context)=>{
-  const id=c.req.param("id");
-  const data=new GameProcess(cloneDeep(boards));
-  return {
-    onMessage(event,_ws){
-      const room=rooms.find((room)=>room.id===id);
-      if (!room || !room.ws1 || !room.ws2){
-        return;
-      }
-      room.game.update(event,room.ws1,room.ws2);
-    },
-    onOpen(_event,ws){
-      rooms.push({ws1:ws,id,gamemode:"survival",game:data});
-    },
-    onClose(_event){
-      const room=rooms.find((room)=>room.id===id);
-      if (!room){
-        return;
-      }
-      const request:Request<any>={head:"close",content:""};
-      room.ws1?.send(JSON.stringify(request));
-      room.ws2?.send(JSON.stringify(request));
-      setRooms(rooms.filter((r)=>r.id!==room.id));
-      // console.log(room);
-    },
-    onError(event){
-      console.log(event);
-    }
-  };
-}));
-
-app.get("/room/enter/:id",upgradeWebSocket((c:Context)=>{
-  const id=c.req.param("id");
-  const room=rooms.find((room)=>room.id===id);
-  return {
-    onMessage(event,_ws){
-      if (!room || !room.ws1 || !room.ws2){
-        return;
-      }
-      room.game.update(event,room.ws1,room.ws2);
-    },
-    onOpen(_event,ws){
-      if (!room || !room.ws1){
-        return;
-      }
-      room.ws2=ws;
-      const d:Request<any>={head:"ready",content:room.game.game};
-      const event:Request<StartEvent>={head:"event",content:{type:"start",data:{},id:crypto.randomUUID()}};
-      room.game.event(event,room.ws1,room.ws2);
-      room.ws1.send(JSON.stringify(d));
-      room.ws2.send(JSON.stringify(d));
-    },
-    onClose(_event){
-      const room=rooms.find((room)=>room.id===id);
-      if (!room){
-        return;
-      }
-      const request:Request<any>={head:"close",content:""};
-      room.ws1?.send(JSON.stringify(request));
-      room.ws2?.send(JSON.stringify(request));
-      setRooms(rooms.filter((r)=>r.id!==room.id));
-      // console.log(room);
-    },
-    onError(event){
-      console.log(event);
-    }
-  };
-}));
-
-function getLocalIpAddress(): string | null {
-  const interfaces = os.networkInterfaces();
-
-  for (const interfaceName in interfaces) {
-    const networkInterface = interfaces[interfaceName];
-    if (!networkInterface) continue;
-
-    for (const iface of networkInterface) {
-      if (iface.family === 'IPv4' && !iface.internal) {
-        return iface.address; // 最初に見つけたIPv4アドレスを返す
-      }
-    }
-  }
-
-  return null; // 見つからなければnull
-}
+app.post("/room/create",create_room);
 
 fs.readdir("src/mods/",(_,d)=>{
   loadMods(d).then((mods)=>{
     setMods(mods);
 
-    const ipAddress = getLocalIpAddress();
+    const ipAddress = getLocalIpAddress(true);
     const server=serve({ fetch: app.fetch, port: 3000 ,hostname:"0.0.0.0"}, () => {
-      console.log(mods);
+      console.log(mods.map((mod)=>mod.identifier.id));
       console.log(`Server is running on http://${ipAddress}:3000`)
     });
 

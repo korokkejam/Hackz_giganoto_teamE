@@ -1,8 +1,0 @@
-.menubar{
-  height:40px;
-  display:flex;
-  align-items:center;
-  width:fit-content;
-  transform:translateX(-50%);
-  margin-left:50%;
-}

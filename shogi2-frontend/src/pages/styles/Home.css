@@ -1,0 +1,20 @@
+.home{
+  width:100vw;
+  height:100vh;
+  background:white;
+}
+
+.home > div{
+  width:300px;
+  position:absolute;
+  left:50%;
+  top:30%;
+  transform:translate(-50%,-50%);
+  display:flex;
+  justify-content:space-around;
+}
+
+.home > div > button{
+  background:#6ec7ff;
+  font-family:ktegaki;
+}

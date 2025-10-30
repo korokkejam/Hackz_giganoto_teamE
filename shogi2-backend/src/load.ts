@@ -1,40 +1,15 @@
-import {ModBase,Game,ModConfig} from "shogi2-types";
+import {Mod, ModBaseClass} from "shogi2-types";
 
-type ModBaseClass=new (game:Game)=>ModBase;
-type ModConfigClass=new (game:Game,mod:ModBase)=>ModConfig;
-
-// import GameProcess from "./game/board";
-// const p=new GameProcess([]);
-
-// class Dog extends ModBase {
-//   type="dog";
-//   constructor(game:Game){
-//     super(game);
-//   }
-// }
-// type ModBaseConstructor = new (game:Game) => ModBase;
-
-// const a:ModBaseConstructor=Dog;
-// const b=new a(p.game);
-
-async function loadMods(d:string[]){
-  let mods:ModBaseClass[]=[];
-  let configs:ModConfigClass[]=[];
+export async function loadMods(d:string[]):Promise<Mod[]>{
+  let mods:Mod[]=[];
   for (const dir of d){
-    const mod=await import(`./mods/${dir}/index`);
-    const config=await import(`./mods/${dir}/config`);
-    mods.push(mod.default as ModBaseClass);
-    configs.push(config.default as ModConfigClass);
+    const mod_class=await import(`./mods/${dir}/src/index`);
+    const info=await import(`./mods/${dir}/info`);
+    const mod:Mod={
+      class:mod_class.default as ModBaseClass,
+      identifier:{name:dir,id:info.id as string}
+    };
+    mods.push(mod);
   }
-  return {mods,configs};
+  return mods;
 }
-
-let mods:ModBaseClass[]=[];
-let configs:ModConfigClass[]=[];
-
-const setMods=(p:{mods:ModBaseClass[],configs:ModConfigClass[]})=>{
-  mods=p.mods;
-  configs=p.configs;
-};
-
-export {mods,configs,setMods,loadMods};

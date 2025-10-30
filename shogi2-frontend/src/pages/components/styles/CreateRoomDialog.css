@@ -1,0 +1,73 @@
+.create-room-dialog{
+  padding:20px;
+}
+
+.create-room-dialog > div > input{
+  font-size:20px;
+  padding:5px;
+  border-radius:5px;
+  border:0.5px solid;
+  outline:none;
+  font-family:ktegaki;
+}
+
+.create-room-dialog > div > button{
+  font-size:20px;
+  background:#6ec7ff;
+  border:1px solid #ddd;
+  border-radius:20px;
+  width:100px;
+  height:40px;
+  font-family:ktegaki;
+  transition:0.4s;
+  color:white;
+}
+
+.create-room-dialog > div > p{
+  margin-top:0;
+  margin-left:0;
+  margin-bottom:0;
+  margin-right:10px;
+  font-family:ktegaki;
+  color:white;
+}
+
+.create-room-dialog > div:has(input){
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  background:#6ec7ff;
+  padding:10px;
+  border-radius:10px;
+}
+
+.create-room-dialog > div:has(button){
+  display:flex;
+  flex-direction:row-reverse;
+}
+
+.create-room-dialog > div > button:hover{
+  cursor:pointer;
+  background:#6effc7;
+}
+
+.create-room-dialog-list{
+  height:150px;
+  overflow-y:scroll;
+}
+
+.create-room-dialog > div > h1{
+  font-size:25px;
+  font-weight:lighter;
+  font-family:ktegaki;
+  color:white;
+  margin:0;
+}
+
+.create-room-dialog > div:has(h1){
+  margin-top:20px;
+  padding:5px;
+  background:#6ec7ff;
+  border-radius:10px;
+  display:block;
+}

@@ -1,8 +1,18 @@
-.container{
-  position:absolute;
-  left:0;
-  top:0;
-  width:100vw;
-  height:100vh;
-  pointer-events:none;
+canvas{
+  width:calc(100vh - 50px);
+  height:calc(100vh - 50px);
+  margin-left:calc(50vw - 50vh + 25px);
+  background:#ffb766;
+}
+
+.header{
+  height:50px;
+}
+
+@media screen and (max-width:calc(100vh - 50px)){
+  canvas{
+    width:100vw;
+    height:100vw;
+    margin-left:0;
+  }
 }

@@ -1,26 +1,30 @@
-export * from "./types";
-export * from "./ModBase";
-export * from "./ModConfig";
-export * from "./CommandBase";
+import {ModBase} from "./ModBase";
+
+export type ModBaseClass=new ()=>ModBase;
+
+export type Mod={identifier:ModIdentifier,class:ModBaseClass};
+
+export interface ModIdentifier{
+  name:string;
+  id:string;
+};
+
+export type Player="player1"|"player2";
+
+export interface CreateRoomRequest{
+  name:string;
+  mods:ModIdentifier[];
+};
+
+export * from "./Request";
+export * from "./requests/StartRequest";
+export * from "./requests/BoardRequest";
 export * from "./Event";
-export * from "./events/CaptureEvent";
-export * from "./events/ChatEvent";
-export * from "./events/CommandEvent";
-export * from "./events/DeleteEvent";
-export * from "./events/DropEvent";
-export * from "./events/EndEvent";
-export * from "./events/MoveEvent";
-export * from "./events/PromotionEvent";
+export * from "./Piece";
+export * from "./PlayerData";
+export * from "./ModBase";
+export * from "./ModBase";
+export * from "./Game";
+export * from "./Board";
 export * from "./events/StartEvent";
-export * from "./events/TurnEvent";
-export * from "./events/QuestionEvent";
-export * from "./events/PromotionCheckEvent";
-export * from "./events/ChangeBoardEvent";
-export * from "./events/FileEvent";
-export * from "./events/AudioEvent";
-export * from "./events/ReservationEvent";
-export * from "./events/WarpEvent";
-export * from "./events/UIEvent";
-export * from "./UI";
-export * from "./Syntax";
-export * from "./events/ReturnEvent";
+export * from "./events/BoardEvent";

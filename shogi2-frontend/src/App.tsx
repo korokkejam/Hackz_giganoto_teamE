@@ -1,13 +1,12 @@
-import "./styles/App.css";
+import {Routes,Route} from "react-router-dom";
+import Home from "./pages/Home";
 import Game from "./pages/Game";
-import {Route,Routes} from "react-router-dom";
-import Index from "./pages/Index";
 
 export default function App(){
   return (
-    <div className="app">
+    <div className="App">
       <Routes>
-        <Route index element={<Index/>}/>
+        <Route index element={<Home/>}/>
         <Route path="/game" element={<Game/>}/>
       </Routes>
     </div>

@@ -1,1 +1,0 @@
-{"version":3,"file":"ReturnEvent.js","sourceRoot":"","sources":["../../../src/events/ReturnEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,KAAK,EAAC,MAAM,UAAU,CAAC;AAQ/B,MAAM,OAAO,WAAY,SAAQ,KAAsB;IACrD,IAAI,CAAiB;IACrB,YAAY,EAAS,EAAC,IAAoB;QACxC,KAAK,CAAC,QAAQ,EAAC,EAAE,CAAC,CAAC;QACnB,IAAI,CAAC,IAAI,GAAC,IAAI,CAAC;IACjB,CAAC;CACF"}

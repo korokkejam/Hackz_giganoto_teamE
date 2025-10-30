@@ -1,0 +1,1 @@
+{"version":3,"file":"BoardEvent.js","sourceRoot":"","sources":["../../../src/events/BoardEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAO,KAAK,EAAC,MAAM,UAAU,CAAC;AAErC,MAAM,OAAO,UAAW,SAAQ,KAAK;IACnC,IAAI,GAAC,OAAO,CAAC;IACb,KAAK,CAAO;IACZ,YAAY,KAAW;QACrB,KAAK,EAAE,CAAC;QACR,IAAI,CAAC,KAAK,GAAC,KAAK,CAAC;IACnB,CAAC;CACF"}

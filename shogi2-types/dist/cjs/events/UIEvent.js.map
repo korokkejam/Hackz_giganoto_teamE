@@ -1,1 +1,0 @@
-{"version":3,"file":"UIEvent.js","sourceRoot":"","sources":["../../../src/events/UIEvent.ts"],"names":[],"mappings":";;;AAAA,oCAA+B;AAQ9B,CAAC;AAEF,MAAa,OAAQ,SAAQ,aAAkB;IAE7C,YAAY,EAAS,EAAC,IAAgB;QACpC,KAAK,CAAC,IAAI,EAAC,EAAE,CAAC,CAAC;QACf,IAAI,CAAC,IAAI,GAAC,IAAI,CAAC;IACjB,CAAC;CACF;AAND,0BAMC"}
