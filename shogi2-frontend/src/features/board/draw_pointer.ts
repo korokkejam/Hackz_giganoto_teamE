@@ -1,6 +1,6 @@
-import { GameData, Player } from "shogi2-types";
+import { GameData, Player, Pos } from "shogi2-types";
 
-export default function draw_pointer(rect:DOMRect,data:GameData,mousePos:{x:number,y:number}|null,player:Player,ctx:CanvasRenderingContext2D){
+export default function draw_pointer(rect:DOMRect,data:GameData,mousePos:Pos|null,player:Player,ctx:CanvasRenderingContext2D){
   if (player!==data.turn){
     return;
   }

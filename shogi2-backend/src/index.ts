@@ -30,7 +30,7 @@ fs.readdir("src/mods/",(_,d)=>{
   loadMods(d).then((mods)=>{
     setMods(mods);
 
-    const ipAddress = getLocalIpAddress(true);
+    const ipAddress = getLocalIpAddress(false);
     const server=serve({ fetch: app.fetch, port: 3000 ,hostname:"0.0.0.0"}, () => {
       console.log(mods.map((mod)=>mod.identifier.id));
       console.log(`Server is running on http://${ipAddress}:3000`)

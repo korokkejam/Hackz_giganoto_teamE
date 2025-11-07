@@ -4,6 +4,7 @@ import "./styles/CreateRoomDialog.css";
 import { useSetAtom } from "jotai";
 import { playerAtom, roomNameAtom } from "../../state";
 import { useNavigate } from "react-router-dom";
+import { ipaddress } from "../../ipaddress";
 
 const dialogStyle:CSSProperties={
   position:"fixed",
@@ -30,7 +31,7 @@ export default function EnterRoomDialog({open,onClose}:{open:boolean,onClose:()=
     sendRequest(room_name);
   };
   const sendRequest=(name:string)=>{
-    fetch(`http://localhost:3000/room/enter/${name}`).then((res)=>{
+    fetch(`http://${ipaddress}:3000/room/enter/${name}`).then((res)=>{
       res.text().then((result)=>{
         console.log(result);
         if (result==="success"){

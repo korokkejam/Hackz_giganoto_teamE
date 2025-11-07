@@ -1,0 +1,16 @@
+.dialog > p{
+  text-align:center;
+}
+
+.dialog > div{
+  display:flex;
+}
+
+.dialog > div > button{
+  background:#6ec7ff;
+  font-family:ktegaki;
+  margin-top:5px;
+  margin-bottom:5px;
+  margin-left:10px;
+  margin-right:10px;
+}

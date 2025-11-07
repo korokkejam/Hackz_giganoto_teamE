@@ -6,6 +6,7 @@ import ModListItem from "./ModListItem";
 import { useSetAtom } from "jotai";
 import { playerAtom, roomNameAtom } from "../../state";
 import { useNavigate } from "react-router-dom";
+import { ipaddress } from "../../ipaddress";
 
 const dialogStyle:CSSProperties={
   position:"fixed",
@@ -39,11 +40,11 @@ export default function CreateRoomDialog({open,onClose}:{open:boolean,onClose:()
       name,
       mods:enableMods
     };
-    fetch(`http://localhost:3000/room/check/${name}`).then((res)=>{
+    fetch(`http://${ipaddress}:3000/room/check/${name}`).then((res)=>{
       res.text().then((result)=>{
         if (result==="false"){
           console.log(result);
-          fetch("http://localhost:3000/room/create",{
+          fetch(`http://${ipaddress}:3000/room/create`,{
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify(create_room_request)
@@ -69,7 +70,7 @@ export default function CreateRoomDialog({open,onClose}:{open:boolean,onClose:()
     setEnableMods(enableMods.filter((mod)=>mod.id!==m.id));
   };
   useEffect(()=>{
-    fetch("http://localhost:3000/mod/list").then((d)=>{
+    fetch(`http://${ipaddress}:3000/mod/list`).then((d)=>{
       d.text().then((text)=>{
         const mod_list:ModIdentifier[]=JSON.parse(text);
         setMods(mod_list);

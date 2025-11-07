@@ -3,11 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PieceType = void 0;
 ;
 class PieceType {
-    constructor(name, movable, jumpable) {
+    constructor(name, movable, jumpable, after_promotion) {
         this.name = name;
         this.movable = movable;
-        this.before_promotion = undefined;
-        this.after_promotion = undefined;
+        this.after_promotion = after_promotion;
         this.image = undefined;
         this.animation = { seconds: 0.1, operation: { 0: 0, 100: 100 } };
         this.jumpable = jumpable;

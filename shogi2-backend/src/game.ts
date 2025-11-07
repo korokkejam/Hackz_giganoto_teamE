@@ -16,12 +16,22 @@ export class Game{
   }
   update(event:Event,sender:Player){
     const requests:Request[]=[];
-    this.instances.forEach((instance)=>{
-      const re=instance.update(this.data,event,sender);
-      re.forEach((r)=>{
-        requests.push(r);
+    let events:Event[]=[event];
+    do{
+      const es:Event[]=[];
+      this.instances.forEach((instance)=>{
+        events.forEach((event)=>{
+          const re=instance.update(this.data,event,sender,requests);
+          re.r.forEach((r)=>{
+            requests.push(r);
+          });
+          re.e.forEach((e)=>{
+            es.push(e);
+          });
+        });
       });
-    });
+      events=es;
+    }while(events.length);
     this.send(requests);
   }
   send(requests:Request[]){

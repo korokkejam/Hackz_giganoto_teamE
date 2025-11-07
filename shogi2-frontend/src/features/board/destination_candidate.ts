@@ -1,7 +1,7 @@
-import { GameData, Piece, Player, Square } from "shogi2-types";
+import { GameData, Piece, Player, Pos, Square } from "shogi2-types";
 
-export default function destination_candidate(piece:Piece,player:Player,data:GameData):{x:number,y:number}[]{
-  const candidate:{x:number,y:number}[]=[];
+export default function destination_candidate(piece:Piece,player:Player,data:GameData):Pos[]{
+  const candidate:Pos[]=[];
   const position_list=data.board.squares.filter((square)=>square.piece?.player===player).map((square)=>square.position);
   const {absolute,relative}=piece.type.movable;
   absolute.forEach((pos)=>{
@@ -68,7 +68,7 @@ export default function destination_candidate(piece:Piece,player:Player,data:Gam
   return candidate;
 };
 
-const pos_cmp=(p1:{x:number,y:number},p2:{x:number,y:number})=>p1.x===p2.x && p1.y===p2.y;
-const pos_add=(p1:{x:number,y:number},p2:{x:number,y:number})=>({x:p1.x+p2.x,y:p1.y+p2.y});
+const pos_cmp=(p1:Pos,p2:Pos)=>p1.x===p2.x && p1.y===p2.y;
+const pos_add=(p1:Pos,p2:Pos)=>({x:p1.x+p2.x,y:p1.y+p2.y});
 const min=(a:number,b:number)=>a<b?a:b;
 const max=(a:number,b:number)=>a>b?a:b;

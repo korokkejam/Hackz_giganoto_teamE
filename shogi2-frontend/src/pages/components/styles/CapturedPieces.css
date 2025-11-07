@@ -1,0 +1,36 @@
+.captured-pieces{
+  margin:20px;
+  width:calc(100vw - 40px);
+  height:calc(100vh - 40px);
+  overflow-y:scroll;
+  display:flex;
+  flex-wrap:wrap;
+  column-gap:20px;
+  row-gap:20px;
+  align-content:flex-start;
+}
+
+.piece{
+  position:relative;
+  width:100px;
+  height:100px;
+}
+
+.piece > img{
+  width:100px;
+  height:100px;
+}
+
+.piece > img:hover{
+  cursor:pointer;
+}
+
+.piece > p{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  left:50px;
+  top:50px;
+  font-family:ktegaki;
+  font-size:30px;
+  margin:0;
+}

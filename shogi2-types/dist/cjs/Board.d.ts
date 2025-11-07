@@ -1,3 +1,4 @@
+import { Pos } from ".";
 import { Piece } from "./Piece";
 export interface Board {
     squares: Square[];
@@ -7,10 +8,7 @@ export interface Board {
     };
 }
 export interface Square {
-    position: {
-        x: number;
-        y: number;
-    };
+    position: Pos;
     piece: Piece | null;
     image: string | undefined;
 }

@@ -1,4 +1,4 @@
-import { Board,Piece, PieceType, Player } from "shogi2-types";
+import { Board,Piece, PieceType, Player, Pos } from "shogi2-types";
 import { pieces } from "./piece_generate";
 
 export default function set_pieces(board:Board){
@@ -12,7 +12,7 @@ export default function set_pieces(board:Board){
   });
 };
 
-function generate(position:{x:number,y:number},type:PieceType,player:Player):Piece{
+function generate(position:Pos,type:PieceType,player:Player):Piece{
   return {
     position,
     type,

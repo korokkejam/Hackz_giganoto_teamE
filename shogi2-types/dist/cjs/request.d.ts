@@ -1,5 +1,5 @@
 import { Player } from ".";
-export type RequestType = "board" | "turn" | "chat" | "file" | "audio" | "square" | "end" | "player" | "ui" | "question" | "start";
+export type RequestType = "board" | "turn" | "chat" | "file" | "audio" | "square" | "end" | "player" | "ui" | "question" | "start" | "move" | "capture";
 export declare abstract class Request {
     abstract type: RequestType;
     abstract to: Player | "both";

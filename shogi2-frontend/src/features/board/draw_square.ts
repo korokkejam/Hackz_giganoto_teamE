@@ -12,7 +12,7 @@ export function draw_square(ctx:CanvasRenderingContext2D,square:Square,rect:DOMR
   }
 }
 
-export function draw_piece(ctx:CanvasRenderingContext2D,piece:Piece,rect:DOMRect,data:GameData,player:Player,decimal:boolean=false){
+export function draw_piece(ctx:CanvasRenderingContext2D,piece:Piece,rect:DOMRect,data:GameData,player:Player){
   const stepx=rect.width/data.board.size.w;
   const stepy=rect.height/data.board.size.h;
   const x=player==="player1"?piece.position.x:data.board.size.w-piece.position.x-1;
@@ -29,18 +29,29 @@ export function draw_piece(ctx:CanvasRenderingContext2D,piece:Piece,rect:DOMRect
     ctx.restore();
   }
   ctx.font="30px ktegaki";
-  const name=[...piece.type.name];
+  const name=[...piece.type.name].reverse();
   let height_sum=0;
-  let width=0;
+  let width_max=0;
+  let height_max=0;
   name.forEach((c)=>{
     const metrics=ctx.measureText(c);
     const w=metrics.width;
-    if (width < w){
-      width=w;
+    const h=metrics.actualBoundingBoxAscent+metrics.actualBoundingBoxDescent;
+    if (width_max < w){
+      width_max=w;
     }
-    const height=metrics.actualBoundingBoxAscent+metrics.actualBoundingBoxDescent;
-    height_sum+=height;
+    if (height_max < h){
+      height_max=h;
+    }
+    height_sum+=h;
   });
   ctx.fillStyle="black";
-  ctx.fillText(piece.type.name,centerX-width/2,centerY+height_sum/2,width);
+  for (let i=0;i < name.length;i++){
+    ctx.fillText(
+      name[i],
+      centerX-width_max/2,
+      centerY+height_sum/2-height_max*i
+    );
+  }
+  // ctx.fillText(piece.type.name,centerX-width/2,centerY+height_sum/2,width);
 }

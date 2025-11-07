@@ -1,10 +1,10 @@
-import { GameData, Piece, Player } from "shogi2-types";
+import { GameData, Piece, Player, Pos } from "shogi2-types";
 import draw_background from "./draw_background";
 import {draw_square} from "./draw_square";
 import draw_pointer from "./draw_pointer";
 import draw_focused from "./draw_focused";
 
-export default function draw_board(canvas:HTMLCanvasElement,ctx:CanvasRenderingContext2D,data:GameData,player:Player,mousePos:{x:number,y:number}|null,focusedPiece:Piece|null){
+export default function draw_board(canvas:HTMLCanvasElement,ctx:CanvasRenderingContext2D,data:GameData,player:Player,mousePos:Pos|null,focusedPiece:Piece|null){
   draw_background(canvas,ctx,data);
   const rect=canvas.getBoundingClientRect();
   data.board.squares.forEach((square)=>{

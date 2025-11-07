@@ -1,16 +1,16 @@
-import { GameData, Piece, Player } from "shogi2-types";
+import { GameData, Piece, Player, Pos } from "shogi2-types";
 import draw_board from "./draw_board";
 import {draw_piece} from "./draw_square";
 
 export default function animation(
   piece:Piece,
-  to:{x:number,y:number},
+  to:Pos,
   callback:()=>void,
   ctx:CanvasRenderingContext2D,
   canvas:HTMLCanvasElement,
   data:GameData,
   player:Player,
-  mousePos:{x:number,y:number}|null
+  mousePos:Pos|null
 ){
   const rect=canvas.getBoundingClientRect();
   const animation=piece.type.animation;
@@ -21,7 +21,7 @@ export default function animation(
 function divided_callback(
   dt:number,
   piece:Piece,
-  to:{x:number,y:number},
+  to:Pos,
   count:number,
   callback:()=>void,
   ctx:CanvasRenderingContext2D,
@@ -29,7 +29,7 @@ function divided_callback(
   data:GameData,
   player:Player,
   rect:DOMRect,
-  mousePos:{x:number,y:number}|null
+  mousePos:Pos|null
 ){
   const {x:x1,y:y1}=piece.position;
   const {x:x2,y:y2}=to;

@@ -1,7 +1,7 @@
-import { Player } from "./index";
+import { Player, Pos } from "./index";
 
 export interface Piece{
-  position:{x:number,y:number};
+  position:Pos;
   type:PieceType;
   id:string;
   player:Player
@@ -10,16 +10,14 @@ export interface Piece{
 export class PieceType{
   name:string;
   movable:Movable;
-  before_promotion:PieceType|undefined;
   after_promotion:PieceType|undefined;
   image:string|undefined;
   animation:Animation;
   jumpable:boolean;
-  constructor(name:string,movable:Movable,jumpable:boolean){
+  constructor(name:string,movable:Movable,jumpable:boolean,after_promotion?:PieceType){
     this.name=name;
     this.movable=movable;
-    this.before_promotion=undefined;
-    this.after_promotion=undefined;
+    this.after_promotion=after_promotion;
     this.image=undefined;
     this.animation={seconds:0.1,operation:{0:0,100:100}};
     this.jumpable=jumpable;
@@ -27,8 +25,8 @@ export class PieceType{
 };
 
 export interface Movable{
-  absolute:{x:number,y:number}[];
-  relative:{x:number,y:number}[];
+  absolute:Pos[];
+  relative:Pos[];
 };
 
 export interface Animation{
