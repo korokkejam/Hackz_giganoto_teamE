@@ -52,3 +52,13 @@ export function connect(upgradeWebSocket:UpgradeWebSocket){
     };
   })
 };
+
+export function debug(c:Context){
+  const id=c.req.param("id");
+  const game=getGame(id);
+  if (game){
+    return c.json(game.data);
+  }else{
+    return c.text("not found");
+  }
+}

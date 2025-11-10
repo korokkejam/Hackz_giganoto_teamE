@@ -5,6 +5,5 @@ export declare class TurnRequest extends Request {
     type: RequestType;
     importance: Importance;
     player: Player;
-    seconds: number;
-    constructor(to: Player | "both", importance: Importance, player: Player, seconds: number);
+    constructor(to: Player | "both", importance: Importance, player: Player);
 }

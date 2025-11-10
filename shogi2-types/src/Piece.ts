@@ -9,12 +9,14 @@ export interface Piece{
 
 export class PieceType{
   name:string;
+  id:string;
   movable:Movable;
   after_promotion:PieceType|undefined;
   image:string|undefined;
   animation:Animation;
   jumpable:boolean;
-  constructor(name:string,movable:Movable,jumpable:boolean,after_promotion?:PieceType){
+  constructor(id:string,name:string,movable:Movable,jumpable:boolean,after_promotion?:PieceType){
+    this.id=id;
     this.name=name;
     this.movable=movable;
     this.after_promotion=after_promotion;

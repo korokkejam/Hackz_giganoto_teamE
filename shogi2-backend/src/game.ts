@@ -1,4 +1,4 @@
-import { createGameData, Event, GameData, Mod, ModBase, Player, Request } from "shogi2-types";
+import { createGameData, Event, GameData, Mod, ModBase, Player, Request, RequestUpdater } from "shogi2-types";
 import { Client } from "./type";
 
 export class Game{
@@ -15,15 +15,15 @@ export class Game{
     this.instances=mods.map((mod)=>new mod.class());
   }
   update(event:Event,sender:Player){
-    const requests:Request[]=[];
+    const updater=new RequestUpdater([]);
     let events:Event[]=[event];
     do{
       const es:Event[]=[];
       this.instances.forEach((instance)=>{
         events.forEach((event)=>{
-          const re=instance.update(this.data,event,sender,requests);
+          const re=instance.update(this.data,event,sender,updater);
           re.r.forEach((r)=>{
-            requests.push(r);
+            updater.add(r);
           });
           re.e.forEach((e)=>{
             es.push(e);
@@ -32,7 +32,7 @@ export class Game{
       });
       events=es;
     }while(events.length);
-    this.send(requests);
+    this.send(updater.requests);
   }
   send(requests:Request[]){
     requests.forEach((request)=>{

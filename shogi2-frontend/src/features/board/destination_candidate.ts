@@ -39,7 +39,6 @@ export default function destination_candidate(piece:Piece,player:Player,data:Gam
     if (absx===0 && absy){
       const filter=(square:Square)=>square.piece && square.position.x===piece.position.x && miny < square.position.y && square.position.y < maxy;
       const number_of_pieces=data.board.squares.filter(filter).length;
-      console.log(number_of_pieces);
       if (number_of_pieces){
         return;
       }

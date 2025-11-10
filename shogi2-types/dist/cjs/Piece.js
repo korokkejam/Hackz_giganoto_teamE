@@ -3,7 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PieceType = void 0;
 ;
 class PieceType {
-    constructor(name, movable, jumpable, after_promotion) {
+    constructor(id, name, movable, jumpable, after_promotion) {
+        this.id = id;
         this.name = name;
         this.movable = movable;
         this.after_promotion = after_promotion;

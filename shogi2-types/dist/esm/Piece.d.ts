@@ -7,12 +7,13 @@ export interface Piece {
 }
 export declare class PieceType {
     name: string;
+    id: string;
     movable: Movable;
     after_promotion: PieceType | undefined;
     image: string | undefined;
     animation: Animation;
     jumpable: boolean;
-    constructor(name: string, movable: Movable, jumpable: boolean, after_promotion?: PieceType);
+    constructor(id: string, name: string, movable: Movable, jumpable: boolean, after_promotion?: PieceType);
 }
 export interface Movable {
     absolute: Pos[];

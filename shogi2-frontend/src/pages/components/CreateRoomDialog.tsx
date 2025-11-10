@@ -31,7 +31,6 @@ export default function CreateRoomDialog({open,onClose}:{open:boolean,onClose:()
     if (!room_name){
       return;
     }
-    console.log(enableMods);
     onClose();
     sendRequest(room_name);
   };
@@ -43,14 +42,12 @@ export default function CreateRoomDialog({open,onClose}:{open:boolean,onClose:()
     fetch(`http://${ipaddress}:3000/room/check/${name}`).then((res)=>{
       res.text().then((result)=>{
         if (result==="false"){
-          console.log(result);
           fetch(`http://${ipaddress}:3000/room/create`,{
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify(create_room_request)
           }).then((res)=>{
             res.text().then((result)=>{
-              console.log(result);
               if (result==="success"){
                 setRoomName(name);
                 setPlayer("player1");
@@ -78,7 +75,6 @@ export default function CreateRoomDialog({open,onClose}:{open:boolean,onClose:()
     });
   },[open]);
   useEffect(()=>{
-    console.log("load");
     setEnableMods(mods);
   },[mods]);
   return (

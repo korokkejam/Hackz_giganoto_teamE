@@ -2,10 +2,10 @@ import { IconButton } from "@mui/material";
 import "./styles/Header.css";
 import GridViewIcon from '@mui/icons-material/GridView';
 import { useSetAtom } from "jotai";
-import { openCapturedPieces } from "../../state";
+import { openCapturedPiecesAtom } from "../../state";
 
 export default function Header(){
-  const setOpen=useSetAtom(openCapturedPieces);
+  const setOpen=useSetAtom(openCapturedPiecesAtom);
   return (
     <div className="header">
       <div>

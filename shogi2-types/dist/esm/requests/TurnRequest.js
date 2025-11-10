@@ -4,14 +4,12 @@ export class TurnRequest extends Request {
     type;
     importance;
     player;
-    seconds;
-    constructor(to, importance, player, seconds) {
+    constructor(to, importance, player) {
         super();
         this.to = to;
         this.importance = importance;
         this.player = player;
         this.type = "turn";
-        this.seconds = seconds;
     }
 }
 //# sourceMappingURL=TurnRequest.js.map

@@ -1,6 +1,7 @@
 import { PieceType } from "shogi2-types";
 
 export const king1=new PieceType(
+  "king",
   "王",
   {
     absolute:[],
@@ -9,6 +10,7 @@ export const king1=new PieceType(
   false
 );
 export const king2=new PieceType(
+  "king",
   "玉",
   {
     absolute:[],
@@ -17,6 +19,7 @@ export const king2=new PieceType(
   false
 );
 const promoted_bishop=new PieceType(
+  "promoted_bishop",
   "竜馬",
   {
     absolute:[],
@@ -31,6 +34,7 @@ const promoted_bishop=new PieceType(
   false
 );
 export const bishop=new PieceType(
+  "bishop",
   "角",
   {
     absolute:[],
@@ -45,6 +49,7 @@ export const bishop=new PieceType(
   promoted_bishop
 );
 const promoted_rook=new PieceType(
+  "promoted_rook",
   "竜王",
   {
     absolute:[],
@@ -59,6 +64,7 @@ const promoted_rook=new PieceType(
   false
 );
 export const rook=new PieceType(
+  "rook",
   "飛",
   {
     absolute:[],
@@ -73,6 +79,7 @@ export const rook=new PieceType(
   promoted_rook
 );
 const promoted_knight=new PieceType(
+  "promoted_knight",
   "成桂",
   {
     absolute:[],
@@ -81,6 +88,7 @@ const promoted_knight=new PieceType(
   false
 );
 export const knight=new PieceType(
+  "knight",
   "桂",
   {
     absolute:[],
@@ -90,6 +98,7 @@ export const knight=new PieceType(
   promoted_knight
 );
 const promoted_pawn=new PieceType(
+  "promoted_pawn",
   "と金",
   {
     absolute:[],
@@ -98,6 +107,7 @@ const promoted_pawn=new PieceType(
   false
 );
 export const pawn=new PieceType(
+  "pawn",
   "歩",
   {
     absolute:[],
@@ -107,6 +117,7 @@ export const pawn=new PieceType(
   promoted_pawn
 );
 export const gold=new PieceType(
+  "gold",
   "金",
   {
     absolute:[],
@@ -115,6 +126,7 @@ export const gold=new PieceType(
   false
 );
 export const silver=new PieceType(
+  "silver",
   "銀",
   {
     absolute:[],
@@ -123,6 +135,7 @@ export const silver=new PieceType(
   false
 );
 const promoted_lance=new PieceType(
+  "promoted_lance",
   "成香",
   {
     absolute:[],
@@ -131,6 +144,7 @@ const promoted_lance=new PieceType(
   false
 );
 export const lance=new PieceType(
+  "lance",
   "香",
   {
     absolute:[],

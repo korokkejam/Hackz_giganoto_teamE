@@ -1,0 +1,11 @@
+.game-end{
+  width:200px;
+  text-align:center;
+  margin:10px;
+}
+
+.game-end > button{
+  font-family:ktegaki;
+  background:#6ec7ff;
+  color:white;
+}

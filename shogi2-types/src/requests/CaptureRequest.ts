@@ -5,14 +5,14 @@ export class CaptureRequest extends Request{
   type: RequestType;
   to: Player | "both";
   importance: Importance;
-  piece1:Piece;
-  piece2:Piece;
-  constructor(to:Player|"both",importance:Importance,piece1:Piece,piece2:Piece){
+  player1_pieces:Piece[];
+  player2_pieces:Piece[];
+  constructor(to:Player|"both",importance:Importance,player1_pieces:Piece[],player2_pieces:Piece[]){
     super();
     this.to=to;
     this.type="capture";
     this.importance=importance;
-    this.piece1=piece1;
-    this.piece2=piece2;
+    this.player1_pieces=player1_pieces;
+    this.player2_pieces=player2_pieces;
   }
 }

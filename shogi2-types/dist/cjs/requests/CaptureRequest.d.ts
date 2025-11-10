@@ -4,7 +4,7 @@ export declare class CaptureRequest extends Request {
     type: RequestType;
     to: Player | "both";
     importance: Importance;
-    piece1: Piece;
-    piece2: Piece;
-    constructor(to: Player | "both", importance: Importance, piece1: Piece, piece2: Piece);
+    player1_pieces: Piece[];
+    player2_pieces: Piece[];
+    constructor(to: Player | "both", importance: Importance, player1_pieces: Piece[], player2_pieces: Piece[]);
 }

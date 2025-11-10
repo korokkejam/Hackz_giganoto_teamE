@@ -1,12 +1,14 @@
 ;
 export class PieceType {
     name;
+    id;
     movable;
     after_promotion;
     image;
     animation;
     jumpable;
-    constructor(name, movable, jumpable, after_promotion) {
+    constructor(id, name, movable, jumpable, after_promotion) {
+        this.id = id;
         this.name = name;
         this.movable = movable;
         this.after_promotion = after_promotion;

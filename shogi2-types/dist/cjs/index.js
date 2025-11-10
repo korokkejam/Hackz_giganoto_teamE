@@ -28,12 +28,16 @@ __exportStar(require("./events/StartEvent"), exports);
 __exportStar(require("./events/BoardEvent"), exports);
 __exportStar(require("./events/MoveEvent"), exports);
 __exportStar(require("./events/AnswerEvent"), exports);
+__exportStar(require("./events/DropEvent"), exports);
+__exportStar(require("./events/CaptureEvent"), exports);
+__exportStar(require("./events/EndEvent"), exports);
 __exportStar(require("./requests/StartRequest"), exports);
 __exportStar(require("./requests/BoardRequest"), exports);
 __exportStar(require("./requests/MoveRequest"), exports);
 __exportStar(require("./requests/TurnRequest"), exports);
-__exportStar(require("./requests/CaptureRequest"), exports);
 __exportStar(require("./requests/QuestionRequest"), exports);
 __exportStar(require("./requests/SquareRequest"), exports);
 __exportStar(require("./requests/CaptureRequest"), exports);
+__exportStar(require("./requests/PlayerRequest"), exports);
+__exportStar(require("./requests/EndRequest"), exports);
 //# sourceMappingURL=index.js.map

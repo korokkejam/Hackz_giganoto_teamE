@@ -33,7 +33,6 @@ export default function EnterRoomDialog({open,onClose}:{open:boolean,onClose:()=
   const sendRequest=(name:string)=>{
     fetch(`http://${ipaddress}:3000/room/enter/${name}`).then((res)=>{
       res.text().then((result)=>{
-        console.log(result);
         if (result==="success"){
           setRoomName(name);
           setPlayer((player)=>player?player:"player2");

@@ -3,13 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CaptureRequest = void 0;
 const Request_1 = require("../Request");
 class CaptureRequest extends Request_1.Request {
-    constructor(to, importance, piece1, piece2) {
+    constructor(to, importance, player1_pieces, player2_pieces) {
         super();
         this.to = to;
         this.type = "capture";
         this.importance = importance;
-        this.piece1 = piece1;
-        this.piece2 = piece2;
+        this.player1_pieces = player1_pieces;
+        this.player2_pieces = player2_pieces;
     }
 }
 exports.CaptureRequest = CaptureRequest;
