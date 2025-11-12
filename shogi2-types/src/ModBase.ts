@@ -1,4 +1,4 @@
-import { CaptureEvent, DropEvent, EndEvent, Event, GameData, Player, Request, RequestUpdater, StartEvent } from "./index";
+import { CaptureEvent, DropEvent, EndEvent, Event, GameData, Player, RequestExpansion, RequestUpdater, StartEvent } from "./index";
 import { BoardEvent } from "./events/BoardEvent";
 import { MoveEvent } from "./events/MoveEvent";
 import { AnswerEvent } from "./events/AnswerEvent";
@@ -11,8 +11,8 @@ export abstract class ModBase{
   log(content:string){
     this.log_list.push(content);
   }
-  update(data:GameData,before:GameData,event:Event,sender:Player,updater:RequestUpdater):{r:Request[],e:Event[]}{
-    const requests:Request[]=[];
+  update(data:GameData,before:GameData,event:Event,sender:Player,updater:RequestUpdater):{r:RequestExpansion[],e:Event[]}{
+    const requests:RequestExpansion[]=[];
     const events:Event[]=[];
     switch (event.type){
       case "start":
@@ -97,11 +97,11 @@ export abstract class ModBase{
     this.log_list=[];
     return {r:requests,e:events};
   }
-  onStart(_data:GameData,_before:GameData,_event:StartEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onBoard(_data:GameData,_before:GameData,_event:BoardEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onMove(_data:GameData,_before:GameData,_event:MoveEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onAnswer(_data:GameData,_before:GameData,_event:AnswerEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onDrop(_data:GameData,_before:GameData,_event:DropEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onCapture(_data:GameData,_before:GameData,_event:CaptureEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onEnd(_data:GameData,_before:GameData,_event:EndEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
+  onStart(_data:GameData,_before:GameData,_event:StartEvent,_sender:Player,_updater:RequestUpdater):{r:RequestExpansion[],e:Event[]}{return {r:[],e:[]};};
+  onBoard(_data:GameData,_before:GameData,_event:BoardEvent,_sender:Player,_updater:RequestUpdater):{r:RequestExpansion[],e:Event[]}{return {r:[],e:[]};};
+  onMove(_data:GameData,_before:GameData,_event:MoveEvent,_sender:Player,_updater:RequestUpdater):{r:RequestExpansion[],e:Event[]}{return {r:[],e:[]};};
+  onAnswer(_data:GameData,_before:GameData,_event:AnswerEvent,_sender:Player,_updater:RequestUpdater):{r:RequestExpansion[],e:Event[]}{return {r:[],e:[]};};
+  onDrop(_data:GameData,_before:GameData,_event:DropEvent,_sender:Player,_updater:RequestUpdater):{r:RequestExpansion[],e:Event[]}{return {r:[],e:[]};};
+  onCapture(_data:GameData,_before:GameData,_event:CaptureEvent,_sender:Player,_updater:RequestUpdater):{r:RequestExpansion[],e:Event[]}{return {r:[],e:[]};};
+  onEnd(_data:GameData,_before:GameData,_event:EndEvent,_sender:Player,_updater:RequestUpdater):{r:RequestExpansion[],e:Event[]}{return {r:[],e:[]};};
 }

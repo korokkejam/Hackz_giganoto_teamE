@@ -17,16 +17,17 @@ class Game {
         let events = [event];
         do {
             const es = [];
-            this.instances.forEach((instance) => {
-                events.forEach((event) => {
+            events.forEach((event) => {
+                this.instances.forEach((instance) => {
                     const re = instance.update(this.data, before, event, sender, updater);
                     re.r.forEach((r) => {
-                        const same_requests = updater.requests.filter((request) => request.type === r.type);
-                        if (r.importance === "exclude") {
-                            updater.filter((request) => request.type !== r.type || request.importance !== "obedience");
+                        const same_requests = updater.requests.filter((request) => request.request.type === r.request.type);
+                        if (r.request.importance === "exclude") {
+                            updater.filter((request) => request.request.type !== r.request.type || request.request.importance !== "obedience");
                         }
-                        if (!same_requests.some((request) => request.importance === "exclude") || r.importance !== "obedience") {
+                        if (!same_requests.some((request) => request.request.importance === "exclude") || r.request.importance !== "obedience") {
                             updater.add(r);
+                            this.data = r.data;
                         }
                     });
                     re.e.forEach((e) => {
@@ -36,7 +37,7 @@ class Game {
             });
             events = es;
         } while (events.length);
-        this.send(updater.requests);
+        this.send(updater.requests.map((r) => r.request));
     }
     send(requests) {
         requests.forEach((request) => {

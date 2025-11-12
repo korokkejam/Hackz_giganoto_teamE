@@ -5,19 +5,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const shogi2_types_1 = require("shogi2-types");
 const set_pieces_1 = __importDefault(require("./set_pieces"));
+const lodash_1 = require("lodash");
 class Base extends shogi2_types_1.ModBase {
     constructor() {
         super();
         this.questions = [];
     }
-    onStart(data, _before, _event, _sender, _updater) {
+    onStart(d, _before, _event, _sender, _updater) {
+        const data = (0, lodash_1.cloneDeep)(d);
         const board = (0, shogi2_types_1.createBoard)(9, 9);
         (0, set_pieces_1.default)(board);
         data.board = board;
-        const request = new shogi2_types_1.BoardRequest("both", board, "obedience");
+        const request = { request: new shogi2_types_1.BoardRequest("both", board, "obedience"), data: (0, lodash_1.cloneDeep)(data) };
         return { r: [request], e: [] };
     }
-    onMove(data, _before, event, _sender, _updater) {
+    onMove(d, _before, event, _sender, _updater) {
+        const data = (0, lodash_1.cloneDeep)(d);
         const events = [];
         const p1 = event.piece.position;
         const p2 = event.to;
@@ -54,9 +57,10 @@ class Base extends shogi2_types_1.ModBase {
             const piece = Object.assign(Object.assign({}, event.piece), { position: event.to });
             this.questions.push({ id: request.id, keys: request.choices.map((choice) => choice.key), piece });
         }
-        return { r: requests, e: events };
+        return { r: requests.map((r) => ({ request: r, data })), e: events };
     }
-    onAnswer(data, _before, event, _sender, _updater) {
+    onAnswer(d, _before, event, _sender, _updater) {
+        const data = (0, lodash_1.cloneDeep)(d);
         const question = this.questions.find((question) => question.id === event.id);
         const requests = [];
         const events = [];
@@ -76,9 +80,10 @@ class Base extends shogi2_types_1.ModBase {
                 });
             }
         }
-        return { r: requests, e: events };
+        return { r: requests.map((r) => ({ request: r, data })), e: events };
     }
-    onDrop(data, _before, event, sender, _updater) {
+    onDrop(d, _before, event, sender, _updater) {
+        const data = (0, lodash_1.cloneDeep)(d);
         data.board.squares = data.board.squares.map((square) => {
             var _a;
             if (square.position.x === event.square.position.x && square.position.y === event.square.position.y) {
@@ -97,9 +102,10 @@ class Base extends shogi2_types_1.ModBase {
         const request2 = new shogi2_types_1.TurnRequest("both", "obedience", sender === "player1" ? "player2" : "player1");
         const request3 = new shogi2_types_1.PlayerRequest("both", "obedience", sender === "player1" ? data.player1 : data.player2);
         request1.then = [request2, request3];
-        return { r: [request1], e: [] };
+        return { r: [{ request: request1, data }], e: [] };
     }
-    onCapture(data, _before, event, sender, _updater) {
+    onCapture(d, _before, event, sender, _updater) {
+        const data = (0, lodash_1.cloneDeep)(d);
         if (sender === "player1") {
             data.player1.captured_pieces.push(event.piece);
         }
@@ -112,11 +118,12 @@ class Base extends shogi2_types_1.ModBase {
         const request1 = new shogi2_types_1.CaptureRequest("both", "obedience", data.player1.captured_pieces, data.player2.captured_pieces);
         const request2 = new shogi2_types_1.TurnRequest("both", "obedience", sender === "player1" ? "player2" : "player1");
         request1.then = [request2];
-        return { r: [request1], e: [] };
+        return { r: [{ request: request1, data }], e: [] };
     }
-    onEnd(_data, _before, _event, sender, updater) {
-        updater.filter((r) => r.type !== "question");
-        return { r: [new shogi2_types_1.EndRequest("both", "obedience", sender)], e: [] };
+    onEnd(d, _before, _event, sender, updater) {
+        const data = (0, lodash_1.cloneDeep)(d);
+        updater.filter((r) => r.request.type !== "question");
+        return { r: [{ request: new shogi2_types_1.EndRequest("both", "obedience", sender), data }], e: [] };
     }
 }
 exports.default = Base;

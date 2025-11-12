@@ -24,7 +24,7 @@ class RequestUpdater {
         this.requests.push(request);
     }
     delete(id) {
-        this.filter((request) => request.id !== id);
+        this.filter((r) => r.request.id !== id);
     }
     filter(func) {
         this.requests = this.requests.filter(func);
@@ -34,5 +34,6 @@ class RequestUpdater {
     }
 }
 exports.RequestUpdater = RequestUpdater;
+;
 ;
 //# sourceMappingURL=Request.js.map
