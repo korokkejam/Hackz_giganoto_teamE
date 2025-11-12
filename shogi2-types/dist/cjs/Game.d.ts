@@ -6,5 +6,6 @@ export interface GameData {
     promotion_line: number;
     player1: PlayerData;
     player2: PlayerData;
+    log: string[];
 }
 export declare function createGameData(w: number, h: number): GameData;

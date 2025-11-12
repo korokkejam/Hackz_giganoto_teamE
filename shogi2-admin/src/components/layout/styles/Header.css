@@ -1,0 +1,21 @@
+.header{
+  width:100vw;
+  height:50px;
+  background:#777;
+  display:flex;
+  flex-direction:row-reverse;
+}
+
+.header > button{
+  color:white;
+}
+
+.login-dialog{
+  width:200px;
+  margin:10px;
+}
+
+.login-dialog > div:has(button){
+  display:flex;
+  justify-content:space-between;
+}

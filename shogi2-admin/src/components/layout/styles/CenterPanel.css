@@ -1,0 +1,6 @@
+.centerpanel{
+  flex-grow:1;
+  margin:20px;
+  height:calc(100vh - 90px);
+  overflow-y:scroll;
+}

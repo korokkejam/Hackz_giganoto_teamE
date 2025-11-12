@@ -326,9 +326,6 @@ export default function Game(){
     };
   },[player,roomName]);
   useEffect(()=>{
-    console.log(gameData);
-  },[gameData]);
-  useEffect(()=>{
     setSp(null);
   },[selectedPiece]);
   return (

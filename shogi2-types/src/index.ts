@@ -7,6 +7,7 @@ export type Mod={identifier:ModIdentifier,class:ModBaseClass};
 export interface ModIdentifier{
   name:string;
   id:string;
+  dir:string;
 };
 
 export type Player="player1"|"player2";
@@ -42,3 +43,10 @@ export * from "./requests/SquareRequest";
 export * from "./requests/CaptureRequest";
 export * from "./requests/PlayerRequest";
 export * from "./requests/EndRequest";
+
+export interface ModRequest{
+  msg:string;
+  repo:string;
+  id:string;
+  type:"add"|"delete";
+};

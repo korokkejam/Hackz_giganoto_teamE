@@ -4,6 +4,13 @@ import { MoveEvent } from "./events/MoveEvent";
 import { AnswerEvent } from "./events/AnswerEvent";
 
 export abstract class ModBase{
+  log_list:string[];
+  constructor(){
+    this.log_list=[];
+  }
+  log(content:string){
+    this.log_list.push(content);
+  }
   update(data:GameData,event:Event,sender:Player,updater:RequestUpdater):{r:Request[],e:Event[]}{
     const requests:Request[]=[];
     const events:Event[]=[];
@@ -86,6 +93,8 @@ export abstract class ModBase{
         }
         break;
     }
+    data.log=data.log.concat(this.log_list);
+    this.log_list=[];
     return {r:requests,e:events};
   }
   onStart(_data:GameData,_event:StartEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};

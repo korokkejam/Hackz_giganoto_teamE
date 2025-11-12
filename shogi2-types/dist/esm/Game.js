@@ -7,7 +7,8 @@ export function createGameData(w, h) {
         turn: "player1",
         promotion_line: 3,
         player1: new PlayerData("player1"),
-        player2: new PlayerData("player2")
+        player2: new PlayerData("player2"),
+        log: []
     };
 }
 //# sourceMappingURL=Game.js.map

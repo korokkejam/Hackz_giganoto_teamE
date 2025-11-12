@@ -1,4 +1,11 @@
 export class ModBase {
+    log_list;
+    constructor() {
+        this.log_list = [];
+    }
+    log(content) {
+        this.log_list.push(content);
+    }
     update(data, event, sender, updater) {
         const requests = [];
         const events = [];
@@ -81,6 +88,8 @@ export class ModBase {
                 }
                 break;
         }
+        data.log = data.log.concat(this.log_list);
+        this.log_list = [];
         return { r: requests, e: events };
     }
     onStart(_data, _event, _sender, _updater) { return { r: [], e: [] }; }

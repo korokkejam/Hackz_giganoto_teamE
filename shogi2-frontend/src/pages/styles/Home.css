@@ -4,7 +4,7 @@
   background:white;
 }
 
-.home > div{
+.room-buttons{
   width:300px;
   position:absolute;
   left:50%;
@@ -14,7 +14,7 @@
   justify-content:space-around;
 }
 
-.home > div > button{
+.room-buttons > button{
   background:#6ec7ff;
   font-family:ktegaki;
 }

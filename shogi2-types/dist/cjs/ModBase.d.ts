@@ -3,6 +3,9 @@ import { BoardEvent } from "./events/BoardEvent";
 import { MoveEvent } from "./events/MoveEvent";
 import { AnswerEvent } from "./events/AnswerEvent";
 export declare abstract class ModBase {
+    log_list: string[];
+    constructor();
+    log(content: string): void;
     update(data: GameData, event: Event, sender: Player, updater: RequestUpdater): {
         r: Request[];
         e: Event[];

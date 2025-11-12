@@ -7,6 +7,7 @@ export interface GameData{
   promotion_line:number;
   player1:PlayerData;
   player2:PlayerData;
+  log:string[];
 };
 
 export function createGameData(w:number,h:number):GameData{
@@ -16,6 +17,7 @@ export function createGameData(w:number,h:number):GameData{
     turn:"player1",
     promotion_line:3,
     player1:new PlayerData("player1"),
-    player2:new PlayerData("player2")
+    player2:new PlayerData("player2"),
+    log:[]
   };
 }
