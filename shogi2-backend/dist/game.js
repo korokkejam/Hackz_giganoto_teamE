@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Game = void 0;
 const shogi2_types_1 = require("shogi2-types");
+const lodash_1 = require("lodash");
 class Game {
     constructor(client, mods) {
         this.id = crypto.randomUUID();
@@ -11,15 +12,22 @@ class Game {
         this.instances = mods.map((mod) => new mod.class());
     }
     update(event, sender) {
+        const before = (0, lodash_1.cloneDeep)(this.data);
         const updater = new shogi2_types_1.RequestUpdater([]);
         let events = [event];
         do {
             const es = [];
             this.instances.forEach((instance) => {
                 events.forEach((event) => {
-                    const re = instance.update(this.data, event, sender, updater);
+                    const re = instance.update(this.data, before, event, sender, updater);
                     re.r.forEach((r) => {
-                        updater.add(r);
+                        const same_requests = updater.requests.filter((request) => request.type === r.type);
+                        if (r.importance === "exclude") {
+                            updater.filter((request) => request.type !== r.type || request.importance !== "obedience");
+                        }
+                        if (!same_requests.some((request) => request.importance === "exclude") || r.importance !== "obedience") {
+                            updater.add(r);
+                        }
                     });
                     re.e.forEach((e) => {
                         es.push(e);

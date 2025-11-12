@@ -63,6 +63,7 @@ export default function Header(){
       </Modal>
       <Button onClick={()=>{setOpenDialog(true)}}>{login?"ログアウト":"ログイン"}</Button>
       {login?<Button onClick={update}>更新</Button>:null}
+      {login?<Button onClick={()=>fetch(`http://${ipaddress}:3000/admin/server/stop`)}>サーバー停止</Button>:null}
     </div>
   );
 }

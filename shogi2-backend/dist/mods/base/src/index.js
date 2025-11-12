@@ -10,14 +10,14 @@ class Base extends shogi2_types_1.ModBase {
         super();
         this.questions = [];
     }
-    onStart(data, _event, _sender, _updater) {
+    onStart(data, _before, _event, _sender, _updater) {
         const board = (0, shogi2_types_1.createBoard)(9, 9);
-        data.board = board;
         (0, set_pieces_1.default)(board);
+        data.board = board;
         const request = new shogi2_types_1.BoardRequest("both", board, "obedience");
         return { r: [request], e: [] };
     }
-    onMove(data, event, _sender, _updater) {
+    onMove(data, _before, event, _sender, _updater) {
         const events = [];
         const p1 = event.piece.position;
         const p2 = event.to;
@@ -56,7 +56,7 @@ class Base extends shogi2_types_1.ModBase {
         }
         return { r: requests, e: events };
     }
-    onAnswer(data, event, _sender, _updater) {
+    onAnswer(data, _before, event, _sender, _updater) {
         const question = this.questions.find((question) => question.id === event.id);
         const requests = [];
         const events = [];
@@ -78,7 +78,7 @@ class Base extends shogi2_types_1.ModBase {
         }
         return { r: requests, e: events };
     }
-    onDrop(data, event, sender, _updater) {
+    onDrop(data, _before, event, sender, _updater) {
         data.board.squares = data.board.squares.map((square) => {
             var _a;
             if (square.position.x === event.square.position.x && square.position.y === event.square.position.y) {
@@ -99,7 +99,7 @@ class Base extends shogi2_types_1.ModBase {
         request1.then = [request2, request3];
         return { r: [request1], e: [] };
     }
-    onCapture(data, event, sender, _updater) {
+    onCapture(data, _before, event, sender, _updater) {
         if (sender === "player1") {
             data.player1.captured_pieces.push(event.piece);
         }
@@ -114,7 +114,7 @@ class Base extends shogi2_types_1.ModBase {
         request1.then = [request2];
         return { r: [request1], e: [] };
     }
-    onEnd(_data, _event, sender, updater) {
+    onEnd(_data, _before, _event, sender, updater) {
         updater.filter((r) => r.type !== "question");
         return { r: [new shogi2_types_1.EndRequest("both", "obedience", sender)], e: [] };
     }

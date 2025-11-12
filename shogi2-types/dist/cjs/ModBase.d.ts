@@ -6,35 +6,35 @@ export declare abstract class ModBase {
     log_list: string[];
     constructor();
     log(content: string): void;
-    update(data: GameData, event: Event, sender: Player, updater: RequestUpdater): {
+    update(data: GameData, before: GameData, event: Event, sender: Player, updater: RequestUpdater): {
         r: Request[];
         e: Event[];
     };
-    onStart(_data: GameData, _event: StartEvent, _sender: Player, _updater: RequestUpdater): {
+    onStart(_data: GameData, _before: GameData, _event: StartEvent, _sender: Player, _updater: RequestUpdater): {
         r: Request[];
         e: Event[];
     };
-    onBoard(_data: GameData, _event: BoardEvent, _sender: Player, _updater: RequestUpdater): {
+    onBoard(_data: GameData, _before: GameData, _event: BoardEvent, _sender: Player, _updater: RequestUpdater): {
         r: Request[];
         e: Event[];
     };
-    onMove(_data: GameData, _event: MoveEvent, _sender: Player, _updater: RequestUpdater): {
+    onMove(_data: GameData, _before: GameData, _event: MoveEvent, _sender: Player, _updater: RequestUpdater): {
         r: Request[];
         e: Event[];
     };
-    onAnswer(_data: GameData, _event: AnswerEvent, _sender: Player, _updater: RequestUpdater): {
+    onAnswer(_data: GameData, _before: GameData, _event: AnswerEvent, _sender: Player, _updater: RequestUpdater): {
         r: Request[];
         e: Event[];
     };
-    onDrop(_data: GameData, _event: DropEvent, _sender: Player, _updater: RequestUpdater): {
+    onDrop(_data: GameData, _before: GameData, _event: DropEvent, _sender: Player, _updater: RequestUpdater): {
         r: Request[];
         e: Event[];
     };
-    onCapture(_data: GameData, _event: CaptureEvent, _sender: Player, _updater: RequestUpdater): {
+    onCapture(_data: GameData, _before: GameData, _event: CaptureEvent, _sender: Player, _updater: RequestUpdater): {
         r: Request[];
         e: Event[];
     };
-    onEnd(_data: GameData, _event: EndEvent, _sender: Player, _updater: RequestUpdater): {
+    onEnd(_data: GameData, _before: GameData, _event: EndEvent, _sender: Player, _updater: RequestUpdater): {
         r: Request[];
         e: Event[];
     };

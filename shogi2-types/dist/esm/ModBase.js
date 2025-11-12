@@ -6,13 +6,13 @@ export class ModBase {
     log(content) {
         this.log_list.push(content);
     }
-    update(data, event, sender, updater) {
+    update(data, before, event, sender, updater) {
         const requests = [];
         const events = [];
         switch (event.type) {
             case "start":
                 {
-                    const re = this.onStart(data, event, sender, updater);
+                    const re = this.onStart(data, before, event, sender, updater);
                     re.r.forEach((r) => {
                         requests.push(r);
                     });
@@ -23,7 +23,7 @@ export class ModBase {
                 break;
             case "board":
                 {
-                    const re = this.onBoard(data, event, sender, updater);
+                    const re = this.onBoard(data, before, event, sender, updater);
                     re.r.forEach((r) => {
                         requests.push(r);
                     });
@@ -34,7 +34,7 @@ export class ModBase {
                 break;
             case "move":
                 {
-                    const re = this.onMove(data, event, sender, updater);
+                    const re = this.onMove(data, before, event, sender, updater);
                     re.r.forEach((r) => {
                         requests.push(r);
                     });
@@ -45,7 +45,7 @@ export class ModBase {
                 break;
             case "answer":
                 {
-                    const re = this.onAnswer(data, event, sender, updater);
+                    const re = this.onAnswer(data, before, event, sender, updater);
                     re.r.forEach((r) => {
                         requests.push(r);
                     });
@@ -56,7 +56,7 @@ export class ModBase {
                 break;
             case "drop":
                 {
-                    const re = this.onDrop(data, event, sender, updater);
+                    const re = this.onDrop(data, before, event, sender, updater);
                     re.r.forEach((r) => {
                         requests.push(r);
                     });
@@ -67,7 +67,7 @@ export class ModBase {
                 break;
             case "capture":
                 {
-                    const re = this.onCapture(data, event, sender, updater);
+                    const re = this.onCapture(data, before, event, sender, updater);
                     re.r.forEach((r) => {
                         requests.push(r);
                     });
@@ -78,7 +78,7 @@ export class ModBase {
                 break;
             case "end":
                 {
-                    const re = this.onEnd(data, event, sender, updater);
+                    const re = this.onEnd(data, before, event, sender, updater);
                     re.r.forEach((r) => {
                         requests.push(r);
                     });
@@ -92,19 +92,19 @@ export class ModBase {
         this.log_list = [];
         return { r: requests, e: events };
     }
-    onStart(_data, _event, _sender, _updater) { return { r: [], e: [] }; }
+    onStart(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
     ;
-    onBoard(_data, _event, _sender, _updater) { return { r: [], e: [] }; }
+    onBoard(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
     ;
-    onMove(_data, _event, _sender, _updater) { return { r: [], e: [] }; }
+    onMove(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
     ;
-    onAnswer(_data, _event, _sender, _updater) { return { r: [], e: [] }; }
+    onAnswer(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
     ;
-    onDrop(_data, _event, _sender, _updater) { return { r: [], e: [] }; }
+    onDrop(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
     ;
-    onCapture(_data, _event, _sender, _updater) { return { r: [], e: [] }; }
+    onCapture(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
     ;
-    onEnd(_data, _event, _sender, _updater) { return { r: [], e: [] }; }
+    onEnd(_data, _before, _event, _sender, _updater) { return { r: [], e: [] }; }
     ;
 }
 //# sourceMappingURL=ModBase.js.map

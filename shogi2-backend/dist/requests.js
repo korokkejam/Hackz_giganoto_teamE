@@ -61,6 +61,7 @@ const state_1 = require("./state");
 const handle_websocket_1 = require("./handle_websocket");
 const game_1 = require("./game");
 const git_clone_1 = __importDefault(require("git-clone"));
+const fs_1 = __importDefault(require("fs"));
 function get_modlist(c) {
     const mod_list = (0, state_1.getMods)().map((mod) => mod.identifier);
     return c.text(JSON.stringify(mod_list));
@@ -165,7 +166,7 @@ function accept_mod_request(c) {
             const info = yield Promise.resolve(`${`./mods/${dir}/info`}`).then(s => __importStar(require(s)));
             const mod = {
                 class: mod_class.default,
-                identifier: { name: dir, id: info.id }
+                identifier: { name: dir, id: info.id, dir }
             };
             (0, state_1.addMod)(mod);
         }
@@ -173,6 +174,8 @@ function accept_mod_request(c) {
             const mods = (0, state_1.getMods)();
             const mod = mods.find((mod) => mod.identifier.name === request.repo);
             if (mod) {
+                const dir = mod.identifier.dir;
+                fs_1.default.rm(`src/mods/${dir}`, { recursive: true }, () => { });
                 (0, state_1.deleteMod)(mod);
             }
         }

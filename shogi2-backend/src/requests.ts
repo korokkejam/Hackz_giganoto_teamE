@@ -6,6 +6,7 @@ import { UpgradeWebSocket } from "hono/ws";
 import { accept_player, close_room, update } from "./handle_websocket";
 import { Game } from "./game";
 import git_clone from "git-clone";
+import fs from "fs";
 
 export function get_modlist(c:Context){
   const mod_list=getMods().map((mod)=>mod.identifier);
@@ -109,13 +110,15 @@ export async function accept_mod_request(c:Context){
     const info=await import(`./mods/${dir}/info`);
     const mod:Mod={
       class:mod_class.default as ModBaseClass,
-      identifier:{name:dir,id:info.id as string}
+      identifier:{name:dir,id:info.id as string,dir}
     };
     addMod(mod);
   }else{
     const mods=getMods();
     const mod=mods.find((mod)=>mod.identifier.name===request.repo);
     if (mod){
+      const dir=mod.identifier.dir;
+      fs.rm(`src/mods/${dir}`,{recursive:true},()=>{});
       deleteMod(mod);
     }
   }

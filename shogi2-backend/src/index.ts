@@ -29,6 +29,7 @@ app.get("/admin/games",admin_games);
 app.get("/admin/mods",get_mod_requests);
 app.get("/admin/mods/accept/:id",accept_mod_request);
 app.get("/admin/mods/reject/:id",reject_mod_request);
+app.get("/admin/server/stop",(_c)=>process.exit());
 
 app.post("/room/create",create_room);
 app.post("/request/mods",request_mod);

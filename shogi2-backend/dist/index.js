@@ -39,6 +39,7 @@ app.get("/admin/games", requests_1.admin_games);
 app.get("/admin/mods", requests_1.get_mod_requests);
 app.get("/admin/mods/accept/:id", requests_1.accept_mod_request);
 app.get("/admin/mods/reject/:id", requests_1.reject_mod_request);
+app.get("/admin/server/stop", (_c) => process.exit());
 app.post("/room/create", requests_1.create_room);
 app.post("/request/mods", requests_1.request_mod);
 fs_1.default.readdir("src/mods/", (_, d) => {

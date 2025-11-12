@@ -51,7 +51,7 @@ function loadMods(d) {
             const info = yield Promise.resolve(`${`./mods/${dir}/info`}`).then(s => __importStar(require(s)));
             const mod = {
                 class: mod_class.default,
-                identifier: { name: dir, id: info.id }
+                identifier: { name: dir, id: info.id, dir }
             };
             mods.push(mod);
         }

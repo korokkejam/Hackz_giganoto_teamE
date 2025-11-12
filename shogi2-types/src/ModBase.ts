@@ -11,13 +11,13 @@ export abstract class ModBase{
   log(content:string){
     this.log_list.push(content);
   }
-  update(data:GameData,event:Event,sender:Player,updater:RequestUpdater):{r:Request[],e:Event[]}{
+  update(data:GameData,before:GameData,event:Event,sender:Player,updater:RequestUpdater):{r:Request[],e:Event[]}{
     const requests:Request[]=[];
     const events:Event[]=[];
     switch (event.type){
       case "start":
         {
-          const re=this.onStart(data,event as StartEvent,sender,updater);
+          const re=this.onStart(data,before,event as StartEvent,sender,updater);
           re.r.forEach((r)=>{
             requests.push(r);
           });
@@ -28,7 +28,7 @@ export abstract class ModBase{
         break;
       case "board":
         {
-          const re=this.onBoard(data,event as BoardEvent,sender,updater);
+          const re=this.onBoard(data,before,event as BoardEvent,sender,updater);
           re.r.forEach((r)=>{
             requests.push(r);
           });
@@ -39,7 +39,7 @@ export abstract class ModBase{
         break;
       case "move":
         {
-          const re=this.onMove(data,event as MoveEvent,sender,updater);
+          const re=this.onMove(data,before,event as MoveEvent,sender,updater);
           re.r.forEach((r)=>{
             requests.push(r);
           });
@@ -50,7 +50,7 @@ export abstract class ModBase{
         break;
       case "answer":
         {
-          const re=this.onAnswer(data,event as AnswerEvent,sender,updater);
+          const re=this.onAnswer(data,before,event as AnswerEvent,sender,updater);
           re.r.forEach((r)=>{
             requests.push(r);
           });
@@ -61,7 +61,7 @@ export abstract class ModBase{
         break;
       case "drop":
         {
-          const re=this.onDrop(data,event as DropEvent,sender,updater);
+          const re=this.onDrop(data,before,event as DropEvent,sender,updater);
           re.r.forEach((r)=>{
             requests.push(r);
           });
@@ -72,7 +72,7 @@ export abstract class ModBase{
         break;
       case "capture":
         {
-          const re=this.onCapture(data,event as CaptureEvent,sender,updater);
+          const re=this.onCapture(data,before,event as CaptureEvent,sender,updater);
           re.r.forEach((r)=>{
             requests.push(r);
           });
@@ -83,7 +83,7 @@ export abstract class ModBase{
         break;
       case "end":
         {
-          const re=this.onEnd(data,event as EndEvent,sender,updater);
+          const re=this.onEnd(data,before,event as EndEvent,sender,updater);
           re.r.forEach((r)=>{
             requests.push(r);
           });
@@ -97,11 +97,11 @@ export abstract class ModBase{
     this.log_list=[];
     return {r:requests,e:events};
   }
-  onStart(_data:GameData,_event:StartEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onBoard(_data:GameData,_event:BoardEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onMove(_data:GameData,_event:MoveEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onAnswer(_data:GameData,_event:AnswerEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onDrop(_data:GameData,_event:DropEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onCapture(_data:GameData,_event:CaptureEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
-  onEnd(_data:GameData,_event:EndEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
+  onStart(_data:GameData,_before:GameData,_event:StartEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
+  onBoard(_data:GameData,_before:GameData,_event:BoardEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
+  onMove(_data:GameData,_before:GameData,_event:MoveEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
+  onAnswer(_data:GameData,_before:GameData,_event:AnswerEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
+  onDrop(_data:GameData,_before:GameData,_event:DropEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
+  onCapture(_data:GameData,_before:GameData,_event:CaptureEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
+  onEnd(_data:GameData,_before:GameData,_event:EndEvent,_sender:Player,_updater:RequestUpdater):{r:Request[],e:Event[]}{return {r:[],e:[]};};
 }

@@ -7,7 +7,7 @@ export async function loadMods(d:string[]):Promise<Mod[]>{
     const info=await import(`./mods/${dir}/info`);
     const mod:Mod={
       class:mod_class.default as ModBaseClass,
-      identifier:{name:dir,id:info.id as string}
+      identifier:{name:dir,id:info.id as string,dir}
     };
     mods.push(mod);
   }

@@ -1,5 +1,6 @@
 import { createGameData, Event, GameData, Mod, ModBase, Player, Request, RequestUpdater } from "shogi2-types";
 import { Client } from "./type";
+import { cloneDeep } from "lodash";
 
 export class Game{
   id:string;
@@ -15,15 +16,22 @@ export class Game{
     this.instances=mods.map((mod)=>new mod.class());
   }
   update(event:Event,sender:Player){
+    const before=cloneDeep(this.data);
     const updater=new RequestUpdater([]);
     let events:Event[]=[event];
     do{
       const es:Event[]=[];
       this.instances.forEach((instance)=>{
         events.forEach((event)=>{
-          const re=instance.update(this.data,event,sender,updater);
+          const re=instance.update(this.data,before,event,sender,updater);
           re.r.forEach((r)=>{
-            updater.add(r);
+            const same_requests=updater.requests.filter((request)=>request.type===r.type);
+            if (r.importance==="exclude"){
+              updater.filter((request)=>request.type!==r.type || request.importance!=="obedience");
+            }
+            if (!same_requests.some((request)=>request.importance==="exclude") || r.importance!=="obedience"){
+              updater.add(r);
+            }
           });
           re.e.forEach((e)=>{
             es.push(e);
