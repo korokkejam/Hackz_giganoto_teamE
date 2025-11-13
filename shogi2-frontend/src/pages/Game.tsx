@@ -1,7 +1,7 @@
 import { useAtom, useAtomValue } from "jotai";
 import { MouseEvent, useEffect, useRef, useState } from "react";
-import { gameDataAtom, openCapturedPiecesAtom, playerAtom, roomNameAtom, selectedPieceAtom } from "../state";
-import { AnswerEvent, BoardRequest, CaptureRequest, DropEvent, EndRequest, GameData, MoveEvent, MoveRequest, Piece, Player, PlayerRequest, Pos, QuestionRequest, Request, Square, SquareRequest, TurnRequest } from "shogi2-types";
+import { gameDataAtom, imagesAtom, openCapturedPiecesAtom, playerAtom, roomNameAtom, selectedPieceAtom } from "../state";
+import { AnswerEvent, BoardRequest, CaptureRequest, DropEvent, EndRequest, FileRequest, GameData, MoveEvent, MoveRequest, Piece, Player, PlayerRequest, Pos, QuestionRequest, Request, Square, SquareRequest, TurnRequest } from "shogi2-types";
 import { CircularProgress,CSSProperties, Modal } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import draw_board from "../features/board/draw_board";
@@ -27,6 +27,7 @@ export default function Game(){
   const navigate=useNavigate();
   const player=useAtomValue(playerAtom);
   const roomName=useAtomValue(roomNameAtom);
+  const [images,setImages]=useAtom(imagesAtom);
   const [loaded,setLoaded]=useState<boolean>(false);
   const canvasRef=useRef<HTMLCanvasElement>(null);
   const websocketRef=useRef<WebSocket|null>(null);
@@ -147,7 +148,7 @@ export default function Game(){
       if (!player){
         return;
       }
-      draw_board(canvas,ctx,gameData,player,mousePos,focusedPiece,sp);
+      draw_board(canvas,ctx,gameData,player,mousePos,focusedPiece,sp,images);
     }
   });
   const board_request=(request:Request,data:GameData):GameData=>{
@@ -162,7 +163,13 @@ export default function Game(){
   const chat_request=(_request:Request,data:GameData):GameData=>{
     return data;
   };
-  const file_request=(_request:Request,data:GameData):GameData=>{
+  const file_request=(request:Request,data:GameData):GameData=>{
+    const r=request as FileRequest;
+    if (r.filetype==="image"){
+      const image=new Image();
+      image.src=r.content;
+      setImages((images)=>[...images,{content:image,name:r.name}]);
+    }
     return data;
   };
   const audio_request=(_request:Request,data:GameData):GameData=>{

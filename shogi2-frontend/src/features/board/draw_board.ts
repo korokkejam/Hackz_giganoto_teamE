@@ -11,12 +11,13 @@ export default function draw_board(
   player:Player,
   mousePos:Pos|null,
   focusedPiece:Piece|null,
-  selectedPiece:Piece|null
+  selectedPiece:Piece|null,
+  images:{content:HTMLImageElement,name:string}[]
 ){
   draw_background(canvas,ctx,data);
   const rect=canvas.getBoundingClientRect();
   data.board.squares.forEach((square)=>{
-    draw_square(ctx,square,rect,data,player);
+    draw_square(ctx,square,rect,data,player,images);
   });
   draw_pointer(rect,data,mousePos,player,ctx);
   if (selectedPiece){

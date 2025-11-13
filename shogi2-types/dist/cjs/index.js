@@ -40,5 +40,6 @@ __exportStar(require("./requests/SquareRequest"), exports);
 __exportStar(require("./requests/CaptureRequest"), exports);
 __exportStar(require("./requests/PlayerRequest"), exports);
 __exportStar(require("./requests/EndRequest"), exports);
+__exportStar(require("./requests/FileRequest"), exports);
 ;
 //# sourceMappingURL=index.js.map

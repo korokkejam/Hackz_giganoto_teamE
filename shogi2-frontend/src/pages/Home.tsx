@@ -4,7 +4,7 @@ import "./styles/Home.css";
 import CreateRoomDialog from "./components/CreateRoomDialog";
 import EnterRoomDialog from "./components/EnterRoomDialog";
 import { useSetAtom } from "jotai";
-import { playerAtom, roomNameAtom } from "../state";
+import { filesAtom, playerAtom, roomNameAtom } from "../state";
 import AddModDialog from "./components/AddModDialog";
 import DeleteModDialog from "./components/DeleteModDialog";
 
@@ -15,9 +15,11 @@ export default function Home(){
   const [openDeleteModDialog,setOpenDeleteModDialog]=useState<boolean>(false);
   const setPlayer=useSetAtom(playerAtom);
   const setRoomName=useSetAtom(roomNameAtom);
+  const setFiles=useSetAtom(filesAtom);
   useEffect(()=>{
     setPlayer(null);
     setRoomName(null);
+    setFiles([]);
   },[]);
   return (
     <div className="home">

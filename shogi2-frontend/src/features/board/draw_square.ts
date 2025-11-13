@@ -4,11 +4,27 @@ import piece_image from "../../assets/piece.png";
 export const image=new Image();
 image.src=piece_image;
 
-export function draw_square(ctx:CanvasRenderingContext2D,square:Square,rect:DOMRect,data:GameData,player:Player){
+export function draw_square(
+  ctx:CanvasRenderingContext2D,
+  square:Square,
+  rect:DOMRect,
+  data:GameData,
+  player:Player,
+  images:{content:HTMLImageElement,name:string}[]
+){
   if (square.piece!==null){
     draw_piece(ctx,square.piece,rect,data,player);
   }
-  if (square.image!==undefined){
+  if (square.image){
+    const image=images.find(({name})=>name===square.image)?.content;
+    if (!image){
+      return;
+    }
+    const stepx=rect.width/data.board.size.w;
+    const stepy=rect.height/data.board.size.h;
+    const x=player==="player1"?square.position.x:data.board.size.w-square.position.x-1;
+    const y=player==="player1"?square.position.y:data.board.size.h-square.position.y-1;
+    ctx.drawImage(image,x*stepx,y*stepy,stepx,stepy);
   }
 }
 
@@ -53,5 +69,4 @@ export function draw_piece(ctx:CanvasRenderingContext2D,piece:Piece,rect:DOMRect
       centerY+height_sum/2-height_max*i
     );
   }
-  // ctx.fillText(piece.type.name,centerX-width/2,centerY+height_sum/2,width);
 }

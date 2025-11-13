@@ -24,5 +24,6 @@ export * from "./requests/SquareRequest";
 export * from "./requests/CaptureRequest";
 export * from "./requests/PlayerRequest";
 export * from "./requests/EndRequest";
+export * from "./requests/FileRequest";
 ;
 //# sourceMappingURL=index.js.map

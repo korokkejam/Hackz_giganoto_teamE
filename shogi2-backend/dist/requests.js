@@ -162,8 +162,8 @@ function accept_mod_request(c) {
         if (request.type === "add") {
             const dir = request.repo.split("/")[1];
             (0, git_clone_1.default)(`https://github.com/${request.repo}`, `./src/mods/${dir}`);
-            const mod_class = yield Promise.resolve(`${`./mods/${dir}/src/index`}`).then(s => __importStar(require(s)));
-            const info = yield Promise.resolve(`${`./mods/${dir}/info`}`).then(s => __importStar(require(s)));
+            const mod_class = yield Promise.resolve(`${`./mods/${dir}/src/index?cacheBust=${new Date()}`}`).then(s => __importStar(require(s)));
+            const info = yield Promise.resolve(`${`./mods/${dir}/info?cacheBust=${new Date()}`}`).then(s => __importStar(require(s)));
             const mod = {
                 class: mod_class.default,
                 identifier: { name: dir, id: info.id, dir }
