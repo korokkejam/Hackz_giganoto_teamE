@@ -117,9 +117,8 @@ export default class Base extends ModBase{
     request1.then=[request2];
     return {r:[{request:request1,data}],e:[]};
   }
-  onEnd(d: GameData,_before:GameData, _event: EndEvent, sender: Player, updater: RequestUpdater){
-    const data=cloneDeep(d);
+  onEnd(_data: GameData,_before:GameData, _event: EndEvent, sender: Player, updater: RequestUpdater){
     updater.filter((r)=>r.request.type!=="question");
-    return {r:[{request:new EndRequest("both","obedience",sender),data}],e:[]};
+    return {r:[{request:new EndRequest("both","obedience",sender)}],e:[]};
   }
 }
