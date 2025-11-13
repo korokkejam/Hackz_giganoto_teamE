@@ -43,5 +43,5 @@ export class RequestUpdater{
 
 export interface RequestExpansion{
   request:Request;
-  data:GameData;
+  data?:GameData;
 };

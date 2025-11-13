@@ -31,7 +31,9 @@ export class Game{
             }
             if (!same_requests.some((request)=>request.request.importance==="exclude") || r.request.importance!=="obedience"){
               updater.add(r);
-              this.data=r.data;
+              if (r.data){
+                this.data=r.data;
+              }
             }
           });
           re.e.forEach((e)=>{

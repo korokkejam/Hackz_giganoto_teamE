@@ -6,6 +6,6 @@ export declare class FileRequest extends Request {
     importance: Importance;
     name: string;
     content: string;
-    filetype: "image" | "audio";
-    constructor(to: Player | "both", importance: Importance, name: string, content: string, filetype: "image" | "audio");
+    filetype: string;
+    constructor(to: Player | "both", importance: Importance, name: string, content: string, filetype: string);
 }
