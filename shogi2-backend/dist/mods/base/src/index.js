@@ -16,15 +16,12 @@ class Base extends shogi2_types_1.ModBase {
         const board = (0, shogi2_types_1.createBoard)(9, 9);
         (0, set_pieces_1.default)(board);
         data.board = board;
-        const request = { request: new shogi2_types_1.BoardRequest("both", board, "obedience"), data: (0, lodash_1.cloneDeep)(data) };
+        const request = new shogi2_types_1.BoardRequest("both", board, "obedience");
         return { r: [request], e: [] };
     }
     onMove(d, _before, event, _sender, _updater) {
         const data = (0, lodash_1.cloneDeep)(d);
         const events = [];
-        const p1 = event.piece.position;
-        const p2 = event.to;
-        const piece = event.piece;
         const square = data.board.squares.find((square) => {
             return square.position.x === event.to.x && square.position.y === event.to.y;
         });
@@ -33,19 +30,9 @@ class Base extends shogi2_types_1.ModBase {
             const event = new shogi2_types_1.CaptureEvent(piece2);
             events.push(event);
         }
-        data.board.squares = data.board.squares.map((square) => {
-            const p = square.position;
-            if (p.x === p1.x && p.y === p1.y) {
-                square.piece = null;
-            }
-            else if (p.x === p2.x && p.y === p2.y) {
-                square.piece = Object.assign(Object.assign({}, piece), { position: p2 });
-            }
-            return square;
-        });
         const request1 = new shogi2_types_1.MoveRequest("both", "exclude", event.piece, event.to);
-        data.turn = data.turn === "player1" ? "player2" : "player1";
-        const request2 = new shogi2_types_1.TurnRequest("both", "exclude", data.turn);
+        const turn = data.turn === "player1" ? "player2" : "player1";
+        const request2 = new shogi2_types_1.TurnRequest("both", "exclude", turn);
         request1.then = [request2];
         const requests = [request1];
         if (((event.piece.player === "player1" && event.to.y < data.promotion_line) || (event.piece.player === "player2" && data.board.size.h - event.to.y - 1 < data.promotion_line)) && event.piece.type.after_promotion) {
@@ -57,7 +44,7 @@ class Base extends shogi2_types_1.ModBase {
             const piece = Object.assign(Object.assign({}, event.piece), { position: event.to });
             this.questions.push({ id: request.id, keys: request.choices.map((choice) => choice.key), piece });
         }
-        return { r: requests.map((r) => ({ request: r, data })), e: events };
+        return { r: requests, e: events };
     }
     onAnswer(d, _before, event, _sender, _updater) {
         const data = (0, lodash_1.cloneDeep)(d);
@@ -80,7 +67,7 @@ class Base extends shogi2_types_1.ModBase {
                 });
             }
         }
-        return { r: requests.map((r) => ({ request: r, data })), e: events };
+        return { r: requests, e: events };
     }
     onDrop(d, _before, event, sender, _updater) {
         const data = (0, lodash_1.cloneDeep)(d);
@@ -102,7 +89,7 @@ class Base extends shogi2_types_1.ModBase {
         const request2 = new shogi2_types_1.TurnRequest("both", "obedience", sender === "player1" ? "player2" : "player1");
         const request3 = new shogi2_types_1.PlayerRequest("both", "obedience", sender === "player1" ? data.player1 : data.player2);
         request1.then = [request2, request3];
-        return { r: [{ request: request1, data }], e: [] };
+        return { r: [request1], e: [] };
     }
     onCapture(d, _before, event, sender, _updater) {
         const data = (0, lodash_1.cloneDeep)(d);
@@ -118,11 +105,11 @@ class Base extends shogi2_types_1.ModBase {
         const request1 = new shogi2_types_1.CaptureRequest("both", "obedience", data.player1.captured_pieces, data.player2.captured_pieces);
         const request2 = new shogi2_types_1.TurnRequest("both", "obedience", sender === "player1" ? "player2" : "player1");
         request1.then = [request2];
-        return { r: [{ request: request1, data }], e: [] };
+        return { r: [request1], e: [] };
     }
     onEnd(_data, _before, _event, sender, updater) {
-        updater.filter((r) => r.request.type !== "question");
-        return { r: [{ request: new shogi2_types_1.EndRequest("both", "obedience", sender) }], e: [] };
+        updater.filter((r) => r.type !== "question");
+        return { r: [new shogi2_types_1.EndRequest("both", "obedience", sender)], e: [] };
     }
 }
 exports.default = Base;

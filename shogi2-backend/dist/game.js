@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Game = void 0;
 const shogi2_types_1 = require("shogi2-types");
 const lodash_1 = require("lodash");
+const updater_1 = __importDefault(require("./updater"));
 class Game {
     constructor(client, mods) {
         this.id = crypto.randomUUID();
@@ -17,32 +21,29 @@ class Game {
         let events = [event];
         do {
             const es = [];
-            events.forEach((event) => {
-                this.instances.forEach((instance) => {
+            this.instances.forEach((instance) => {
+                events.forEach((event) => {
                     const re = instance.update(this.data, before, event, sender, updater);
                     re.r.forEach((r) => {
-                        const same_requests = updater.requests.filter((request) => request.request.type === r.request.type);
-                        if (r.request.importance === "exclude") {
-                            updater.filter((request) => request.request.type !== r.request.type || request.request.importance !== "obedience");
+                        const same_requests = updater.requests.filter((request) => request.type === r.type);
+                        if (r.importance === "exclude") {
+                            updater.filter((request) => request.type !== r.type || request.importance !== "obedience");
                         }
-                        if (!same_requests.some((request) => request.request.importance === "exclude") || r.request.importance !== "obedience") {
+                        if (!same_requests.some((request) => request.importance === "exclude") || r.importance !== "obedience") {
                             updater.add(r);
-                            if (r.data) {
-                                console.log("=".repeat(10));
-                                console.log(r.data.turn);
-                                console.log(r.request.type);
-                                this.data = r.data;
-                            }
                         }
                     });
                     re.e.forEach((e) => {
                         es.push(e);
                     });
                 });
+                updater.requests.forEach((request) => {
+                    (0, updater_1.default)(this.data, request);
+                });
             });
             events = es;
         } while (events.length);
-        this.send(updater.requests.map((r) => r.request));
+        this.send(updater.requests);
     }
     send(requests) {
         requests.forEach((request) => {

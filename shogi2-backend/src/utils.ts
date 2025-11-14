@@ -1,4 +1,5 @@
 import os from "os";
+import { Pos } from "shogi2-types";
 
 export function getLocalIpAddress(localhost:boolean): string | null {
   if (localhost){
@@ -17,4 +18,8 @@ export function getLocalIpAddress(localhost:boolean): string | null {
     }
     return null;
   }
+}
+
+export function cmp_pos(p1:Pos,p2:Pos):boolean{
+  return p1.x===p2.x && p1.y===p2.y;
 }

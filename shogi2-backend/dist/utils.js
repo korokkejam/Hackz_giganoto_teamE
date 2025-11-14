@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLocalIpAddress = getLocalIpAddress;
+exports.cmp_pos = cmp_pos;
 const os_1 = __importDefault(require("os"));
 function getLocalIpAddress(localhost) {
     if (localhost) {
@@ -23,4 +24,7 @@ function getLocalIpAddress(localhost) {
         }
         return null;
     }
+}
+function cmp_pos(p1, p2) {
+    return p1.x === p2.x && p1.y === p2.y;
 }

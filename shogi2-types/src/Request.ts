@@ -1,4 +1,4 @@
-import { Diff, Player } from ".";
+import { Player } from ".";
 
 export type RequestType="board"|"turn"|"chat"|"file"|"audio"|"square"|"end"|"player"|"ui"|"question"|"start"|"move"|"capture";
 
@@ -20,28 +20,23 @@ export abstract class Request{
 export type Importance="exclude"|"coexistence"|"obedience";
 
 export class RequestUpdater{
-  requests:RequestExpansion[];
-  constructor(requests:RequestExpansion[]){
+  requests:Request[];
+  constructor(requests:Request[]){
     this.requests=requests;
   }
-  set(requests:RequestExpansion[]){
+  set(requests:Request[]){
     this.requests=requests;
   }
-  add(request:RequestExpansion){
+  add(request:Request){
     this.requests.push(request);
   }
   delete(id:string){
-    this.filter((r:RequestExpansion)=>r.request.id!==id);
+    this.filter((r:Request)=>r.id!==id);
   }
-  filter(func:(request:RequestExpansion)=>boolean){
+  filter(func:(request:Request)=>boolean){
     this.requests=this.requests.filter(func);
   }
-  map(func:(request:RequestExpansion)=>RequestExpansion){
+  map(func:(request:Request)=>Request){
     this.requests=this.requests.map(func);
   }
-};
-
-export interface RequestExpansion{
-  request:Request;
-  diff?:Diff;
 };

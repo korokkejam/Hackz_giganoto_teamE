@@ -23,7 +23,7 @@ export class RequestUpdater {
         this.requests.push(request);
     }
     delete(id) {
-        this.filter((r) => r.request.id !== id);
+        this.filter((r) => r.id !== id);
     }
     filter(func) {
         this.requests = this.requests.filter(func);
@@ -32,6 +32,5 @@ export class RequestUpdater {
         this.requests = this.requests.map(func);
     }
 }
-;
 ;
 //# sourceMappingURL=Request.js.map

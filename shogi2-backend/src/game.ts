@@ -1,6 +1,7 @@
 import { createGameData, Event, GameData, Mod, ModBase, Player, Request, RequestUpdater } from "shogi2-types";
 import { Client } from "./type";
 import { cloneDeep } from "lodash";
+import gamedata_update from "./updater";
 
 export class Game{
   id:string;
@@ -21,29 +22,29 @@ export class Game{
     let events:Event[]=[event];
     do{
       const es:Event[]=[];
-      events.forEach((event)=>{
-        this.instances.forEach((instance)=>{
+      this.instances.forEach((instance)=>{
+        events.forEach((event)=>{
           const re=instance.update(this.data,before,event,sender,updater);
           re.r.forEach((r)=>{
-            const same_requests=updater.requests.filter((request)=>request.request.type===r.request.type);
-            if (r.request.importance==="exclude"){
-              updater.filter((request)=>request.request.type!==r.request.type || request.request.importance!=="obedience");
+            const same_requests=updater.requests.filter((request)=>request.type===r.type);
+            if (r.importance==="exclude"){
+              updater.filter((request)=>request.type!==r.type || request.importance!=="obedience");
             }
-            if (!same_requests.some((request)=>request.request.importance==="exclude") || r.request.importance!=="obedience"){
+            if (!same_requests.some((request)=>request.importance==="exclude") || r.importance!=="obedience"){
               updater.add(r);
-              if (r.data){
-                // this.data=r.data;
-              }
             }
           });
           re.e.forEach((e)=>{
             es.push(e);
           });
         });
+        updater.requests.forEach((request)=>{
+          gamedata_update(this.data,request);
+        });
       });
       events=es;
     }while(events.length);
-    this.send(updater.requests.map((r)=>r.request));
+    this.send(updater.requests);
   }
   send(requests:Request[]){
     requests.forEach((request)=>{

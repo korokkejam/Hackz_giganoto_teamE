@@ -8,20 +8,17 @@ export default class Base extends ModBase{
     super();
     this.questions=[];
   }
-  onStart(d: GameData,_before:GameData, _event: StartEvent, _sender: Player,_updater:RequestUpdater){
+  onStart(d: GameData, _before: GameData, _event: StartEvent, _sender: Player, _updater: RequestUpdater): { r: Request[]; e: Event[]; } {
     const data=cloneDeep(d);
     const board:Board=createBoard(9,9);
     set_pieces(board);
     data.board=board;
-    const request={request:new BoardRequest("both",board,"obedience"),data:cloneDeep(data)};
+    const request=new BoardRequest("both",board,"obedience");
     return {r:[request],e:[]};
   }
   onMove(d: GameData,_before:GameData, event: MoveEvent, _sender: Player,_updater:RequestUpdater){
     const data=cloneDeep(d);
     const events:Event[]=[];
-    const p1=event.piece.position;
-    const p2=event.to;
-    const piece=event.piece;
     const square=data.board.squares.find((square)=>{
       return square.position.x===event.to.x && square.position.y===event.to.y
     });
@@ -30,18 +27,9 @@ export default class Base extends ModBase{
       const event=new CaptureEvent(piece2);
       events.push(event);
     }
-    data.board.squares=data.board.squares.map((square)=>{
-      const p=square.position;
-      if (p.x===p1.x && p.y===p1.y){
-        square.piece=null;
-      }else if (p.x===p2.x && p.y===p2.y){
-        square.piece={...piece,position:p2};
-      }
-      return square;
-    });
     const request1=new MoveRequest("both","exclude",event.piece,event.to);
-    data.turn=data.turn==="player1"?"player2":"player1";
-    const request2=new TurnRequest("both","exclude",data.turn);
+    const turn=data.turn==="player1"?"player2":"player1"
+    const request2=new TurnRequest("both","exclude",turn);
     request1.then=[request2];
     const requests:Request[]=[request1];
     if (((event.piece.player==="player1" && event.to.y < data.promotion_line) || (event.piece.player==="player2" && data.board.size.h-event.to.y-1 < data.promotion_line)) && event.piece.type.after_promotion){
@@ -58,7 +46,7 @@ export default class Base extends ModBase{
       const piece={...event.piece,position:event.to};
       this.questions.push({id:request.id,keys:request.choices.map((choice)=>choice.key),piece});
     }
-    return {r:requests.map((r)=>({request:r,data})),e:events};
+    return {r:requests,e:events};
   }
   onAnswer(d: GameData,_before:GameData, event: AnswerEvent, _sender: Player, _updater:RequestUpdater){
     const data=cloneDeep(d);
@@ -80,7 +68,7 @@ export default class Base extends ModBase{
         });
       }
     }
-    return {r:requests.map((r)=>({request:r,data})),e:events};
+    return {r:requests,e:events};
   }
   onDrop(d: GameData,_before:GameData, event: DropEvent, sender: Player, _updater:RequestUpdater){
     const data=cloneDeep(d);
@@ -100,7 +88,7 @@ export default class Base extends ModBase{
     const request2=new TurnRequest("both","obedience",sender==="player1"?"player2":"player1");
     const request3=new PlayerRequest("both","obedience",sender==="player1"?data.player1:data.player2);
     request1.then=[request2,request3];
-    return {r:[{request:request1,data}],e:[]};
+    return {r:[request1],e:[]};
   }
   onCapture(d: GameData,_before:GameData, event: CaptureEvent, sender: Player, _updater: RequestUpdater){
     const data=cloneDeep(d);
@@ -115,10 +103,10 @@ export default class Base extends ModBase{
     const request1=new CaptureRequest("both","obedience",data.player1.captured_pieces,data.player2.captured_pieces);
     const request2=new TurnRequest("both","obedience",sender==="player1"?"player2":"player1");
     request1.then=[request2];
-    return {r:[{request:request1,data}],e:[]};
+    return {r:[request1],e:[]};
   }
   onEnd(_data: GameData,_before:GameData, _event: EndEvent, sender: Player, updater: RequestUpdater){
-    updater.filter((r)=>r.request.type!=="question");
-    return {r:[{request:new EndRequest("both","obedience",sender)}],e:[]};
+    updater.filter((r)=>r.type!=="question");
+    return {r:[new EndRequest("both","obedience",sender)],e:[]};
   }
 }
