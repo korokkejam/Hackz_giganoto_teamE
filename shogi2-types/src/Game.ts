@@ -23,7 +23,7 @@ export function createGameData(w:number,h:number):GameData{
 }
 
 export interface Diff{
-  keys:string|number[];
+  keys:(string|number)[];
   value:any;
   type:"add"|"delete"|"update";
 }
