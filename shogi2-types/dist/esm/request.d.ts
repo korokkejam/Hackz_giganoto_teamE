@@ -1,4 +1,4 @@
-import { GameData, Player } from ".";
+import { Diff, Player } from ".";
 export type RequestType = "board" | "turn" | "chat" | "file" | "audio" | "square" | "end" | "player" | "ui" | "question" | "start" | "move" | "capture";
 export declare abstract class Request {
     abstract type: RequestType;
@@ -21,5 +21,5 @@ export declare class RequestUpdater {
 }
 export interface RequestExpansion {
     request: Request;
-    data?: GameData;
+    data?: Diff;
 }

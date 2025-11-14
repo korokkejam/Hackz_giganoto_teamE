@@ -43,13 +43,13 @@ class Base extends shogi2_types_1.ModBase {
             }
             return square;
         });
-        const request1 = new shogi2_types_1.MoveRequest("both", "obedience", event.piece, event.to);
+        const request1 = new shogi2_types_1.MoveRequest("both", "exclude", event.piece, event.to);
         data.turn = data.turn === "player1" ? "player2" : "player1";
-        const request2 = new shogi2_types_1.TurnRequest("both", "obedience", data.turn);
+        const request2 = new shogi2_types_1.TurnRequest("both", "exclude", data.turn);
         request1.then = [request2];
         const requests = [request1];
         if (((event.piece.player === "player1" && event.to.y < data.promotion_line) || (event.piece.player === "player2" && data.board.size.h - event.to.y - 1 < data.promotion_line)) && event.piece.type.after_promotion) {
-            const request = new shogi2_types_1.QuestionRequest(event.piece.player, "obedience", "成る？", [
+            const request = new shogi2_types_1.QuestionRequest(event.piece.player, "exclude", "成る？", [
                 { display: "はい", key: "yes" },
                 { display: "いいえ", key: "no" }
             ]);
@@ -120,10 +120,9 @@ class Base extends shogi2_types_1.ModBase {
         request1.then = [request2];
         return { r: [{ request: request1, data }], e: [] };
     }
-    onEnd(d, _before, _event, sender, updater) {
-        const data = (0, lodash_1.cloneDeep)(d);
+    onEnd(_data, _before, _event, sender, updater) {
         updater.filter((r) => r.request.type !== "question");
-        return { r: [{ request: new shogi2_types_1.EndRequest("both", "obedience", sender), data }], e: [] };
+        return { r: [{ request: new shogi2_types_1.EndRequest("both", "obedience", sender) }], e: [] };
     }
 }
 exports.default = Base;

@@ -32,7 +32,7 @@ export class Game{
             if (!same_requests.some((request)=>request.request.importance==="exclude") || r.request.importance!=="obedience"){
               updater.add(r);
               if (r.data){
-                this.data=r.data;
+                // this.data=r.data;
               }
             }
           });

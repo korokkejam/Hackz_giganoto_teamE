@@ -21,3 +21,9 @@ export function createGameData(w:number,h:number):GameData{
     log:[]
   };
 }
+
+export interface Diff{
+  keys:string|number[];
+  value:any;
+  type:"add"|"delete"|"update";
+}

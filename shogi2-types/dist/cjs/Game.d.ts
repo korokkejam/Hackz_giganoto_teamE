@@ -9,3 +9,8 @@ export interface GameData {
     log: string[];
 }
 export declare function createGameData(w: number, h: number): GameData;
+export interface Diff {
+    keys: string | number[];
+    value: any;
+    type: "add" | "delete" | "update";
+}

@@ -27,7 +27,12 @@ class Game {
                         }
                         if (!same_requests.some((request) => request.request.importance === "exclude") || r.request.importance !== "obedience") {
                             updater.add(r);
-                            this.data = r.data;
+                            if (r.data) {
+                                console.log("=".repeat(10));
+                                console.log(r.data.turn);
+                                console.log(r.request.type);
+                                this.data = r.data;
+                            }
                         }
                     });
                     re.e.forEach((e) => {

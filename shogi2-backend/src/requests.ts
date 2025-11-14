@@ -5,8 +5,10 @@ import { Client } from "./type";
 import { UpgradeWebSocket } from "hono/ws";
 import { accept_player, close_room, update } from "./handle_websocket";
 import { Game } from "./game";
-import git_clone from "git-clone";
 import fs from "fs";
+import simpleGit from "simple-git";
+
+const git=simpleGit();
 
 export function get_modlist(c:Context){
   const mod_list=getMods().map((mod)=>mod.identifier);
@@ -105,7 +107,7 @@ export async function accept_mod_request(c:Context){
   }
   if (request.type==="add"){
     const dir=request.repo.split("/")[1];
-    git_clone(`https://github.com/${request.repo}`,`./src/mods/${dir}`);
+    await git.clone(`https://github.com/${request.repo}`,`./src/mods/${dir}`);
     const mod_class=await import(`./mods/${dir}/src/index`);
     const info=await import(`./mods/${dir}/info`);
     const mod:Mod={

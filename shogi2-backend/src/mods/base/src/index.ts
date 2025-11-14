@@ -39,15 +39,15 @@ export default class Base extends ModBase{
       }
       return square;
     });
-    const request1=new MoveRequest("both","obedience",event.piece,event.to);
+    const request1=new MoveRequest("both","exclude",event.piece,event.to);
     data.turn=data.turn==="player1"?"player2":"player1";
-    const request2=new TurnRequest("both","obedience",data.turn);
+    const request2=new TurnRequest("both","exclude",data.turn);
     request1.then=[request2];
     const requests:Request[]=[request1];
     if (((event.piece.player==="player1" && event.to.y < data.promotion_line) || (event.piece.player==="player2" && data.board.size.h-event.to.y-1 < data.promotion_line)) && event.piece.type.after_promotion){
       const request=new QuestionRequest(
         event.piece.player,
-        "obedience",
+        "exclude",
         "成る？",
         [
           {display:"はい",key:"yes"},

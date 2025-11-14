@@ -60,8 +60,9 @@ exports.reject_mod_request = reject_mod_request;
 const state_1 = require("./state");
 const handle_websocket_1 = require("./handle_websocket");
 const game_1 = require("./game");
-const git_clone_1 = __importDefault(require("git-clone"));
 const fs_1 = __importDefault(require("fs"));
+const simple_git_1 = __importDefault(require("simple-git"));
+const git = (0, simple_git_1.default)();
 function get_modlist(c) {
     const mod_list = (0, state_1.getMods)().map((mod) => mod.identifier);
     return c.text(JSON.stringify(mod_list));
@@ -161,9 +162,9 @@ function accept_mod_request(c) {
         }
         if (request.type === "add") {
             const dir = request.repo.split("/")[1];
-            (0, git_clone_1.default)(`https://github.com/${request.repo}`, `./src/mods/${dir}`);
-            const mod_class = yield Promise.resolve(`${`./mods/${dir}/src/index?cacheBust=${new Date()}`}`).then(s => __importStar(require(s)));
-            const info = yield Promise.resolve(`${`./mods/${dir}/info?cacheBust=${new Date()}`}`).then(s => __importStar(require(s)));
+            yield git.clone(`https://github.com/${request.repo}`, `./src/mods/${dir}`);
+            const mod_class = yield Promise.resolve(`${`./mods/${dir}/src/index`}`).then(s => __importStar(require(s)));
+            const info = yield Promise.resolve(`${`./mods/${dir}/info`}`).then(s => __importStar(require(s)));
             const mod = {
                 class: mod_class.default,
                 identifier: { name: dir, id: info.id, dir }
