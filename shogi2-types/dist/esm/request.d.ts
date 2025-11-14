@@ -21,5 +21,5 @@ export declare class RequestUpdater {
 }
 export interface RequestExpansion {
     request: Request;
-    data?: Diff;
+    diff?: Diff;
 }
